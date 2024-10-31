@@ -1,0 +1,37 @@
+body {
+	font-family: 'Arial', sans-serif;
+	background-color: #f0f8ff; /* Light blue background */
+	color: #333;
+	margin: 0;
+	padding: 20px;
+	text-align: center;
+}
+
+header {
+	background-color: #ffcc00; /* Yellow header */
+	padding: 20px;
+	border-radius: 10px;
+}
+
+h1 {
+	color: #ff4500; /* Orange text */
+}
+
+.category {
+	background-color: #90ee90; /* Light green */
+	border: 2px solid #3cb371; /* Medium sea green */
+	border-radius: 15px;
+	padding: 20px;
+	margin: 15px;
+	cursor: pointer;
+	transition: transform 0.2s; /* Animation */
+}
+
+.category:hover {
+	transform: scale(1.05); /* Scale up on hover */
+}
+
+.category h2 {
+	margin: 0;
+	color: #2e8b57; /* Dark green */
+}
