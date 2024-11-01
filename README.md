@@ -8,12 +8,12 @@ algorithm based on the farthest-point Voronoi diagram.
 ## Project Structure
 
 - **/assets**: Contains images and fonts.
-- **/css**: Stylesheets for the website.
-- **/js**: JavaScript files for functionality and p5.js sketches.
-- **/pages**: HTML files for different sections of the project.
+- **/src/css**: Stylesheets for the website.
+- **/src/js**: JavaScript files for functionality and p5.js sketches.
+- **/src/pages**: HTML files for different sections of the project.
 - **/data**: Data files for algorithm input.
 - **/docs**: Documentation and reports.
-- **/tests**: Test scripts and data.
+- **/src/tests**: Test scripts and data.
 
 ## Setup Instructions
 
