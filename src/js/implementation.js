@@ -2,21 +2,22 @@ class CanvasUI {
 	constructor() {
 		this.points = [];
 		this.hull = [];
-		this.updateBounds();  // Initialize bounds based on window size
 		this.createCanvas();
 		this.createUI();
 	}
 
 	createCanvas() {
-		createCanvas(windowWidth, windowHeight);
+		// Create canvas and attach it to the clickable area div
+		this.canvas = createCanvas(windowWidth, windowHeight);
+		this.canvas.parent('clickable-area'); // Attach the canvas to the clickable area div
 		textSize(20);
 	}
 
 	createUI() {
 		// Clear button to reset points
-		new Button("Clear", 40, 160, () => this.resetPoints());
+		this.clearButton = new Button("Clear", 40, 160, () => this.resetPoints());
 		// Show Convex Hull button to display the convex hull polygon
-		new Button("Show Convex Hull", 40, 200, () => this.computeAndShowHull());
+		this.hullButton = new Button("Show Convex Hull", 170, 160, () => this.computeAndShowHull());
 	}
 
 	resetPoints() {
@@ -30,12 +31,7 @@ class CanvasUI {
 	}
 
 	draw() {
-		background("#add8e6"); // Light blue background
-
-		// Draw clickable area with a distinct background color
-		noStroke();
-		fill("#cce5ff");  // Light blue background for the box
-		rect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+		background(0);
 
 		// Draw points
 		stroke("yellow");
@@ -66,27 +62,16 @@ class CanvasUI {
 	// Check if a point is within the defined bounds
 	isWithinBounds(x, y) {
 		return (
-			x > this.bounds.x &&
-			x < this.bounds.x + this.bounds.width &&
-			y > this.bounds.y &&
-			y < this.bounds.y + this.bounds.height
+			x >= 0 &&
+			x <= width &&
+			y >= 0 &&
+			y <= height
 		);
-	}
-
-	// Update bounds based on current window size
-	updateBounds() {
-		this.bounds = {
-			x: windowWidth * 0.2,
-			y: windowHeight * 0.2,
-			width: windowWidth * 0.6,
-			height: windowHeight * 0.6
-		};
 	}
 
 	// Resize canvas and update bounds when the window is resized
 	windowResized() {
 		resizeCanvas(windowWidth, windowHeight);
-		this.updateBounds();
 	}
 }
 

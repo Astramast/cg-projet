@@ -1,55 +1,68 @@
-@import url('https://fonts.googleapis.com/css2?family=Comic+Sans+MS&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400&display=swap');
 
 body {
-	font-family: 'Comic Sans MS', cursive, sans-serif; /* Updated font */
-	background-color: #add8e6; /* Light blue background */
-	color: #333;
+	font-family: 'Fredoka', sans-serif;
+	background-color: #FFF9BF; /* Vibrant pastel yellow */
+	color: #333333; /* Darker gray for readability */
 	margin: 0;
 	padding: 20px;
 	text-align: center;
 }
 
 header {
-	background-color: #ffcc00; /* Yellow header */
+	background-color: #CB9DF0; /* Bright pastel pink to make the header pop */
 	padding: 20px;
-	border-radius: 10px;
+	border-radius: 12px;
+	margin-bottom: 20px;
 }
 
 h1 {
-	color: #ff4500; /* Orange text */
+	color: #4B0082; /* Deep indigo for bold contrast with the pastel pink background */
+	margin: 0;
 }
 
 .category {
-	background-color: #90ee90; /* Light green */
-	border: 2px solid #3cb371; /* Medium sea green */
+	background-color: #ffd6b0; /* More vibrant pastel yellow */
+	border: 2px solid #AB47BC;
 	border-radius: 15px;
 	padding: 20px;
 	margin: 15px;
 	cursor: pointer;
-	transition: transform 0.2s; /* Animation */
+	transition: transform 0.2s, background-color 0.3s;
 }
 
 .category:hover {
-	transform: scale(1.05); /* Scale up on hover */
+	transform: scale(1.05);
+	background-color: #ffcb9c; /* Slightly deeper vibrant pastel yellow on hover */
 }
 
 .category h2 {
 	margin: 0;
-	color: #2e8b57; /* Dark green */
+	color: #8E24AA; /* Richer purple for text contrast */
 }
 
 .styled-button {
-	background-color: #4CAF50;
-	color: white;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 5px;
-	font-size: 16px;
+	font-family: 'Fredoka', sans-serif;
+	background-color: #ffd6b0; /* Matching the category background color */
+	border: 2px solid #AB47BC; /* Matching the category border color */
+	border-radius: 15px; /* Matching the rounded corners of the category */
+	padding: 15px 25px;
+	color: #8E24AA; /* Rich purple text color for better contrast */
+	font-size: 1.5rem;
 	cursor: pointer;
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-	transition: background-color 0.3s;
+	text-decoration: none;
+	transition: transform 0.2s, background-color 0.3s;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px;
+	margin-top: 20px;
 }
 
 .styled-button:hover {
-	background-color: #45a049;
+	transform: scale(1.05);
+	background-color: #ffcb9c; /* Slightly darker pastel color on hover, like the category hover */
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 12px;
+}
+
+.styled-button:focus {
+	outline: none;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 4px #AB47BC;
 }
