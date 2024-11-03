@@ -25,6 +25,15 @@ class Polygon {
 		}
 		return true;
 	}
+
+	perimeter() {
+		let n = this.points.length;
+		let p = euclidianDist(this.points[0], this.points[n - 1]);
+		for (let i = 0; i < n - 1; i++) {
+			p += euclidianDist(this.points[i], this.points[i + 1]);
+		}
+		return p;
+	}
 }
 
 function doIntersect(p1, p2, p3, p4) {
@@ -34,6 +43,10 @@ function doIntersect(p1, p2, p3, p4) {
 	let o3 = crossProduct(p3, p4, p1);
 	let o4 = crossProduct(p3, p4, p2);
 	return o1 * o2 < 0 && o3 * o4 < 0;
+}
+
+function euclidianDist(p1, p2) {
+	return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 }
 
 

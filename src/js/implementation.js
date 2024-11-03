@@ -1,6 +1,6 @@
 class CanvasUI {
 	constructor() {
-		this.polygon = new Polygon();
+		this.points = [];
 		this.hull = new Polygon();
 		this.createCanvas();
 		this.createUI();
@@ -14,23 +14,26 @@ class CanvasUI {
 	}
 
 	createUI() {
-		// Clear button to reset points
-		this.clearButton = new Button("Clear", 40, 160, () => this.resetPoints());
-		// Show Convex Hull button to display the convex hull polygon
-		this.hullButton = new Button("Show Convex Hull", 170, 160, () => this.computeAndShowHull());
+		this.backButton = new Button("Back", 40, 160, () => this.backHome());
+		this.clearButton = new Button("Clear", 170, 160, () => this.resetPoints());
 	}
 
 	resetPoints() {
-		this.polygon = new Polygon();
+		this.points = [];
 		this.hull = new Polygon();
+	}
+
+	backHome() {
+		window.location.href = 'index.html';
 	}
 
 	computeAndShowHull() {
 		// Compute the convex hull and store it
-		this.hull = new Polygon(computeConvexHull(Array.from(this.polygon.points)));
+		this.hull = new Polygon(computeConvexHull(Array.from(this.points)));
 	}
 
 	draw() {
+		background("#FFF9BF");
 
 		// Clear the canvas
 		stroke("#CB9DF0");
@@ -38,33 +41,36 @@ class CanvasUI {
 		rect(0, 120, width - 100, height - 250 - 120);
 
 		// Draw points
-		stroke("yellow");
-		beginShape();
-		for (let p of this.polygon.points) {
-			fill("yellow");
+		stroke("#FFF9BF");
+		for (let p of this.points) {
+			fill("#FFF9BF");
 			ellipse(p.x, p.y, 6, 6);
-			noFill();
-			vertex(p.x, p.y);
 		}
-		endShape(CLOSE);
 
 		// Draw convex hull as a polygon if it exists
 		if (this.hull.points.length > 0) {
-			stroke("red");
 			noFill();
 			beginShape();
 			for (let p of this.hull.points) {
 				vertex(p.x, p.y);
 			}
 			endShape(CLOSE);
+
+			// Draw perimeter of the convex hull
+			stroke("#FF6F61");
+			fill("#FF6F61");
+			textSize(20);
+			text("Perimeter: " + this.hull.perimeter().toFixed(2), width - 200, height - 200);
 		}
 	}
 
 	mousePressed() {
 		// Only add point if within the specified bounds
-		let p = new Point(mouseX, mouseY);
-		if (this.isWithinBounds(mouseX, mouseY) && this.polygon.doesNotIntersect(p)) {
-			this.polygon.addPoint(p);
+		if (this.isWithinBounds(mouseX, mouseY)) {
+			this.points.push(new Point(mouseX, mouseY));
+			if (this.points.length > 2) {
+				this.computeAndShowHull();
+			}
 		}
 	}
 
