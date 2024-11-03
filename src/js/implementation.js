@@ -1,7 +1,7 @@
 class CanvasUI {
 	constructor() {
-		this.points = [];
-		this.hull = [];
+		this.polygon = new Polygon();
+		this.hull = new Polygon();
 		this.createCanvas();
 		this.createUI();
 	}
@@ -21,31 +21,39 @@ class CanvasUI {
 	}
 
 	resetPoints() {
-		this.points = [];
-		this.hull = [];
+		this.polygon = new Polygon();
+		this.hull = new Polygon();
 	}
 
 	computeAndShowHull() {
 		// Compute the convex hull and store it
-		this.hull = computeConvexHull(this.points);
+		this.hull = new Polygon(computeConvexHull(Array.from(this.polygon.points)));
 	}
 
 	draw() {
-		background(0);
+
+		// Clear the canvas
+		stroke("#CB9DF0");
+		fill("#CB9DF0");
+		rect(0, 120, width - 100, height - 250 - 120);
 
 		// Draw points
 		stroke("yellow");
-		fill("yellow");
-		for (let p of this.points) {
+		beginShape();
+		for (let p of this.polygon.points) {
+			fill("yellow");
 			ellipse(p.x, p.y, 6, 6);
+			noFill();
+			vertex(p.x, p.y);
 		}
+		endShape(CLOSE);
 
 		// Draw convex hull as a polygon if it exists
-		if (this.hull.length > 0) {
+		if (this.hull.points.length > 0) {
 			stroke("red");
 			noFill();
 			beginShape();
-			for (let p of this.hull) {
+			for (let p of this.hull.points) {
 				vertex(p.x, p.y);
 			}
 			endShape(CLOSE);
@@ -54,8 +62,9 @@ class CanvasUI {
 
 	mousePressed() {
 		// Only add point if within the specified bounds
-		if (this.isWithinBounds(mouseX, mouseY)) {
-			this.points.push(new Point(mouseX, mouseY));
+		let p = new Point(mouseX, mouseY);
+		if (this.isWithinBounds(mouseX, mouseY) && this.polygon.doesNotIntersect(p)) {
+			this.polygon.addPoint(p);
 		}
 	}
 
@@ -63,9 +72,9 @@ class CanvasUI {
 	isWithinBounds(x, y) {
 		return (
 			x >= 0 &&
-			x <= width &&
-			y >= 0 &&
-			y <= height
+			x <= width - 100 &&
+			y >= 120 &&
+			y <= height - 250
 		);
 	}
 

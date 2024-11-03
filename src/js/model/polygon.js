@@ -8,25 +8,33 @@ class Polygon {
 		this.points.push(point);
 	}
 
-	// Check if the polygon is convex
-	isConvex() {
-		let sign = 0;
-		for (let i = 0; i < this.points.length; i++) {
-			const p0 = this.points[i];
-			const p1 = this.points[(i + 1) % this.points.length];
-			const p2 = this.points[(i + 2) % this.points.length];
+	doesNotIntersect(p) {
+		let n = this.points.length;
+		let firstPoint = this.points[0];
+		let lastPoint = this.points[n - 1];
 
-			const crossProduct = (p1.x - p0.x) * (p2.y - p1.y) - (p1.y - p0.y) * (p2.x - p1.x);
-			const currentSign = Math.sign(crossProduct);
-
-			if (sign === 0) {
-				sign = currentSign;
-			} else if (currentSign !== 0 && currentSign !== sign) {
-				return false; // Non-convex
+		for (let i = 0; i < n - 1; i++) {
+			let p1 = this.points[i];
+			let p2 = this.points[i + 1];
+			if (
+				doIntersect(p1, p2, lastPoint, p) ||
+				doIntersect(p1, p2, firstPoint, p)
+			) {
+				return false; // The polygon is no longer simple
 			}
 		}
-		return true; // Convex
+		return true;
 	}
 }
+
+function doIntersect(p1, p2, p3, p4) {
+	const crossProduct = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+	let o1 = crossProduct(p1, p2, p3);
+	let o2 = crossProduct(p1, p2, p4);
+	let o3 = crossProduct(p3, p4, p1);
+	let o4 = crossProduct(p3, p4, p2);
+	return o1 * o2 < 0 && o3 * o4 < 0;
+}
+
 
 window.Polygon = Polygon;
