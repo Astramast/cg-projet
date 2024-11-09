@@ -34,6 +34,16 @@ class Polygon {
 		}
 		return p;
 	}
+
+	area() {
+		let n = this.points.length;
+		let a = 0;
+		for (let i = 0; i < n - 1; i++) {
+			a += this.points[i].x * this.points[i + 1].y - this.points[i + 1].x * this.points[i].y;
+		}
+		a += this.points[n - 1].x * this.points[0].y - this.points[0].x * this.points[n - 1].y;
+		return Math.abs(a) / 2;
+	}
 }
 
 function doIntersect(p1, p2, p3, p4) {

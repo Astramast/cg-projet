@@ -2,6 +2,7 @@ class CanvasUI {
 	constructor() {
 		this.points = [];
 		this.hull = new Polygon();
+		this.perimeterSlider = null; // Slider for perimeter adjustment
 		this.createCanvas();
 		this.createUI();
 	}
@@ -14,13 +15,38 @@ class CanvasUI {
 	}
 
 	createUI() {
+		// Buttons for user interaction
 		this.backButton = new Button("Back", 40, 160, () => this.backHome());
 		this.clearButton = new Button("Clear", 170, 160, () => this.resetPoints());
+
+		// Slider for adjusting perimeter
+		this.perimeterSlider = createSlider(100, 1000, 300); // Min: 100, Max: 1000, Initial: 300
+		this.perimeterSlider.position(300, 160); // Position the slider at the same height as the buttons
+		this.perimeterSlider.style('width', '200px');
+		this.perimeterSlider.style('background', '#FF6F61'); // Set the background color of the slider
+		this.perimeterSlider.style('height', '8px'); // Slider height
+		this.perimeterSlider.input(() => this.adjustPerimeter());
+
+		// Styling and positioning for perimeter and area text
+		this.perimeterText = createDiv("Perimeter: " + this.perimeterSlider.value());
+		this.perimeterText.position(300, 130); // Position above the slider at the same height as buttons
+		this.perimeterText.style('color', '#FF6F61');
+		this.perimeterText.style('font-size', '18px');
+		this.perimeterText.style('font-weight', 'bold');
+
+		this.areaText = createDiv("Area: 0");
+		this.areaText.position(520, 130); // Position near the perimeter text at the same height
+		this.areaText.style('color', '#4CAF50');
+		this.areaText.style('font-size', '18px');
+		this.areaText.style('font-weight', 'bold');
 	}
 
 	resetPoints() {
 		this.points = [];
 		this.hull = new Polygon();
+		this.perimeterSlider.value(300); // Reset the slider to initial value
+		this.perimeterText.html("Perimeter: " + this.perimeterSlider.value()); // Reset perimeter text
+		this.areaText.html("Area: 0"); // Reset area text
 	}
 
 	backHome() {
@@ -30,6 +56,17 @@ class CanvasUI {
 	computeAndShowHull() {
 		// Compute the convex hull and store it
 		this.hull = new Polygon(computeConvexHull(Array.from(this.points)));
+	}
+
+	adjustPerimeter() {
+		// Adjust the convex hull based on the perimeter slider value
+		const desiredPerimeter = this.perimeterSlider.value();
+		this.perimeterText.html("Perimeter: " + desiredPerimeter.toFixed(2));
+
+		if (this.hull.points.length > 0) {
+			// Adjust the hull's perimeter (dummy function here, adjust as per your implementation)
+			this.hull.adjustToPerimeter(desiredPerimeter);
+		}
 	}
 
 	draw() {
@@ -56,11 +93,17 @@ class CanvasUI {
 			}
 			endShape(CLOSE);
 
-			// Draw perimeter of the convex hull
-			stroke("#FF6F61");
-			fill("#FF6F61");
-			textSize(20);
-			text("Perimeter: " + this.hull.perimeter().toFixed(2), width - 200, height - 200);
+			// Update area text dynamically
+			this.areaText.html("Area: " + this.hull.area().toFixed(2));
+
+			// Update perimeter slider and text once the hull is computed
+			this.perimeterSlider.value(this.hull.perimeter()); // Set the slider to match the perimeter of the hull
+			this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2)); // Update perimeter text
+
+			// Set the slider's max value to a multiple of the perimeter (e.g., 2x or 3x)
+			const currentPerimeter = this.hull.perimeter();
+			this.perimeterSlider.attribute('min', currentPerimeter);
+			this.perimeterSlider.attribute('max', currentPerimeter * 3); // Allow scaling up to 3x the current perimeter
 		}
 	}
 
