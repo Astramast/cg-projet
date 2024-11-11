@@ -2,27 +2,27 @@
 
 body {
 	font-family: 'Fredoka', sans-serif;
-	background-color: #FFF9BF; /* Vibrant pastel yellow */
-	color: #333333; /* Darker gray for readability */
+	background-color: #FFF9BF;
+	color: #333333;
 	margin: 0;
 	padding: 20px;
 	text-align: center;
 }
 
 header {
-	background-color: #CB9DF0; /* Bright pastel pink to make the header pop */
+	background-color: #CB9DF0;
 	padding: 20px;
 	border-radius: 12px;
 	margin-bottom: 20px;
 }
 
 h1 {
-	color: #4B0082; /* Deep indigo for bold contrast with the pastel pink background */
+	color: #4B0082;
 	margin: 0;
 }
 
 .category {
-	background-color: #ffd6b0; /* More vibrant pastel yellow */
+	background-color: #ffd6b0;
 	border: 2px solid #AB47BC;
 	border-radius: 15px;
 	padding: 20px;
@@ -33,21 +33,21 @@ h1 {
 
 .category:hover {
 	transform: scale(1.05);
-	background-color: #ffcb9c; /* Slightly deeper vibrant pastel yellow on hover */
+	background-color: #ffcb9c;
 }
 
 .category h2 {
 	margin: 0;
-	color: #8E24AA; /* Richer purple for text contrast */
+	color: #8E24AA;
 }
 
 .styled-button {
 	font-family: 'Fredoka', sans-serif;
-	background-color: #ffd6b0; /* Matching the category background color */
-	border: 2px solid #AB47BC; /* Matching the category border color */
-	border-radius: 15px; /* Matching the rounded corners of the category */
+	background-color: #ffd6b0;
+	border: 2px solid #AB47BC;
+	border-radius: 15px;
 	padding: 15px 25px;
-	color: #8E24AA; /* Rich purple text color for better contrast */
+	color: #8E24AA;
 	font-size: 1.5rem;
 	cursor: pointer;
 	text-decoration: none;
@@ -58,11 +58,48 @@ h1 {
 
 .styled-button:hover {
 	transform: scale(1.05);
-	background-color: #ffcb9c; /* Slightly darker pastel color on hover, like the category hover */
+	background-color: #ffcb9c;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 12px;
 }
 
 .styled-button:focus {
 	outline: none;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 4px #AB47BC;
+}
+
+#clickable-area canvas {
+	border: 0px solid #CB9DF0;
+}
+
+.perimeter-text,
+.area-text {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.perimeter-text {
+	color: #CB9DF0;
+}
+
+.area-text {
+	color: #CB9DF0;
+}
+
+.slider {
+	-webkit-appearance: none;
+	width: 200px;
+	height: 8px;
+	cursor: pointer;
+	background: #ffcb9c;
+	border-radius: 15px;
+
+}
+
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: #AB47BC;
 }
