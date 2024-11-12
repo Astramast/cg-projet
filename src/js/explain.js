@@ -228,6 +228,16 @@ function setup() {
   );
   button2.style("cursor", "pointer");
   button2.mousePressed(triangulate);
+
+  button3 = createButton("convexify the polygon");
+  button3.style("font-size", "30px");
+  button3.size((6 * windowWidth) / 20, windowHeight / 20);
+  button3.position(
+    windowWidth / 2 - button.width / 2,
+    (19 * windowHeight) / 20 - button.height / 2
+  );
+  button3.style("cursor", "pointer");
+  button3.mousePressed(convexify);
 }
 
 function draw() {
@@ -316,6 +326,10 @@ windowResized = function () {
   resizeCanvas(windowWidth, windowHeight);
 };
 
+function convexify() {
+  // findReflexVertices
+  // reverse_reflex_vertices
+}
 
 function findReflexVertices(polygon) {
   /**
@@ -334,15 +348,16 @@ function findReflexVertices(polygon) {
   return reflexVertices;
 }
 
+function rotatePoint(point, center, angle) {
+  let radians = (Math.PI / 180) * angle;
+  let cos = Math.cos(radians);
+  let sin = Math.sin(radians);
+  let nx = cos * (point.x - center.x) - sin * (point.y - center.y) + center.x;
+  let ny = sin * (point.x - center.x) + cos * (point.y - center.y) + center.y;
+  return new Point(nx, ny);
+}
+
 function reverse_reflex_vertices(polygon, reflex_vertices) {
-  function rotatePoint(point, center, angle) {
-    let radians = (Math.PI / 180) * angle;
-    let cos = Math.cos(radians);
-    let sin = Math.sin(radians);
-    let nx = cos * (point.x - center.x) - sin * (point.y - center.y) + center.x;
-    let ny = sin * (point.x - center.x) + cos * (point.y - center.y) + center.y;
-    return new Point(nx, ny);
-  }
 
   if (reflex_vertices.length > 0) {
     let firstReflex = reflex_vertices[0];
@@ -366,6 +381,38 @@ function reverse_reflex_vertices(polygon, reflex_vertices) {
       polygon[lastIndex] = rotatePoint(lastReflex, lastPrev, 180);
     } else {
       polygon[lastIndex] = rotatePoint(lastReflex, lastNext, 180);
+    }
+  }
+}
+
+function propagate_transformation(polygon, reflex_vertices){
+  let reflexVerticesSet = new Set(reflex_vertices);
+  let visited = new Set();
+
+  function propagate(index) {
+    if (visited.has(index)) return;
+    visited.add(index);
+
+    let prev = polygon[(index - 1 + polygon.length) % polygon.length];
+    let curr = polygon[index];
+    let next = polygon[(index + 1) % polygon.length];
+
+    if (reflexVerticesSet.has(curr)) {
+      if (orientation_determinant(prev, curr, next) < 0) {
+        polygon[index] = rotatePoint(curr, prev, 180);
+      } else {
+        polygon[index] = rotatePoint(curr, next, 180);
+      }
+    }
+
+    propagate((index - 1 + polygon.length) % polygon.length);
+    propagate((index + 1) % polygon.length);
+  }
+
+  for (let i = 0; i < polygon.length; i++) {
+    if (reflexVerticesSet.has(polygon[i])) {
+      propagate(i);
+      break;
     }
   }
 }
