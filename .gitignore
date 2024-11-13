@@ -1,2 +1,4 @@
 .idea
 app/node_modules
+app/dist
+app/package-lock.json
