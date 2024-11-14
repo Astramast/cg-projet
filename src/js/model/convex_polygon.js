@@ -37,7 +37,6 @@ class ConvexPolygon {
 		if (this.points.length == 3) {
 			return getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 		}
-		let tree = getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 	}
 }
 
