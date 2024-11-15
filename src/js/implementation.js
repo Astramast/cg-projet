@@ -2,6 +2,7 @@ class CanvasUI {
 	constructor() {
 		this.points = [];
 		this.hull = new Polygon();
+		this.closedCurve = new ClosedCurve();
 		this.perimeterSlider = null; // Slider for perimeter adjustment
 		this.createCanvas();
 		this.createUI();
@@ -38,6 +39,7 @@ class CanvasUI {
 	resetPoints() {
 		this.points = [];
 		this.hull = new Polygon();
+		this.closedCurve = new ClosedCurve();
 		this.perimeterSlider.attribute('min', 0);
 		this.perimeterSlider.attribute('max', 1000);
 		this.perimeterSlider.value(0);
@@ -58,8 +60,12 @@ class CanvasUI {
 		this.perimeterText.html("Perimeter: " + desiredPerimeter.toFixed(2));
 
 		if (this.hull.points.length > 0) {
-			this.hull.adjustToPerimeter(desiredPerimeter);
+			this.computePQCurve(desiredPerimeter);
 		}
+	}
+
+	computePQCurve(desiredPerimeter) {
+		this.closedCurve = findPQCurve(this.hull, desiredPerimeter);
 	}
 
 	draw() {
@@ -75,6 +81,23 @@ class CanvasUI {
 			ellipse(p.x, p.y, 6, 6);
 		}
 
+		stroke("#00000");
+		// Show closed curve if it exists
+		if (this.closedCurve.points.length > 0) {
+			if (this.closedCurve.points.length < 3) return;
+
+			noFill();
+			beginShape();
+			// Use curveVertex for smooth curves (closed path)
+			for (let i = 0; i < this.closedCurve.points.length; i++) {
+				curveVertex(this.closedCurve.points[i].x, this.closedCurve.points[i].y);
+			}
+			// Close the shape by connecting the last point to the first one
+			curveVertex(this.closedCurve.points[0].x, this.closedCurve.points[0].y);
+			endShape(CLOSE);
+		}
+
+		stroke("#FFF9BF");
 		if (this.hull.points.length > 0) {
 			noFill();
 			beginShape();
@@ -83,10 +106,15 @@ class CanvasUI {
 			}
 			endShape(CLOSE);
 
-			this.areaText.html("Area: " + this.hull.area().toFixed(2));
-			this.perimeterSlider.value(this.hull.perimeter());
-			this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
-
+			if (this.closedCurve.points.length === 0) {
+				this.areaText.html("Area: " + this.hull.area().toFixed(2));
+				this.perimeterSlider.value(this.hull.perimeter());
+				this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
+			} else {
+				this.areaText.html("Area: " + this.closedCurve.area().toFixed(2));
+				this.perimeterSlider.value(this.closedCurve.perimeter());
+				this.perimeterText.html("Perimeter: " + this.closedCurve.perimeter().toFixed(2));
+			}
 			const currentPerimeter = this.hull.perimeter();
 			this.perimeterSlider.attribute('min', currentPerimeter);
 			this.perimeterSlider.attribute('max', currentPerimeter * 3);

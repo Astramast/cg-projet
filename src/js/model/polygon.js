@@ -44,6 +44,14 @@ class Polygon {
 		a += this.points[n - 1].x * this.points[0].y - this.points[0].x * this.points[n - 1].y;
 		return Math.abs(a) / 2;
 	}
+
+
+	getFPVD() {
+		// TODO: Implement the farthest-point Voronoi diagram algorithm
+		return this.points;
+	}
+
+
 }
 
 function doIntersect(p1, p2, p3, p4) {

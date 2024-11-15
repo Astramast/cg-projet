@@ -1,23 +1,11 @@
 class Curve {
 	constructor(points = [], segments = 100) {
-		this.points = points;  // Array of p5.Vector points
-		this.segments = segments;  // Number of segments to sample the curve
+		this.points = points; // Array of p5.Vector points
+		this.segments = segments; // Number of segments to sample the curve
 	}
 
 	addPoint(x, y) {
 		this.points.push(createVector(x, y));
-	}
-
-	draw() {
-		if (this.points.length < 2) return;
-
-		noFill();
-		beginShape();
-		// Use curveVertex for smooth curves (open path)
-		for (let i = 0; i < this.points.length; i++) {
-			curveVertex(this.points[i].x, this.points[i].y);
-		}
-		endShape();
 	}
 
 	// Calculate the perimeter by approximating the curve using sampled points
@@ -36,10 +24,11 @@ class Curve {
 	// Sample a point on the curve using a parameter t (from 0 to 1)
 	samplePoint(t) {
 		let n = this.points.length;
-		let p0 = this.points[0];
-		let p1 = this.points[1 % n];
-		let p2 = this.points[2 % n];
-		let p3 = this.points[3 % n];
+		let i = Math.floor(t * n);
+		let p0 = this.points[i % n];
+		let p1 = this.points[(i + 1) % n];
+		let p2 = this.points[(i + 2) % n];
+		let p3 = this.points[(i + 3) % n];
 
 		// Using Catmull-Rom spline for smooth interpolation between points
 		let x = 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t * t + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t * t * t);
