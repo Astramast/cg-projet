@@ -8,10 +8,10 @@ class ConvexPolygon {
 		}
 	}
 	getStartingFPVD(p, q, r) {
-		c1 = computeVoronoiCell(p, [p, q, r]);
-		c2 = computeVoronoiCell(q, [p, q, r]);
-		semilines = [c1.semiline1, c1.semiline2];
-		if c1.semiline1.isEqual(c2.semiline1) {
+		let c1 = computeVoronoiCell(p, [p, q, r]);
+		let c2 = computeVoronoiCell(q, [p, q, r]);
+		let semilines = [c1.semiline1, c1.semiline2];
+		if (c1.semiline1.isEqual(c2.semiline1)) {
 			semilines.push(c2.semiline2);
 		}
 		else {
@@ -24,18 +24,18 @@ class ConvexPolygon {
 		if (this.points.length <= 1) {
 			return Tree(this.points, null);
 		}
-		if (this.points.length == 2) {
+		if (this.points.length === 2) {
 			return Tree(this.points, perpendicularBisector(this.points[0], this.points[1]));
 		}
-		if (this.points.length == 3) {
+		if (this.points.length === 3) {
 			return getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 		}
-		throw NotImplementedError();//TODO
+		throw Error("not implemented"); // TODO
 	}
 }
 
 function perpendicularBisector(p, q) {
-	//TODO Assumed general position, complete code for extreme cases
+	// TODO: Assumed general position, complete code for extreme cases
 	const y = (x) => ((2*q.x - 2*p.x) * x + (p.x**2 + p.y**2 - q.x**2 - q.y**2)) / (2*p.y - 2*q.y);
 	return Line(Point(0, y(0)), Point(1, y(1)));
 }
