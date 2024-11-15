@@ -10,7 +10,14 @@ class ConvexPolygon {
 	getStartingFPVD(p, q, r) {
 		c1 = computeVoronoiCell(p, [p, q, r]);
 		c2 = computeVoronoiCell(q, [p, q, r]);
-		
+		semilines = [c1.semiline1, c1.semiline2];
+		if c1.semiline1.isEqual(c2.semiline1) {
+			semilines.push(c2.semiline2);
+		}
+		else {
+			semilines.push(c2.semiline1);
+		}
+		return VoronoiDiagram([semilines[0].a], semilines);
 	}
 	//Farthest-Point Voronoi Diagram
 	getFPVD() {
@@ -23,6 +30,7 @@ class ConvexPolygon {
 		if (this.points.length == 3) {
 			return getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 		}
+		throw NotImplementedError();//TODO
 	}
 }
 
