@@ -219,7 +219,7 @@ function setup() {
   button.style("cursor", "pointer");
   button.mousePressed(reset);
 
-  button2 = createButton("Triangulate");
+  button2 = createButton("Convexify");
   button2.style("font-size", "30px");
   button2.size((6 * windowWidth) / 20, windowHeight / 20);
   button2.position(
@@ -227,17 +227,8 @@ function setup() {
     (18 * windowHeight) / 20 - button2.height / 2
   );
   button2.style("cursor", "pointer");
-  button2.mousePressed(triangulate);
+  button2.mousePressed(convexify(/*polygon*/));
 
-  button3 = createButton("convexify");
-  button3.style("font-size", "30px");
-  button3.size((6 * windowWidth) / 20, windowHeight / 20);
-  button3.position(
-    windowWidth / 2 - button.width / 2,
-    (19 * windowHeight) / 20 - button.height / 2
-  );
-  button3.style("cursor", "pointer");
-  button3.mousePressed(convexify);
 }
 
 function draw() {
@@ -326,10 +317,13 @@ windowResized = function () {
   resizeCanvas(windowWidth, windowHeight);
 };
 
-function convexify() {
+function convexify(polygon) {
+  /**
+   * polygon : list of Points
+   */
   // findReflexVertices
   // reverse_reflex_vertices - aka concave ear
-  reflectReflexVertices(polygon.points)
+  reflectReflexVertices(polygon)
 }
 
 
