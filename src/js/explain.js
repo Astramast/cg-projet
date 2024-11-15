@@ -229,7 +229,7 @@ function setup() {
   button2.style("cursor", "pointer");
   button2.mousePressed(triangulate);
 
-  button3 = createButton("convexify the polygon");
+  button3 = createButton("convexify");
   button3.style("font-size", "30px");
   button3.size((6 * windowWidth) / 20, windowHeight / 20);
   button3.position(
@@ -328,14 +328,46 @@ windowResized = function () {
 
 function convexify() {
   // findReflexVertices
-  // reverse_reflex_vertices
+  // reverse_reflex_vertices - aka concave ear
+  reflectReflexVertices(polygon.points)
 }
 
-function findReflexVertices(polygon) {
-  /**
-   * parameter polygon must be a list of points 
-   * */
 
+// Helper function to calculate the convex hull using Andrew's monotone chain algorithm
+function convexHull(points) {
+  points.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+  let lower = [];
+  for (let p of points) {
+    while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+      lower.pop();
+    }
+    lower.push(p);
+  }
+  let upper = [];
+  for (let i = points.length - 1; i >= 0; i--) {
+    let p = points[i];
+    while (upper.length >= 2 && orientation_determinant(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+      upper.pop();
+    }
+    upper.push(p);
+  }
+  upper.pop();
+  lower.pop();
+  return lower.concat(upper);
+}
+
+// Helper function to reflect a point across a line segment
+function reflectPoint(p, a, b) {
+  let dx = b[0] - a[0];
+  let dy = b[1] - a[1];
+  let t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy);
+  let x = a[0] + t * dx;
+  let y = a[1] + t * dy;
+  return [2 * x - p[0], 2 * y - p[1]];
+}
+
+// Main function to find and reflect reflex vertices
+function reflectReflexVertices(polygon) {
   let reflexVertices = [];
   for (let i = 0; i < polygon.length; i++) {
     let prev = polygon[(i - 1 + polygon.length) % polygon.length];
@@ -345,74 +377,22 @@ function findReflexVertices(polygon) {
       reflexVertices.push(curr);
     }
   }
-  return reflexVertices;
-}
 
-function rotatePoint(point, center, angle) {
-  let radians = (Math.PI / 180) * angle;
-  let cos = Math.cos(radians);
-  let sin = Math.sin(radians);
-  let nx = cos * (point.x - center.x) - sin * (point.y - center.y) + center.x;
-  let ny = sin * (point.x - center.x) + cos * (point.y - center.y) + center.y;
-  return new Point(nx, ny);
-}
-
-function reverse_reflex_vertices(polygon, reflex_vertices) {
-
-  if (reflex_vertices.length > 0) {
-    let firstReflex = reflex_vertices[0];
-    let lastReflex = reflex_vertices[reflex_vertices.length - 1];
-
-    let firstIndex = polygon.indexOf(firstReflex);
-    let lastIndex = polygon.indexOf(lastReflex);
-
-    let firstPrev = polygon[(firstIndex - 1 + polygon.length) % polygon.length];
-    let firstNext = polygon[(firstIndex + 1) % polygon.length];
-    let lastPrev = polygon[(lastIndex - 1 + polygon.length) % polygon.length];
-    let lastNext = polygon[(lastIndex + 1) % polygon.length];
-
-    if (orientation_determinant(firstPrev, firstReflex, firstNext) >= 0) {
-      polygon[firstIndex] = rotatePoint(firstReflex, firstPrev, 180);
-    } else {
-      polygon[firstIndex] = rotatePoint(firstReflex, firstNext, 180);
-    }
-
-    if (orientation_determinant(lastPrev, lastReflex, lastNext) >= 0) {
-      polygon[lastIndex] = rotatePoint(lastReflex, lastPrev, 180);
-    } else {
-      polygon[lastIndex] = rotatePoint(lastReflex, lastNext, 180);
-    }
-  }
-}
-
-function propagate_transformation(polygon, reflex_vertices){
-  let reflexVerticesSet = new Set(reflex_vertices);
-  let visited = new Set();
-
-  function propagate(index) {
-    if (visited.has(index)) return;
-    visited.add(index);
-
-    let prev = polygon[(index - 1 + polygon.length) % polygon.length];
-    let curr = polygon[index];
-    let next = polygon[(index + 1) % polygon.length];
-
-    if (reflexVerticesSet.has(curr)) {
-      if (orientation_determinant(prev, curr, next) < 0) {
-        polygon[index] = rotatePoint(curr, prev, 180);
-      } else {
-        polygon[index] = rotatePoint(curr, next, 180);
+  let hull = convexHull(polygon);
+  let reflectedVertices = reflexVertices.map(vertex => {
+    let minDist = Infinity;
+    let nearestEdge = null;
+    for (let i = 0; i < hull.length; i++) {
+      let a = hull[i];
+      let b = hull[(i + 1) % hull.length];
+      let dist = Math.abs((b[1] - a[1]) * vertex[0] - (b[0] - a[0]) * vertex[1] + b[0] * a[1] - b[1] * a[0]) / Math.sqrt((b[1] - a[1]) ** 2 + (b[0] - a[0]) ** 2);
+      if (dist < minDist) {
+        minDist = dist;
+        nearestEdge = [a, b];
       }
     }
+    return reflectPoint(vertex, nearestEdge[0], nearestEdge[1]);
+  });
 
-    propagate((index - 1 + polygon.length) % polygon.length);
-    propagate((index + 1) % polygon.length);
-  }
-
-  for (let i = 0; i < polygon.length; i++) {
-    if (reflexVerticesSet.has(polygon[i])) {
-      propagate(i);
-      break;
-    }
-  }
+  return reflectedVertices;
 }
