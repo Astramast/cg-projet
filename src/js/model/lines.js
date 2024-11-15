@@ -77,3 +77,12 @@ function intersectSegmentSegment(segment1, segment2) {
 	return one && two;
 }
 
+window.Line = Line;
+window.SemiLine = SemiLine;
+window.Segment = Segment;
+window.intersectLineLine = intersectLineLine;
+window.intersectLineSemiline = intersectLineSemiline;
+window.intersectLineSegment = intersectLineSegment;
+window.intersectSemilineSemiline = intersectSemilineSemiline;
+window.intersectSemilineSegment = intersectSemilineSegment;
+window.intersectSegmentSegment = intersectSegmentSegment;
