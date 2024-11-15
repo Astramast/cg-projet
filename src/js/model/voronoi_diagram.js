@@ -1,17 +1,16 @@
 class VoronoiDiagram {
-	constructor(points) {
+	constructor(points, lines) {
 		this.points = points;
-		this.cells = []; // Placeholder for cells
+		this.lines = lines;
 	}
 
-	// Stub for calculating the farthest-point Voronoi diagram
-	computeFarthestPointDiagram() {
-		// Placeholder: Implement the algorithm to compute the farthest-point Voronoi diagram
-	}
-
-	// Draw cells for visualization
 	draw() {
-		// Placeholder: Draw Voronoi cells
+		for (p of this.points){
+			p.draw();
+		}
+		for (l of this.lines){
+			l.draw();
+		}
 	}
 }
 
