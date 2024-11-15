@@ -3,6 +3,12 @@ class Line {
 		this.a = a
 		this.b = b
 	}
+	draw () {
+		v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
+		v.normalize();
+		v.mult(Math.max(windowWidth, windowHeight));
+		line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
+	}
 }
 
 class SemiLine {
@@ -13,12 +19,21 @@ class SemiLine {
 	isEqual(semiline){
 		return this.a.x == semiline.a.x && this.a.y == semiline.a.y && this.b.orientationDeterminant(this.a, semiline.b) == 0;
 	}
+	draw () {
+		v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
+		v.normalize();
+		v.mult(Math.max(windowWidth, windowHeight));
+		line(this.a.x, this.a.y, this.a.x + v.x, this.a.y + v.y);
+	}
 }
 
 class Segment {
 	constructor(a,b){
 		this.a = a
 		this.b = b
+	}
+	draw () {
+		line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 }
 
