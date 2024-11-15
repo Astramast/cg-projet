@@ -10,6 +10,9 @@ class SemiLine {
 		this.a = a
 		this.b = b
 	}
+	isEqual(semiline){
+		return this.a.x == semiline.a.x && this.a.y == semiline.a.y && this.b.orientationDeterminant(this.a, semiline.b) == 0;
+	}
 }
 
 class Segment {
