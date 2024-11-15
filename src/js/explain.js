@@ -226,7 +226,7 @@ function setup() {
     (18 * windowHeight) / 20 - button2.height / 2
   );
   button2.style("cursor", "pointer");
-  button2.mousePressed(convexify(polygon.points));
+  button2.mousePressed(convexify);
 
 }
 
@@ -316,74 +316,97 @@ windowResized = function () {
   resizeCanvas(windowWidth, windowHeight);
 };
 
-// function convexify(polygon) {
-//   /**
-//    * polygon : list of Points
-//    */
-//   reflectReflexVertices(polygon)
-// }
+function convexify() {
+  /**
+   * polygon : list of Points
+   * */
 
+  // let reversedVertices, concaveVertices = reflectReflexVertices(polygon);
+  // updatePolygon(polygon, reversedVertices, concaveVertices);
 
-// // Helper function to calculate the convex hull using Andrew's monotone chain algorithm
-// function convexHull(points) {
-//   points.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
-//   let lower = [];
-//   for (let p of points) {
-//     while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
-//       lower.pop();
-//     }
-//     lower.push(p);
-//   }
-//   let upper = [];
-//   for (let i = points.length - 1; i >= 0; i--) {
-//     let p = points[i];
-//     while (upper.length >= 2 && orientation_determinant(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
-//       upper.pop();
-//     }
-//     upper.push(p);
-//   }
-//   upper.pop();
-//   lower.pop();
-//   return lower.concat(upper);
-// }
+  let {reversedVertices, concaveVertices} = reflectReflexVertices(polygon.points.map(p => [p.x, p.y]));
+  updatePolygon(polygon, reversedVertices, concaveVertices);
 
-// // Helper function to reflect a point across a line segment
-// function reflectPoint(p, a, b) {
-//   let dx = b[0] - a[0];
-//   let dy = b[1] - a[1];
-//   let t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy);
-//   let x = a[0] + t * dx;
-//   let y = a[1] + t * dy;
-//   return [2 * x - p[0], 2 * y - p[1]];
-// }
+  /* refresh the displayed polygon here */
+  // polygon.draw();  // dont work
+  // draw();  // dont work
+  // polygon.draw();  // dont work
+  // for (let t = 0; t < triangles.length; t++) {
+  //   triangles[t].draw();
+  // }
 
-// // Main function to find and reflect reflex vertices
-// function reflectReflexVertices(polygon) {
-//   let reflexVertices = [];
-//   for (let i = 0; i < polygon.length; i++) {
-//     let prev = polygon[(i - 1 + polygon.length) % polygon.length];
-//     let curr = polygon[i];
-//     let next = polygon[(i + 1) % polygon.length];
-//     if (orientation_determinant(prev, curr, next) < 0) {
-//       reflexVertices.push(curr);
-//     }
-//   }
+}
 
-//   let hull = convexHull(polygon);
-//   let reflectedVertices = reflexVertices.map(vertex => {
-//     let minDist = Infinity;
-//     let nearestEdge = null;
-//     for (let i = 0; i < hull.length; i++) {
-//       let a = hull[i];
-//       let b = hull[(i + 1) % hull.length];
-//       let dist = Math.abs((b[1] - a[1]) * vertex[0] - (b[0] - a[0]) * vertex[1] + b[0] * a[1] - b[1] * a[0]) / Math.sqrt((b[1] - a[1]) ** 2 + (b[0] - a[0]) ** 2);
-//       if (dist < minDist) {
-//         minDist = dist;
-//         nearestEdge = [a, b];
-//       }
-//     }
-//     return reflectPoint(vertex, nearestEdge[0], nearestEdge[1]);
-//   });
+function updatePolygon(polygon, reversedVertices, concaveVertices) {
+  // Remove concave vertices from the polygon
+  polygon.points = polygon.points.filter(p => !concaveVertices.some(cv => cv[0] === p.x && cv[1] === p.y));
 
-//   return reflectedVertices;
-// }
+  // Add the reflected vertices to the polygon
+  for (let rv of reversedVertices) {
+    polygon.points.push(new Point(rv[0], rv[1]));
+  }
+}
+
+function convexHull(points) {
+  // Helper function to calculate the convex hull using Andrew's monotone chain algorithm
+  points.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+  let lower = [];
+  for (let p of points) {
+    while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+      lower.pop();
+    }
+    lower.push(p);
+  }
+  let upper = [];
+  for (let i = points.length - 1; i >= 0; i--) {
+    let p = points[i];
+    while (upper.length >= 2 && orientation_determinant(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+      upper.pop();
+    }
+    upper.push(p);
+  }
+  upper.pop();
+  lower.pop();
+  return lower.concat(upper);
+}
+
+function reflectPoint(p, a, b) {
+  // Helper function to reflect a point across a line segment
+  let dx = b[0] - a[0];
+  let dy = b[1] - a[1];
+  let t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy);
+  let x = a[0] + t * dx;
+  let y = a[1] + t * dy;
+  return [2 * x - p[0], 2 * y - p[1]];
+}
+
+function reflectReflexVertices(polygon) {
+  // Main function to find and reflect reflex vertices
+  let concaveVertices = [];
+  for (let i = 0; i < polygon.length; i++) {
+    let prev = polygon[(i - 1 + polygon.length) % polygon.length];
+    let curr = polygon[i];
+    let next = polygon[(i + 1) % polygon.length];
+    if (orientation_determinant(prev, curr, next) < 0) {
+      concaveVertices.push(curr);
+    }
+  }
+
+  let hull = convexHull(polygon);
+  let reflectedVertices = concaveVertices.map(vertex => {
+    let minDist = Infinity;
+    let nearestEdge = null;
+    for (let i = 0; i < hull.length; i++) {
+      let a = hull[i];
+      let b = hull[(i + 1) % hull.length];
+      let dist = Math.abs((b[1] - a[1]) * vertex[0] - (b[0] - a[0]) * vertex[1] + b[0] * a[1] - b[1] * a[0]) / Math.sqrt((b[1] - a[1]) ** 2 + (b[0] - a[0]) ** 2);
+      if (dist < minDist) {
+        minDist = dist;
+        nearestEdge = [a, b];
+      }
+    }
+    return reflectPoint(vertex, nearestEdge[0], nearestEdge[1]);
+  });
+
+  return { reflectedVertices, concaveVertices };
+}
