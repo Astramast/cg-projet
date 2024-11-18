@@ -440,6 +440,27 @@ function reflectPoint(p, a, b) {  // tested and functionnal
   return new_p
 }
 
+function findNearestEdge(vertex, hull) {
+  let minDist = Infinity;
+    let nearestEdge = null;
+    for (let i = 0; i < hull.length; i++) {
+      let a = hull[i];
+      let b = hull[(i + 1) % hull.length];
+      let dist = Math.abs((b.y - a.y) * vertex.x - (b.x - a.x) * vertex.y + b.x * a.y - b.y * a.x) / Math.sqrt((b.y - a.y) ** 2 + (b.x - a.x) ** 2);
+      if (dist < minDist) {
+        minDist = dist;
+        nearestEdge = [a, b];
+      }
+    }
+    if (nearestEdge) {
+      return nearestEdge;
+    }
+    else {  // not a pb anymore
+      console.log("nearestEdge is null, \
+        either there is no concave ear or the algo wrong")
+    }
+}
+
 function findReflexVertices(polygon) {
   // Parameter polygon : list of Point
   
@@ -456,26 +477,12 @@ function findReflexVertices(polygon) {
 
   // here we find the nearest edge of the convex hull
   let hull = convexHull(polygon);
-  let reversedVertices = concaveVertices.map(vertex => { 
-    let minDist = Infinity;
-    let nearestEdge = null;
-    for (let i = 0; i < hull.length; i++) {
-      let a = hull[i];
-      let b = hull[(i + 1) % hull.length];
-      let dist = Math.abs((b.y - a.y) * vertex.x - (b.x - a.x) * vertex.y + b.x * a.y - b.y * a.x) / Math.sqrt((b.y - a.y) ** 2 + (b.x - a.x) ** 2);
-      if (dist < minDist) {
-        minDist = dist;
-        nearestEdge = [a, b];
-      }
-    }
-    if (nearestEdge) {
-      return reflectPoint(vertex, nearestEdge[0], nearestEdge[1]);
-    }
-    else {  // not a pb anymore
-      console.log("nearestEdge is null, \
-        either there is no concave ear or the algo wrong")
-    }
-  });
+  let reversedVertices = [];
+  for (let vertex of concaveVertices) {
+    let nearest_edge = findNearestEdge(vertex, hull);
+    let reversed_point = reflectPoint(vertex, nearest_edge[0], nearest_edge[1]);
+    reversedVertices.push(reversed_point);
+  }
 
   return { reversedVertices, concaveVertices };
 }
