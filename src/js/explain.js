@@ -316,7 +316,7 @@ windowResized = function () {
   resizeCanvas(windowWidth, windowHeight);
 };
 
-function test_reflect_point() {
+function test_reflect_point() {  // functionnal
   let p = new Point(1, 0);
   let a = new Point(0, 0);
   let b = new Point(0, 1);
@@ -331,12 +331,17 @@ function test_reflect_point() {
   }
 }
 
-function test_update_polygon(old_polygon, new_polygon, toDelete, toAdd) {
+function test_update_polygon(old_polygon, new_polygon, toDelete, toAdd) {  // functionnal
   // first simple check, not enough to prove the polygon updated correctly
   if (JSON.stringify(old_polygon) === JSON.stringify(new_polygon)) {
     console.log("ERROR : The polygon has not changed");
     return;
   }
+
+    console.log("Old Polygon:", old_polygon);
+    console.log("New Polygon:", new_polygon);
+    console.log("Vertices to Delete:", toDelete);
+    console.log("Vertices to Add:", toAdd);
 
   // mode advanced check
   for (let pt of new_polygon) {
@@ -363,28 +368,19 @@ function test_update_polygon(old_polygon, new_polygon, toDelete, toAdd) {
   console.log("GOOD : the polygon has been updated correctly")
 }
 
-function convexify() {
-
-  let old_points = [...points];  // static copy
-
-  console.log("old points :", old_points)
-  
+function convexify() {  // drawing not working
   console.log("convexifying...")
+
+  let old_points = [...points];  // static copy  
   let {reversedVertices, concaveVertices} = findReflexVertices(points);
   updatePolygon(points, reversedVertices, concaveVertices);
-  console.log("Concave Vertices:", concaveVertices);
-  console.log("Reversed Vertices:", reversedVertices);
-  // the reversed points are already added wtf ?
-  // thats wierd 
-  console.log("new points", points)
-
   test_update_polygon(old_points, points, concaveVertices, reversedVertices);
 
-  /* refresh the displayed polygon here */
+  /* refresh the displayed polygon here */  // stil not functionnal bcs of old code
   let _polygon_ = new Polygon(points)
   // console.log("list of points :", polygon_points);
   // console.log("object polygon :", _polygon_);
-  _polygon_.draw();  // dont work
+  // _polygon_.draw();  // dont work
   // draw();  // dont work
   // for (let t = 0; t < triangles.length; t++) {
   //   triangles[t].draw();
@@ -392,7 +388,7 @@ function convexify() {
 
 }
 
-function updatePolygon(polygon, reversedVertices, concaveVertices) {
+function updatePolygon(polygon, reversedVertices, concaveVertices) {  // functionnal
   // Parameters polygon, reversedVertices, concaveVertices : list of Point
   
   // Remove concave vertices from the polygon
@@ -410,10 +406,10 @@ function updatePolygon(polygon, reversedVertices, concaveVertices) {
   }
 }
 
-function convexHull(points) {
+function convexHull(points) {  // functionnal
   // Helper function to calculate the convex hull using Andrew's monotone chain algorithm
   // Parameter points : list of Point
-  points.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+  points.sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
   let lower = [];
   for (let p of points) {
     while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
@@ -443,7 +439,7 @@ function reflectPoint(p, a, b) {  // tested and functionnal
   return new_p
 }
 
-function findReflexVertices(polygon) {  // tested and looks functionnal
+function findReflexVertices(polygon) {  // something's off 
   // Parameter polygon : list of Point
   
   // here we find the reflex vertices -- ok
@@ -474,7 +470,7 @@ function findReflexVertices(polygon) {  // tested and looks functionnal
     if (nearestEdge) {
       return reflectPoint(vertex, nearestEdge[0], nearestEdge[1]);
     }
-    else {
+    else {  // not a pb anymore
       console.log("nearestEdge is null, \
         either there is no concave ear or the algo is fcked up")
     }
