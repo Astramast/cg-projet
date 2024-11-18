@@ -375,6 +375,7 @@ function convexify() {  // drawing not working
   let {reversedVertices, concaveVertices} = findReflexVertices(points);
   updatePolygon(points, reversedVertices, concaveVertices);
   test_update_polygon(old_points, points, concaveVertices, reversedVertices);
+  // one last pb is that it doesnt choose the right hull edge
 
   /* refresh the displayed polygon here */  // stil not functionnal bcs of old code
   let _polygon_ = new Polygon(points)
@@ -439,10 +440,10 @@ function reflectPoint(p, a, b) {  // tested and functionnal
   return new_p
 }
 
-function findReflexVertices(polygon) {  // something's off 
+function findReflexVertices(polygon) {
   // Parameter polygon : list of Point
   
-  // here we find the reflex vertices -- ok
+  // here we find the reflex vertices
   let concaveVertices = [];
   for (let i = 0; i < polygon.length; i++) {
     let prev = polygon[(i - 1 + polygon.length) % polygon.length];
@@ -472,7 +473,7 @@ function findReflexVertices(polygon) {  // something's off
     }
     else {  // not a pb anymore
       console.log("nearestEdge is null, \
-        either there is no concave ear or the algo is fcked up")
+        either there is no concave ear or the algo wrong")
     }
   });
 
