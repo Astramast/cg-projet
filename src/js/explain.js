@@ -475,12 +475,16 @@ function findReflexVertices(polygon) {
     }
   }
 
-  // here we find the nearest edge of the convex hull
-  let hull = convexHull(polygon);
   let reversedVertices = [];
-  for (let vertex of concaveVertices) {
-    let nearest_edge = findNearestEdge(vertex, hull);
-    let reversed_point = reflectPoint(vertex, nearest_edge[0], nearest_edge[1]);
+  
+  let first = polygon.indexOf(concaveVertices[0]);
+  let last = polygon.indexOf(concaveVertices[concaveVertices.length -1]);
+  
+  let prev = polygon[(first -1 + polygon.length) % polygon.length]
+  let next = polygon[(last +1) % polygon.length]
+
+  for (let current of concaveVertices) {
+    let reversed_point = reflectPoint(current, prev, next)
     reversedVertices.push(reversed_point);
   }
 
