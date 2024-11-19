@@ -368,13 +368,48 @@ function test_update_polygon(old_polygon, new_polygon, toDelete, toAdd) {  // fu
   console.log("GOOD : the polygon has been updated correctly")
 }
 
-function convexify() {  // drawing not working
-  console.log("convexifying...")
+function isEqual(polygon, hull) {
+  let compare = polygon.map(() => false);
+  for (let pt of polygon) {
+    for (let pt2 of hull) {
+      if (pt == pt2) {
+        compare[polygon.indexOf(pt)] = true;
+      }
+    }
+  }
+  for (cp of compare) {
+    if (cp == false) {
+      return false;
+    }
+  }
+  return true;
+}
 
+function alreadyConvex(polygon) {
+  let alreadyConvex = false;
+  let hull = computeConvexHull(polygon)
+  if (isEqual(polygon, hull)){
+    alreadyConvex = true;
+  }
+  console.log("hull", hull);
+  console.log("polygon", polygon);
+  return alreadyConvex
+}
+
+function convexify() {  // drawing not working
+  
   let old_points = [...points];  // static copy  
+  if (alreadyConvex(old_points)) {
+    console.log("already convex")
+    return;
+  } else {
+  console.log("not convex")
+  console.log("convexifying...")
+  }
+
   let {reversedVertices, concaveVertices} = findReflexVertices(points);
   updatePolygon(points, reversedVertices, concaveVertices);
-  test_update_polygon(old_points, points, concaveVertices, reversedVertices);
+  // test_update_polygon(old_points, points, concaveVertices, reversedVertices);
   // one last pb is that it doesnt choose the right hull edge
 
   /* refresh the displayed polygon here */  // stil not functionnal bcs of old code
@@ -405,30 +440,6 @@ function updatePolygon(polygon, reversedVertices, concaveVertices) {  // functio
   for (let rv of reversedVertices) {
     polygon.push(new Point(rv.x, rv.y));
   }
-}
-
-function convexHull(points) {  // functionnal
-  // Helper function to calculate the convex hull using Andrew's monotone chain algorithm
-  // Parameter points : list of Point
-  points.sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
-  let lower = [];
-  for (let p of points) {
-    while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
-      lower.pop();
-    }
-    lower.push(p);
-  }
-  let upper = [];
-  for (let i = points.length - 1; i >= 0; i--) {
-    let p = points[i];
-    while (upper.length >= 2 && orientation_determinant(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
-      upper.pop();
-    }
-    upper.push(p);
-  }
-  upper.pop();
-  lower.pop();
-  return lower.concat(upper);
 }
 
 function reflectPoint(p, a, b) {  // tested and functionnal
@@ -481,7 +492,7 @@ function prevNextAlgo(polygon, concaveVertices) {
 function nearestEdgeAlgo(polygon, concaveVertices) {
   // we reflect the point by symmetry with the nearest edge of the convex hull
   // Parameter polygon, concaveVertices : list of Point
-  let hull = convexHull(polygon);
+  let hull = computeConvexHull(polygon);
   let reversedVertices = [];
   for (let vertex of concaveVertices) {
     let nearest_edge = findNearestEdge(vertex, hull);
