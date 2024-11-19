@@ -9,6 +9,14 @@ class Line {
 		v.mult(Math.max(windowWidth, windowHeight));
 		line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
 	}
+	isEqual(line){
+		return (this.a.orientationDeterminant(this.b, line.a) == 0 && this.a.orientationDeterminant(this.b, line.b) == 0)
+	}
+	getYFromX(x) {
+		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
+		let c = this.a.y - m * this.a.x;
+		return m * x + c;
+	}
 }
 
 class SemiLine {

@@ -48,7 +48,7 @@ class ConvexPolygon {
 			p_i = this.points[i];
 			prevPi = vertices[p_i][0];
 			nextPi = vertices[p_i][1];
-			
+			prevVCell = fpvd.getCellFromSite(prevPi);
 		}
 	}
 }
