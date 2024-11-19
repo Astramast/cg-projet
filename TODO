@@ -1,0 +1,23 @@
+findAB(hull, polygon)
+
+list de hull 
+list de points aka polygon
+list de pt concave
+list vide
+
+for pt in points
+  if pt not in concave
+    vide.push(pt)
+    continue
+  else
+    chercher ds points (iterer a gch et dr) pr trouver les pt ds hull
+    dont faut faire la simetry (pr chq pt ds hull on retrouve l index ds poinnts)
+    simetry de pt par la droite des 2 pts de la hull
+    vide.push(pt')
+
+
+
+Symmetry(A, B)
+voir feuille arthur
+
+une fonction qui fait l intersection de 2 droite()
