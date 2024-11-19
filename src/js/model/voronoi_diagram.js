@@ -3,7 +3,6 @@ class VoronoiDiagram {
 		this.points = points;
 		this.lines = lines;
 	}
-
 	draw() {
 		for (p of this.points){
 			p.draw();
@@ -12,6 +11,7 @@ class VoronoiDiagram {
 			l.draw();
 		}
 	}
+	
 }
 
 window.VoronoiDiagram = VoronoiDiagram;

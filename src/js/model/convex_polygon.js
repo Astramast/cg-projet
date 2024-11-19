@@ -8,15 +8,23 @@ class ConvexPolygon {
 		}
 	}
 	getStartingFPVD(p, q, r) {
-		return computeVoronoiCell(p, q, r);
+		pCell = getVoronoiCell3(p, q, r);
+		qCell = getVoronoiCell3(q, r, p);
+		lines = [pCell.semiLine1, pCell.semiLine2];
+		if (pCell.semiLine1.b.x == qCell.semiLine1.b.x && pCell.semiLine1.b.y == qCell.semiLine1.b.y) {
+			lines.push(qCell.semiLine2);
+		} else {
+			lines.push(qCell.semiLine1);
+		}
+		return VoronoiDiagram(pCell.semiLine1.a, lines);
 	}
 	//Farthest-Point Voronoi Diagram
 	getFPVD() {
 		if (this.points.length <= 1) {
-			return Tree(this.points, null);
+			return VoronoiDiagram(this.points, null);
 		}
 		if (this.points.length == 2) {
-			return Tree(this.points, perpendicularBisector(this.points[0], this.points[1]));
+			return VoronoiDiagram(this.points, perpendicularBisector(this.points[0], this.points[1]));
 		}
 		if (this.points.length == 3) {
 			return getStartingFPVD(this.points[0], this.points[1], this.points[2]);
