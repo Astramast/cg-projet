@@ -24,7 +24,7 @@ function computeConvexHull(points) {
 
 	upper.pop();
 	lower.pop();
-	return ConvexPolygon(lower.concat(upper));
+	return lower.concat(upper);
 }
 
 window.computeConvexHull = computeConvexHull;
