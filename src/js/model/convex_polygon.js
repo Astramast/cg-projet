@@ -8,16 +8,7 @@ class ConvexPolygon {
 		}
 	}
 	getStartingFPVD(p, q, r) {
-		c1 = computeVoronoiCell(p, [p, q, r]);
-		c2 = computeVoronoiCell(q, [p, q, r]);
-		semilines = [c1.semiline1, c1.semiline2];
-		if c1.semiline1.isEqual(c2.semiline1) {
-			semilines.push(c2.semiline2);
-		}
-		else {
-			semilines.push(c2.semiline1);
-		}
-		return VoronoiDiagram([semilines[0].a], semilines);
+		return computeVoronoiCell(p, q, r);
 	}
 	//Farthest-Point Voronoi Diagram
 	getFPVD() {
@@ -30,7 +21,23 @@ class ConvexPolygon {
 		if (this.points.length == 3) {
 			return getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 		}
-		throw NotImplementedError();//TODO
+		let copy = this.points.slice();
+		let vertices = {};
+		for (let i = 0; i < this.points.length - 3; i++) {
+			const randomIndex = Math.floor(Math.random() * copy.length);
+			const randomPoint = copy[randomIndex];
+			const prevPoint = copy[(randomIndex - 1 + copy.length) % copy.length];
+			const nextPoint = copy[(randomIndex + 1) % copy.length];
+			vertices[randomPoint] = [prevPoint, nextPoint];
+			copy.splice(randomIndex, 1);
+		}
+		let fpvd = this.getStartingFPVD(copy[0], copy[1], copy[2]);
+		for (let i = 3; i < this.points.length; i++) {
+			p_i = this.points[i];
+			prevPi = vertices[p_i][0];
+			nextPi = vertices[p_i][1];
+			
+		}
 	}
 }
 
