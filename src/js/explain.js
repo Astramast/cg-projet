@@ -461,7 +461,8 @@ function findNearestEdge(vertex, hull) {
     }
 }
 
-function reflectAlgo(polygon, concaveVertices) {
+function prevNextAlgo(polygon, concaveVertices) {
+  // Parameter polygon, concaveVertices : list of Point
   let reversedVertices = [];
   
   let first = polygon.indexOf(concaveVertices[0]);
@@ -477,7 +478,18 @@ function reflectAlgo(polygon, concaveVertices) {
   return reversedVertices;
 }
 
-
+function nearestEdgeAlgo(polygon, concaveVertices) {
+  // we reflect the point by symmetry with the nearest edge of the convex hull
+  // Parameter polygon, concaveVertices : list of Point
+  let hull = convexHull(polygon);
+  let reversedVertices = [];
+  for (let vertex of concaveVertices) {
+    let nearest_edge = findNearestEdge(vertex, hull);
+    let reversed_point = reflectPoint(vertex, nearest_edge[0], nearest_edge[1]);
+    reversedVertices.push(reversed_point);
+  }
+  return reversedVertices;
+}
 
 function findReflexVertices(polygon) {
   // Parameter polygon : list of Point
@@ -493,7 +505,8 @@ function findReflexVertices(polygon) {
     }
   }
 
-  let reversedVertices = reflectAlgo(polygon, concaveVertices);
+  // let reversedVertices = prevNextAlgo(polygon, concaveVertices);
+  let reversedVertices = nearestEdgeAlgo(polygon, concaveVertices);
 
   return { reversedVertices, concaveVertices };
 }
