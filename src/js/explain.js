@@ -39,6 +39,9 @@ class Point extends Shape {
     }
     return false;
   }
+  isEqual(p) {
+    return this.x == p.x && this.y == p.y;
+  }
 }
 
 class Line extends Shape {
@@ -316,6 +319,137 @@ windowResized = function () {
   resizeCanvas(windowWidth, windowHeight);
 };
 
+function convexify() {  // drawing not working  
+  let old_points = [...points];  // static copy  
+  // let old_points = points.slice();
+  if (alreadyConvex(old_points)) {
+    console.log("already convex");
+    return;
+  } else {
+    console.log("not convex");
+    console.log("convexifying...");
+  }
+
+  let new_polygon = newAlgo(points);
+  console.log("new polygon :", new_polygon);
+  console.log("old polygon :", old_points);
+  points = new_polygon;
+
+  // let {reversed_vertices, concave_vertices} = findReflexVertices(points);
+  // updatePolygon(points, reversed_vertices, concave_vertices);
+  // test_update_polygon(old_points, points, concave_vertices, reversed_vertices);
+  // one big pb is that it doesnt choose the right hull edge
+
+  /* refresh the displayed polygon here */  // stil not functionnal bcs of old code
+  // let _polygon_ = new Polygon(points)
+  // console.log("list of points :", polygon_points);
+  // console.log("object polygon :", _polygon_);
+  // _polygon_.draw();  // dont work
+  // draw();  // dont work
+  // for (let t = 0; t < triangles.length; t++) {
+  //   triangles[t].draw();
+  // }
+
+}
+
+function alreadyConvex(polygon) {
+  let alreadyConvex = false;
+  let hull = computeConvexHull(polygon)
+  if (polygon.length == hull.length) {
+    alreadyConvex = true;
+  }
+  console.log("hull", hull);
+  console.log("polygon", polygon);
+  return alreadyConvex
+}
+
+function reflectPoint(c, a, b) {
+  // voir feuille arthur, jongler avec les vecteurs
+  
+  let v = new Point(b.x - a.x, b.y - a.y);
+  let v_ = new Point(-v.y, v.x);
+
+  let M = ((b.y - a.y) / (b.x - a.x))
+  let C = (a.y - ((b.y - a.y) / (b.x - a.x)) * a.x)
+  let M_ = ((v_.y - c.y) / (v_.x - c.x))
+  let C_ = (c.y - ((v_.y - c.y) / (v_.x - c.x)) * c.x)
+
+  let y_mX_c = (X) => M * X + C;
+  // let y_mX_c_prime = (X) => ((v_.y - c.y) / (v_.x - c.x)) * X + (c.y - ((v_.y - c.y) / (v_.x - c.x)) * c.x);
+
+  let X = (C_ - C) / (M - M_)
+  let Y = y_mX_c(X)
+  let mid = new Point(X, Y)
+  let c_sym = new Point(2*mid.x - c.x, 2*mid.y - c.y) 
+
+  return c_sym;
+}
+
+function findInHull(hull, polygon, pt) {
+  let null_point = new Point(0, 0);
+  let a = new Point(0, 0);
+  let b = new Point(0, 0);
+  let pt_i = polygon.indexOf(pt);
+  let ln = polygon.length;
+
+  for (let i=1; i<ln; i++) {  // itere vers la gch
+    let j = (pt_i - i + ln) % ln;
+    if (hull.includes(polygon[j])) {
+      a = polygon[j];
+      break;
+    }
+  }
+
+  for (let i=1; i<ln; i++) {  // itere vers la dr
+    let j = (pt_i + i) % ln;
+    if (hull.includes(polygon[j])) {
+      b = polygon[j];
+      break;
+    }
+  }
+    if (a.isEqual(null_point) || b.isEqual(null_point)){
+      console.log("ERROR : a, b not found in hull");
+    }
+  return {a, b};
+}
+
+function findConcaveVertices(polygon) {  // NOT functionnal
+  // here we find the reflex vertices
+  let concave_vertices = [];
+  for (let i = 0; i < polygon.length; i++) {
+    let prev = polygon[(i - 1 + polygon.length) % polygon.length];
+    let curr = polygon[i];
+    let next = polygon[(i + 1) % polygon.length];
+    if (orientation_determinant(prev, curr, next) > 0) {
+      concave_vertices.push(curr);
+    }
+  }
+  console.log(concave_vertices)
+  return concave_vertices;
+}
+
+function newAlgo(polygon) {
+  let hull = computeConvexHull(polygon);
+  let concaves = findConcaveVertices(polygon);
+  let vide = [];
+
+  for (let pt of polygon) {
+    if (!concaves.includes(pt)) {
+      vide.push(pt);
+      continue;
+    } else {
+      let {a, b} = findInHull(hull, polygon, pt);  // done
+      let reversed_point = reflectPoint(pt, a, b);  // to be done
+      vide.push(reversed_point);
+    }
+  }
+
+  return vide;
+}
+
+
+//////////////TEST///////////////////
+
 function test_reflect_point() {  // functionnal
   let p = new Point(1, 0);
   let a = new Point(0, 0);
@@ -368,32 +502,14 @@ function test_update_polygon(old_polygon, new_polygon, toDelete, toAdd) {  // fu
   console.log("GOOD : the polygon has been updated correctly")
 }
 
-function convexify() {  // drawing not working
-  console.log("convexifying...")
 
-  let old_points = [...points];  // static copy  
-  let {reversedVertices, concaveVertices} = findReflexVertices(points);
-  updatePolygon(points, reversedVertices, concaveVertices);
-  test_update_polygon(old_points, points, concaveVertices, reversedVertices);
-  // one last pb is that it doesnt choose the right hull edge
+///////////////////////// DEPRECATED /////////////////////////////////
 
-  /* refresh the displayed polygon here */  // stil not functionnal bcs of old code
-  let _polygon_ = new Polygon(points)
-  // console.log("list of points :", polygon_points);
-  // console.log("object polygon :", _polygon_);
-  // _polygon_.draw();  // dont work
-  // draw();  // dont work
-  // for (let t = 0; t < triangles.length; t++) {
-  //   triangles[t].draw();
-  // }
-
-}
-
-function updatePolygon(polygon, reversedVertices, concaveVertices) {  // functionnal
-  // Parameters polygon, reversedVertices, concaveVertices : list of Point
+function updatePolygon(polygon, reversed_vertices, concave_vertices) {  // functionnal
+  // Parameters polygon, reversed_vertices, concave_vertices : list of Point
   
   // Remove concave vertices from the polygon
-  for (let del of concaveVertices) {
+  for (let del of concave_vertices) {
     for (let pt of polygon) {
       if (pt.x == del.x && pt.y == del.y) {
         polygon.splice(polygon.indexOf(pt), 1);
@@ -402,45 +518,43 @@ function updatePolygon(polygon, reversedVertices, concaveVertices) {  // functio
   }
 
   // Add the reflected vertices to the polygon
-  for (let rv of reversedVertices) {
+  for (let rv of reversed_vertices) {
     polygon.push(new Point(rv.x, rv.y));
   }
 }
 
-function convexHull(points) {  // functionnal
-  // Helper function to calculate the convex hull using Andrew's monotone chain algorithm
-  // Parameter points : list of Point
-  points.sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
-  let lower = [];
-  for (let p of points) {
-    while (lower.length >= 2 && orientation_determinant(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
-      lower.pop();
-    }
-    lower.push(p);
+function prevNextAlgo(polygon, concave_vertices) {  // deprecated
+  // Parameter polygon, concave_vertices : list of Point
+  let reversed_vertices = [];
+  
+  let first = polygon.indexOf(concave_vertices[0]);
+  let last = polygon.indexOf(concave_vertices[concave_vertices.length -1]);
+  
+  let prev = polygon[(first -1 + polygon.length) % polygon.length]
+  let next = polygon[(last +1) % polygon.length]
+
+  for (let current of concave_vertices) {
+    let reversed_point = reflectPoint(current, prev, next)
+    reversed_vertices.push(reversed_point);
   }
-  let upper = [];
-  for (let i = points.length - 1; i >= 0; i--) {
-    let p = points[i];
-    while (upper.length >= 2 && orientation_determinant(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
-      upper.pop();
-    }
-    upper.push(p);
-  }
-  upper.pop();
-  lower.pop();
-  return lower.concat(upper);
+  return reversed_vertices;
 }
 
-function reflectPoint(p, a, b) {  // tested and functionnal
-  // Helper function to reflect a point across a line segment
-  // parametes p, a, b : Point
-  let dx = Math.abs(b.x - a.x);
-  let dy = Math.abs(b.y - a.y);
-  let new_p = new Point(p.x + dx, p.y + dy)
-  return new_p
+function nearestEdgeAlgo(polygon, concave_vertices) {  // deprecated
+  // we reflect the point by symmetry with the nearest edge of the convex hull
+  // Parameter polygon, concave_vertices : list of Point
+  let hull = computeConvexHull(polygon);
+  let reversed_vertices = [];
+  for (let vertex of concave_vertices) {
+    let nearest_edge = findNearestEdge(vertex, hull);
+    let reversed_point = reflectPoint(vertex, nearest_edge[0], nearest_edge[1]);
+    reversed_vertices.push(reversed_point);
+  }
+  return reversed_vertices;
 }
 
 function findNearestEdge(vertex, hull) {
+  // using square root is forbidden
   let minDist = Infinity;
     let nearestEdge = null;
     for (let i = 0; i < hull.length; i++) {
@@ -461,52 +575,70 @@ function findNearestEdge(vertex, hull) {
     }
 }
 
-function prevNextAlgo(polygon, concaveVertices) {
-  // Parameter polygon, concaveVertices : list of Point
-  let reversedVertices = [];
+// function findReflexVertices(polygon) {
+//   // Parameter polygon : list of Point
   
-  let first = polygon.indexOf(concaveVertices[0]);
-  let last = polygon.indexOf(concaveVertices[concaveVertices.length -1]);
+//   // here we find the reflex vertices
+//   let concave_vertices = [];
+//   let reversed_vertices = []
+//   for (let i = 0; i < polygon.length; i++) {
+//     let prev = polygon[(i - 1 + polygon.length) % polygon.length];
+//     let curr = polygon[i];
+//     let next = polygon[(i + 1) % polygon.length];
+//     if (orientation_determinant(prev, curr, next) > 0) {
+//       let reversed_point = reflectPoint(curr, prev, next);
+//       reversed_vertices.push(reversed_point);
+//       concave_vertices.push(curr);
+//     }
+//   }
+//   return { reversed_vertices, concave_vertices };
+// }
+
+// function findReflexVertices(polygon) {
+//   // Parameter polygon : list of Point
   
-  let prev = polygon[(first -1 + polygon.length) % polygon.length]
-  let next = polygon[(last +1) % polygon.length]
+//   // here we find the reflex vertices
+//   let concave_vertices = [];
+//   for (let i = 0; i < polygon.length; i++) {
+//     let prev = polygon[(i - 1 + polygon.length) % polygon.length];
+//     let curr = polygon[i];
+//     let next = polygon[(i + 1) % polygon.length];
+//     if (orientation_determinant(prev, curr, next) > 0) {
+//       concave_vertices.push(curr);
+//     }
+//   }
 
-  for (let current of concaveVertices) {
-    let reversed_point = reflectPoint(current, prev, next)
-    reversedVertices.push(reversed_point);
-  }
-  return reversedVertices;
-}
+//   // let reversed_vertices = prevNextAlgo(polygon, concave_vertices);
+//   // let reversed_vertices = nearestEdgeAlgo(polygon, concave_vertices);
+//   let reversed_vertices = newAlgo(polygon, concave_vertices);
 
-function nearestEdgeAlgo(polygon, concaveVertices) {
-  // we reflect the point by symmetry with the nearest edge of the convex hull
-  // Parameter polygon, concaveVertices : list of Point
-  let hull = convexHull(polygon);
-  let reversedVertices = [];
-  for (let vertex of concaveVertices) {
-    let nearest_edge = findNearestEdge(vertex, hull);
-    let reversed_point = reflectPoint(vertex, nearest_edge[0], nearest_edge[1]);
-    reversedVertices.push(reversed_point);
-  }
-  return reversedVertices;
-}
+//   return { reversed_vertices, concave_vertices };
+// }
 
-function findReflexVertices(polygon) {
-  // Parameter polygon : list of Point
-  
-  // here we find the reflex vertices
-  let concaveVertices = [];
-  for (let i = 0; i < polygon.length; i++) {
-    let prev = polygon[(i - 1 + polygon.length) % polygon.length];
-    let curr = polygon[i];
-    let next = polygon[(i + 1) % polygon.length];
-    if (orientation_determinant(prev, curr, next) > 0) {
-      concaveVertices.push(curr);
-    }
-  }
 
-  // let reversedVertices = prevNextAlgo(polygon, concaveVertices);
-  let reversedVertices = nearestEdgeAlgo(polygon, concaveVertices);
+// function reflectPoint(p, a, b) {  // tested and functionnal
+//   // Helper function to reflect a point across a line segment
+//   // parametes p, a, b : Point
+//   let dx = Math.abs(b.x - a.x);
+//   let dy = Math.abs(b.y - a.y);
+//   let new_p = new Point(p.x + dx, p.y + dy)
+//   return new_p
+// }
 
-  return { reversedVertices, concaveVertices };
-}
+
+// function isEqual(polygon, hull) {
+//   let compare = polygon.map(() => false);
+//   for (let pt of polygon) {
+//     for (let pt2 of hull) {
+//       if (pt == pt2) {
+//         compare[polygon.indexOf(pt)] = true;
+//       }
+//     }
+//   }
+//   for (cp of compare) {
+//     if (cp == false) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
