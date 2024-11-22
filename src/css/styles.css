@@ -9,16 +9,24 @@ body {
 	text-align: center;
 }
 
-header {
+
+.title {
 	background-color: #CB9DF0;
+	color: #4B0082;
 	padding: 20px;
 	border-radius: 12px;
 	margin-bottom: 20px;
+	font-size: 50px;
 }
 
 h1 {
+	background-color: #ffd6b0;
 	color: #4B0082;
 	margin: 0;
+	padding: 20px;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	color: #8E24AA;
 }
 
 .category {
