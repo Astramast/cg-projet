@@ -6,8 +6,21 @@
 	<title>Welcome to Optimal Curves</title>
 	<link href="css/styles.css" rel="stylesheet">
 
+	<!-- --- Libraries --- -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
+
+	<!-- --- Models--- -->
+	<script src="js/model/point.js"></script>
+	<script src="js/model/polygon.js"></script>
+	<script src="js/model/convex_hull.js"></script>
+
+
+	<!-- --- Views --- -->
+	<script src="js/interactive_zone.js"></script>
+	<script src="js/view/button.js"></script>
+	<script src="js/view/CanvasUI.js"></script>
+	<script src="js/view/ConvexifyPolygonCanvasUI.js"></script>
 
     <!-- add other scripts here -->
 
@@ -18,7 +31,7 @@
 	</header>
 <main>
 
-	<h1> 🌟 Explaination of the Problem </h1>
+	<h1> 🌟 Explanation of the Problem </h1>
 
 	<h2> State the problem </h2>
 
@@ -30,9 +43,9 @@
 
 	<h2> Explain shortest curve is convex hull and largest is a cicrle </h2>
 
-	<div id="p5-sketch"></div>
+	<div id="convexify-polygon"></div>
 
-
+	<br>
 
 	<h1> 🔧 The Implementation </h1>
 
@@ -40,13 +53,13 @@
 
 	<p> whats is it</p>
 
-	<div id="p5-sketch"></div>
+	<div id="voronoi-diagram"></div>
 
 	<h2> Optimal Curve </h2>
 
 	<p> how it works </p>
 
-	<div id="p5-sketch"></div>
+	<div id="pq-curve"></div>
 
 
 

@@ -2,13 +2,11 @@
 
 body {
 	font-family: 'Fredoka', sans-serif;
-	background-color: #FFF9BF;
-	color: #333333;
+	background-color: #fff8ba;
 	margin: 0;
 	padding: 20px;
 	text-align: center;
 }
-
 
 .title {
 	background-color: #CB9DF0;
@@ -16,38 +14,18 @@ body {
 	padding: 20px;
 	border-radius: 12px;
 	margin-bottom: 20px;
-	font-size: 50px;
+	font-size: 40px;
+	font-weight: bold;
 }
 
 h1 {
-	background-color: #ffd6b0;
-	color: #4B0082;
-	margin: 0;
+	background-color: #ffd3ab;
+	color: #8E24AA;
 	padding: 20px;
 	border-radius: 12px;
-	margin-bottom: 20px;
-	color: #8E24AA;
+	margin: 0 0 20px;
 }
 
-.category {
-	background-color: #ffd6b0;
-	border: 2px solid #AB47BC;
-	border-radius: 15px;
-	padding: 20px;
-	margin: 15px;
-	cursor: pointer;
-	transition: transform 0.2s, background-color 0.3s;
-}
-
-.category:hover {
-	transform: scale(1.05);
-	background-color: #ffcb9c;
-}
-
-.category h2 {
-	margin: 0;
-	color: #8E24AA;
-}
 
 .styled-button {
 	font-family: 'Fredoka', sans-serif;
@@ -73,10 +51,6 @@ h1 {
 .styled-button:focus {
 	outline: none;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 0px 4px #AB47BC;
-}
-
-#clickable-area canvas {
-	border: 0px solid #CB9DF0;
 }
 
 .perimeter-text,
