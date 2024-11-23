@@ -23,16 +23,17 @@
 	<script src="js/model/VoronoiCell.js"></script>
 	<script src="js/model/VoronoiDiagram.js"></script>
 
-
 	<!-- --- Views --- -->
 	<script src="js/InteractiveZone.js"></script>
 	<script src="js/view/Button.js"></script>
 	<script src="js/view/CanvasUI.js"></script>
+	<script src="js/view/CauchyArmLemmaCanvasUI.js"></script>
 	<script src="js/view/ConvexifyPolygonCanvasUI.js"></script>
 	<script src="js/view/VoronoiDiagramCanvasUI.js"></script>
 	<script src="js/view/OptimalCurveCanvasUI.js"></script>
 
 	<!-- add other scripts here -->
+
 
 </head>
 <body>
@@ -56,14 +57,14 @@
 
 	<h1> 📖 Explanation of the Problem </h1>
 
-	<h3> Problem Statement </h3>
+	<h2> Problem Statement </h2>
 	<p>
 		Let \(S\) be a set of \(n > 2\) points in the plane, and let \(P > 0\) be a given value.
 		Among all the curves of perimeter \(P\) that enclose \(S\), which curve encloses the maximum area?
 		This question leads to a fascinating interplay between convex geometry and optimization.
 	</p>
 
-	<h3> Key Insight: Cauchy’s Arm Lemma </h3>
+	<h2> Key Insight: Cauchy’s Arm Lemma </h2>
 	<p>
 		Cauchy’s Arm Lemma provides an important geometric result that plays a critical role in solving the problem.
 		The lemma states:
@@ -83,7 +84,11 @@
 		This result is crucial in understanding why optimal solutions to our problem are convex.
 	</p>
 
-	<h3> Convex vs. Non-Convex Shapes </h3>
+	<h3> 🎨 Draw a convex polygon and modify the angles to see Cauchy’s Arm Lemma in action: </h3>
+	<div id="cauchy-arm-lemma"></div>
+	<br>
+
+	<h2> Convex vs. Non-Convex Shapes </h2>
 	<p>
 		It is important to note that the shortest enclosing curve for a given set of points is always the convex hull,
 		whereas the largest area is enclosed by a circle. This observation forms the basis for analyzing the optimal
@@ -100,24 +105,24 @@
 
 	<h1> 🔧 The Implementation </h1>
 
-	<h3> Voronoi Diagram </h3>
+	<h2> Voronoi Diagram </h2>
 	<p>
 		A Voronoi diagram is a partition of the plane into regions based on the distance to a given set of points.
 		Each region corresponds to all locations closer to one particular point than to any other.
 		Voronoi diagrams are widely used in computational geometry for nearest-neighbor queries and shape optimization.
 	</p>
-	<h2> 🎨 Draw points to generate a Voronoi diagram: </h2>
+	<h3> 🎨 Draw points to generate a Voronoi diagram: </h3>
 	<div id="voronoi-diagram"></div>
 	<br>
 
-	<h3> Optimal Curve </h3>
+	<h2> Optimal Curve </h2>
 	<p>
 		The optimal curve is computed by balancing the constraints of a fixed perimeter \(P\) and the requirement to
 		enclose the maximum area.
 		This involves iterative adjustments to ensure convexity and area maximization, which can be visualized
 		interactively:
 	</p>
-	<h2> 🎨 Draw points, set the perimeter, and visualize the optimal curve: </h2>
+	<h3> 🎨 Draw points, set the perimeter, and visualize the optimal curve: </h3>
 	<div id="optimal-curve"></div>
 	<br>
 
