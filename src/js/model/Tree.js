@@ -7,6 +7,7 @@ class Tree {
 			this.root = vertices[0];
 		}
 	}
+
 	draw() {
 		for (v of this.vertices) {
 			v.draw();
@@ -16,6 +17,3 @@ class Tree {
 		}
 	}
 }
-
-window.Tree = Tree
-

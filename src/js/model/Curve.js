@@ -37,5 +37,3 @@ class Curve {
 		return createVector(x, y);
 	}
 }
-
-window.Curve = Curve;

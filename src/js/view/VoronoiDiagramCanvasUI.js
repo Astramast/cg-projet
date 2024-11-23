@@ -4,6 +4,10 @@ class VoronoiDiagramCanvasUI extends CanvasUI {
 		this.points = [];
 	}
 
+	setup() {
+
+	}
+
 	draw() {
 		this.p.background("#CB9DF0");
 
@@ -22,7 +26,4 @@ class VoronoiDiagramCanvasUI extends CanvasUI {
 	}
 
 
-	windowResized() {
-		this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight);
-	}
 }

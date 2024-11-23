@@ -11,14 +11,22 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
 
 	<!-- --- Models--- -->
-	<script src="js/model/point.js"></script>
-	<script src="js/model/polygon.js"></script>
-	<script src="js/model/convex_hull.js"></script>
+	<script src="js/model/Curve.js"></script>
+	<script src="js/model/ClosedCurve.js"></script>
+	<script src="js/model/ConvexHull.js"></script>
+	<script src="js/model/ConvexPolygon.js"></script>
+	<script src="js/model/Lines.js"></script>
+	<script src="js/model/Point.js"></script>
+	<script src="js/model/Polygon.js"></script>
+	<script src="js/model/PQCurve.js"></script>
+	<script src="js/model/Tree.js"></script>
+	<script src="js/model/VoronoiCell.js"></script>
+	<script src="js/model/VoronoiDiagram.js"></script>
 
 
 	<!-- --- Views --- -->
 	<script src="js/InteractiveZone.js"></script>
-	<script src="js/view/button.js"></script>
+	<script src="js/view/Button.js"></script>
 	<script src="js/view/CanvasUI.js"></script>
 	<script src="js/view/ConvexifyPolygonCanvasUI.js"></script>
 	<script src="js/view/VoronoiDiagramCanvasUI.js"></script>
@@ -33,51 +41,97 @@
 </header>
 <main>
 
-	<h1> 🌟 Explanation of the Problem </h1>
+	<h1> 🌟 Introduction </h1>
 
-	<h2> State the problem </h2>
+	<p>
+		In the field of geometry, one of the fundamental problems is understanding how shapes can maximize certain
+		properties under given constraints.
+		For example, it is well-known that, among all curves with a fixed perimeter, the circle encloses the maximum
+		area.
+		This principle has profound implications in mathematics, physics, and engineering. Below is an image
+		illustrating this concept:
+	</p>
+	<!-- Add an image or canvas for a circle illustration -->
+	<div id="circle-illustration"></div>
 
-	<p> yo </p>
+	<h1> 📖 Explanation of the Problem </h1>
 
-	<br>
-	<h2> Cauchy arm lemma </h2>
+	<h3> Problem Statement </h3>
+	<p>
+		Let \(S\) be a set of \(n > 2\) points in the plane, and let \(P > 0\) be a given value.
+		Among all the curves of perimeter \(P\) that enclose \(S\), which curve encloses the maximum area?
+		This question leads to a fascinating interplay between convex geometry and optimization.
+	</p>
 
-	<p> yo </p>
+	<h3> Key Insight: Cauchy’s Arm Lemma </h3>
+	<p>
+		Cauchy’s Arm Lemma provides an important geometric result that plays a critical role in solving the problem.
+		The lemma states:
+	</p>
+	<blockquote>
+		Let \(Q = (v_0, v_1, \dots, v_k, v_0)\) be a convex polygon where each consecutive pair of vertices is connected
+		by an edge \(e_i = v_{i-1}v_i\),
+		and where the internal angle at vertex \(v_i\) between \(e_i\) and \(e_{i+1}\) (modulo \(k\)) is \(\theta_i\).
+		If we remove the edge \(v_kv_0\) from \(Q\) and increase the value of some nonempty subset of the angles
+		\(\theta_i\)
+		while keeping the length of all remaining edges fixed and every \(\theta_i \leq \pi\),
+		then the distance between the endpoints \(v_0\) and \(v_k\) strictly increases.
+	</blockquote>
+	<p>
+		In simpler terms, modifying the angles of a convex shape while preserving the edge lengths can increase the
+		distance between certain points.
+		This result is crucial in understanding why optimal solutions to our problem are convex.
+	</p>
 
-	<br>
-	<h2> Explain shortest curve is convex hull and largest is a cicrle </h2>
-
-	<br>
+	<h3> Convex vs. Non-Convex Shapes </h3>
+	<p>
+		It is important to note that the shortest enclosing curve for a given set of points is always the convex hull,
+		whereas the largest area is enclosed by a circle. This observation forms the basis for analyzing the optimal
+		shape for a given perimeter \(P\).
+	</p>
+	<h2> Convexity Insight </h2>
+	<p>
+		Given a number \(P > 0\) and a set of points \(S\), any \((P, S)\)-curve of maximum area must be convex.
+		To explore this property interactively, consider the following visualization:
+	</p>
+	<h3> 🎨 Draw a non-convex polygon and convexify it to see this principle in action: </h3>
 	<div id="convexify-polygon"></div>
+	<br>
 
-	<br>
-	<br>
 	<h1> 🔧 The Implementation </h1>
 
-	<h2> Voronoi Diagram </h2>
-
-	<p> whats is it</p>
-
-	<br>
+	<h3> Voronoi Diagram </h3>
+	<p>
+		A Voronoi diagram is a partition of the plane into regions based on the distance to a given set of points.
+		Each region corresponds to all locations closer to one particular point than to any other.
+		Voronoi diagrams are widely used in computational geometry for nearest-neighbor queries and shape optimization.
+	</p>
+	<h2> 🎨 Draw points to generate a Voronoi diagram: </h2>
 	<div id="voronoi-diagram"></div>
-
 	<br>
-	<br>
-	<h2> Optimal Curve </h2>
 
-	<p> how it works </p>
-
-	<br>
+	<h3> Optimal Curve </h3>
+	<p>
+		The optimal curve is computed by balancing the constraints of a fixed perimeter \(P\) and the requirement to
+		enclose the maximum area.
+		This involves iterative adjustments to ensure convexity and area maximization, which can be visualized
+		interactively:
+	</p>
+	<h2> 🎨 Draw points, set the perimeter, and visualize the optimal curve: </h2>
 	<div id="optimal-curve"></div>
-
 	<br>
-	<br>
-	<h1>🔍 Hardness Results</h1>
 
-	<p> Explain </p>
+	<h1> 🔍 Hardness Results </h1>
 
+	<p>
+		Finally, solving this problem is computationally challenging due to its combinatorial nature.
+		The problem of finding the optimal curve that maximizes the enclosed area while adhering to the given
+		constraints
+		requires sophisticated algorithms and mathematical insights. Below, we explore some theoretical limitations and
+		practical challenges of these computations.
+	</p>
 
-	<br>
 </main>
+
 </body>
 </html>

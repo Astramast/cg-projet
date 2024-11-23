@@ -1,33 +1,48 @@
 class Line {
-	constructor(a,b){
+	constructor(a, b) {
 		this.a = a
 		this.b = b
 	}
-	draw () {
+
+	draw() {
 		v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
 		v.normalize();
 		v.mult(Math.max(windowWidth, windowHeight));
 		line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
 	}
-	isEqual(line){
+
+	isEqual(line) {
 		return (this.a.orientationDeterminant(this.b, line.a) == 0 && this.a.orientationDeterminant(this.b, line.b) == 0)
 	}
+
 	getYFromX(x) {
 		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
 		let c = this.a.y - m * this.a.x;
 		return m * x + c;
 	}
+
+	getIntersection(otherLine) {
+		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
+		let c = this.a.y - m * this.a.x;
+		let n = (otherLine.b.y - otherLine.a.y) / (otherLine.b.x - otherLine.a.x);
+		let d = otherLine.a.y - n * otherLine.a.x;
+		let x = (d - c) / (m - n);
+		let y = m * x + c;
+		return new Point(x, y);
+	}
 }
 
 class SemiLine {
-	constructor(a,b){
+	constructor(a, b) {
 		this.a = a
 		this.b = b
 	}
-	isEqual(semiline){
+
+	isEqual(semiline) {
 		return this.a.x == semiline.a.x && this.a.y == semiline.a.y && this.b.orientationDeterminant(this.a, semiline.b) == 0;
 	}
-	draw () {
+
+	draw() {
 		v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
 		v.normalize();
 		v.mult(Math.max(windowWidth, windowHeight));
@@ -36,11 +51,12 @@ class SemiLine {
 }
 
 class Segment {
-	constructor(a,b){
+	constructor(a, b) {
 		this.a = a
 		this.b = b
 	}
-	draw () {
+
+	draw() {
 		line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 }
@@ -84,13 +100,3 @@ function intersectSegmentSegment(segment1, segment2) {
 	two = intersectLineSegment(segment2, segment1);
 	return one && two;
 }
-
-window.Line = Line;
-window.SemiLine = SemiLine;
-window.Segment = Segment;
-window.intersectLineLine = intersectLineLine;
-window.intersectLineSemiline = intersectLineSemiline;
-window.intersectLineSegment = intersectLineSegment;
-window.intersectSemilineSemiline = intersectSemilineSemiline;
-window.intersectSemilineSegment = intersectSemilineSegment;
-window.intersectSegmentSegment = intersectSegmentSegment;

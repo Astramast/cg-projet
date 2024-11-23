@@ -29,5 +29,3 @@ class ClosedCurve extends Curve {
 		return Math.abs(area) / 2;
 	}
 }
-
-window.ClosedCurve = ClosedCurve;

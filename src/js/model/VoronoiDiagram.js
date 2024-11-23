@@ -4,14 +4,16 @@ class VoronoiDiagram {
 		this.lines = lines;
 		this.sites = sites;
 	}
+
 	draw() {
-		for (p of this.points){
+		for (p of this.points) {
 			p.draw();
 		}
-		for (l of this.lines){
+		for (l of this.lines) {
 			l.draw();
 		}
 	}
+
 	getCellFromSite(p) {
 		if (!this.sites.includes(p)) {
 			throw new Error("Point is not a site of the Voronoi Diagram !")
@@ -41,5 +43,3 @@ class VoronoiDiagram {
 		return new VoronoiCell(semilines[0], semilines[1], segments);
 	}
 }
-
-window.VoronoiDiagram = VoronoiDiagram;

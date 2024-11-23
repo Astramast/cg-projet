@@ -2,8 +2,11 @@ const convexifyPolygonSketch = (p) => {
 	let canvasUI;
 	p.setup = () => {
 		canvasUI = new ConvexifyPolygonCanvasUI(p);
-		let canvas = p.createCanvas(3 * p.windowWidth / 4, p.windowHeight / 2);
+		let size = canvasUI.getCanvasSize(p.windowWidth, p.windowHeight);
+		let canvas = p.createCanvas(size.width, size.height);
 		canvas.parent("convexify-polygon");
+		canvasUI.setCanvasPosition(canvas.position());
+		canvasUI.setup();
 	}
 	p.draw = () => {
 		canvasUI.draw();
@@ -22,8 +25,11 @@ const voronoiDiagramSketch = (p) => {
 	let canvasUI;
 	p.setup = () => {
 		canvasUI = new VoronoiDiagramCanvasUI(p);
-		let canvas = p.createCanvas(3 * p.windowWidth / 4, p.windowHeight / 2);
+		let size = canvasUI.getCanvasSize(p.windowWidth, p.windowHeight);
+		let canvas = p.createCanvas(size.width, size.height);
 		canvas.parent("voronoi-diagram");
+		canvasUI.setCanvasPosition(canvas.position());
+		canvasUI.setup();
 	}
 	p.draw = () => {
 		canvasUI.draw();
@@ -42,8 +48,11 @@ const optimalCurveSketch = (p) => {
 	let canvasUI;
 	p.setup = () => {
 		canvasUI = new OptimalCurveCanvasUI(p);
-		let canvas = p.createCanvas(3 * p.windowWidth / 4, p.windowHeight / 2);
+		let size = canvasUI.getCanvasSize(p.windowWidth, p.windowHeight);
+		let canvas = p.createCanvas(size.width, size.height);
 		canvas.parent("optimal-curve");
+		canvasUI.setCanvasPosition(canvas.position());
+		canvasUI.setup();
 	}
 	p.draw = () => {
 		canvasUI.draw();
