@@ -7,8 +7,8 @@
 	<link href="css/styles.css" rel="stylesheet">
 
 	<!-- --- Libraries --- -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
 
 	<!-- --- Models--- -->
 	<script src="js/model/point.js"></script>
@@ -17,18 +17,20 @@
 
 
 	<!-- --- Views --- -->
-	<script src="js/interactive_zone.js"></script>
+	<script src="js/InteractiveZone.js"></script>
 	<script src="js/view/button.js"></script>
 	<script src="js/view/CanvasUI.js"></script>
 	<script src="js/view/ConvexifyPolygonCanvasUI.js"></script>
+	<script src="js/view/VoronoiDiagramCanvasUI.js"></script>
+	<script src="js/view/OptimalCurveCanvasUI.js"></script>
 
-    <!-- add other scripts here -->
+	<!-- add other scripts here -->
 
 </head>
 <body>
-	<header class="title">
-		Welcome to the World of Optimal Curves!
-	</header>
+<header class="title">
+	Welcome to the World of Optimal Curves!
+</header>
 <main>
 
 	<h1> 🌟 Explanation of the Problem </h1>
@@ -37,37 +39,45 @@
 
 	<p> yo </p>
 
+	<br>
 	<h2> Cauchy arm lemma </h2>
 
 	<p> yo </p>
 
+	<br>
 	<h2> Explain shortest curve is convex hull and largest is a cicrle </h2>
 
+	<br>
 	<div id="convexify-polygon"></div>
 
 	<br>
-
+	<br>
 	<h1> 🔧 The Implementation </h1>
 
 	<h2> Voronoi Diagram </h2>
 
 	<p> whats is it</p>
 
+	<br>
 	<div id="voronoi-diagram"></div>
 
+	<br>
+	<br>
 	<h2> Optimal Curve </h2>
 
 	<p> how it works </p>
 
-	<div id="pq-curve"></div>
+	<br>
+	<div id="optimal-curve"></div>
 
-
-
+	<br>
+	<br>
 	<h1>🔍 Hardness Results</h1>
 
 	<p> Explain </p>
 
 
+	<br>
 </main>
 </body>
 </html>
