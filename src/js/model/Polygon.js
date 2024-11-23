@@ -56,9 +56,7 @@ class Polygon {
 	convexify() {
 		let new_points = [];
 		let convex_hull = computeConvexHull(Array.from(this.points));
-		console.log(convex_hull);
 		for (let p of this.points) {
-			console.log(p);
 			if (convex_hull.includes(p)) {
 				new_points.push(p);
 			} else {
@@ -68,7 +66,7 @@ class Polygon {
 				new_points.push(p.getSymmetricPoint(new Line(a, b)));
 			}
 		}
-		this.points = new_points;
+		return new Polygon(new_points);
 	}
 
 	getNeighbourConvexHullPoint(p, left, hull) {

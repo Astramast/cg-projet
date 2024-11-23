@@ -2,6 +2,7 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 	constructor(p) {
 		super(p);
 		this.polygon = new Polygon();
+		this.convexPolygon = null;
 	}
 
 	setup() {
@@ -12,10 +13,14 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 
 	reset() {
 		this.polygon = new Polygon();
+		this.convexPolygon = null;
 	}
 
 	convexify() {
-		this.polygon.convexify();
+		if (this.convexPolygon != null) {
+			this.polygon = this.convexPolygon;
+		}
+		this.convexPolygon = this.polygon.convexify();
 	}
 
 	draw() {
@@ -27,16 +32,39 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 		this.p.fill("#CB9DF0");
 		this.p.rect(0, 100, this.p.width, this.p.height);
 
-		// Draw points
+		// Draw Convex Polygon
+		if (this.convexPolygon != null) {
+			this.p.stroke("#8E24AA");
+			this.p.fill("#ba76f1");
+			this.p.beginShape();
+			for (let p of this.convexPolygon.points) {
+				this.p.vertex(p.x, p.y);
+			}
+			this.p.endShape(this.p.CLOSE);
+
+			this.p.stroke("#FFF9BF");
+			this.p.fill("#FFF9BF");
+			for (let p of this.convexPolygon.points) {
+				this.p.ellipse(p.x, p.y, 6, 6);
+			}
+		}
+
+		// Draw Polygon
 		this.p.stroke("#FFF9BF");
+		this.p.fill("#ba76f1");
 		this.p.beginShape();
 		for (let p of this.polygon.points) {
-			this.p.fill("#FFF9BF");
-			this.p.ellipse(p.x, p.y, 6, 6);
-			this.p.noFill();
 			this.p.vertex(p.x, p.y);
 		}
 		this.p.endShape(this.p.CLOSE);
+
+
+		// Draw Points
+		this.p.stroke("#FFF9BF");
+		this.p.fill("#FFF9BF");
+		for (let p of this.polygon.points) {
+			this.p.ellipse(p.x, p.y, 6, 6);
+		}
 	}
 
 
