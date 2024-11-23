@@ -1,16 +1,16 @@
 class VoronoiDiagram {
-	constructor(points, segments, semilines, sites) {
+	constructor(points, semilines, sites) {
 		this.points = points;
-		this.lines = lines;
+		this.semilines = semilines;
 		this.sites = sites;
 	}
 
-	draw() {
-		for (p of this.points) {
-			p.draw();
+	draw(canvas) {
+		for (let p of this.points) {
+			p.draw(canvas);
 		}
-		for (l of this.lines) {
-			l.draw();
+		for (let l of this.semilines) {
+			l.draw(canvas);
 		}
 	}
 
@@ -18,7 +18,7 @@ class VoronoiDiagram {
 		if (!this.sites.includes(p)) {
 			throw new Error("Point is not a site of the Voronoi Diagram !")
 		}
-		bisectors = [];
+		let bisectors = [];
 		for (let i = 0; i < this.points.length; i++) {
 			let q = this.points[i];
 			if (q === p) continue;

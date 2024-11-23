@@ -4,11 +4,11 @@ class Line {
 		this.b = b
 	}
 
-	draw() {
-		v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
+	draw(canvas) {
+		let v = canvas.createVector(this.b.x - this.a.x, this.b.y - this.a.y);
 		v.normalize();
-		v.mult(Math.max(windowWidth, windowHeight));
-		line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
+		v.mult(Math.max(canvas.windowWidth, canvas.windowHeight));
+		canvas.line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
 	}
 
 	isEqual(line) {

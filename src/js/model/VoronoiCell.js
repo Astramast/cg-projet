@@ -22,7 +22,7 @@ function isInsideHalfPlane(segment, bisector, p) {
 	return orientation > 0;
 }
 
-function computeVoronoiCell(p, points) {
+function computeVoronoiCell3(p, points) {
 
 	let bisectors = [];
 	for (let i = 0; i < points.length; i++) {
