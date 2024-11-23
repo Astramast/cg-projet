@@ -38,5 +38,3 @@ function findPQCurve(polygon, desiredPerimeter) {
 
 	return new ClosedCurve(pqCurve);
 }
-
-window.findPQCurve = findPQCurve;

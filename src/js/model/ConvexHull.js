@@ -26,5 +26,3 @@ function computeConvexHull(points) {
 	lower.pop();
 	return lower.concat(upper);
 }
-
-window.computeConvexHull = computeConvexHull;

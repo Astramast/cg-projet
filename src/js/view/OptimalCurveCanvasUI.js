@@ -1,0 +1,95 @@
+class OptimalCurveCanvasUI extends CanvasUI {
+	constructor(p) {
+		super(p);
+		this.points = [];
+		this.hull = new Polygon();
+		// this.closedCurve = new ClosedCurve();
+		this.perimeterSlider = null; // Slider for perimeter adjustment
+	}
+
+	setup() {
+		// Buttons for user interaction
+		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y, () => this.resetPoints(), this.p);
+
+		// Slider for adjusting perimeter
+		this.perimeterSlider = this.p.createSlider(0, 1000, 0);
+		this.perimeterSlider.position(320, this.canvasPosition.y + 60);
+		this.perimeterSlider.addClass('slider');
+		this.perimeterSlider.input(() => this.adjustPerimeter());
+
+		// Perimeter and area text
+		this.perimeterText = this.p.createDiv("Perimeter: " + this.perimeterSlider.value());
+		this.perimeterText.position(330, this.canvasPosition.y + 30);
+		this.perimeterText.addClass('perimeter-text');
+
+		this.areaText = this.p.createDiv("Area: 0");
+		this.areaText.position(550, this.canvasPosition.y + 30);
+		this.areaText.addClass('area-text');
+	}
+
+	resetPoints() {
+		this.points = [];
+		this.hull = new Polygon();
+		this.closedCurve = new ClosedCurve();
+		this.perimeterSlider.attribute('min', 0);
+		this.perimeterSlider.attribute('max', 1000);
+		this.perimeterSlider.value(0);
+		this.perimeterText.html("Perimeter: 0");
+		this.areaText.html("Area: 0");
+	}
+
+	adjustPerimeter() {
+		const desiredPerimeter = this.perimeterSlider.value();
+		this.perimeterText.html("Perimeter: " + desiredPerimeter.toFixed(2));
+
+		if (this.hull.points.length > 0) {
+			// Find the P-Q Curve with the desired perimeter
+		}
+	}
+
+	draw() {
+		// Draw background
+		this.p.background("#FFF9BF");
+
+		// Draw the drawing area
+		this.p.stroke("#CB9DF0");
+		this.p.fill("#CB9DF0");
+		this.p.rect(0, 100, this.p.width, this.p.height);
+
+		// Draw convex hull
+		this.p.stroke("#FFF9BF");
+		this.p.fill("#ba76f1");
+		this.p.beginShape();
+		for (let p of this.hull.points) {
+			this.p.vertex(p.x, p.y);
+		}
+		this.p.endShape(this.p.CLOSE);
+
+		// Draw points
+		this.p.stroke("#FFF9BF");
+		this.p.fill("#FFF9BF");
+		for (let p of this.points) {
+			this.p.ellipse(p.x, p.y, 6, 6);
+		}
+
+		// Draw perimeter and area text
+		this.areaText.html("Area: " + this.hull.area().toFixed(2));
+		this.perimeterSlider.value(this.hull.perimeter());
+		this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
+
+		const currentPerimeter = this.hull.perimeter();
+		this.perimeterSlider.attribute('min', currentPerimeter);
+		this.perimeterSlider.attribute('max', currentPerimeter * 3);
+
+	}
+
+
+	mousePressed() {
+		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 100 || this.p.mouseY > this.p.height) return;
+		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
+		if (this.points.length > 2) {
+			this.hull = new Polygon(computeConvexHull(Array.from(this.points)));
+		}
+	}
+
+}

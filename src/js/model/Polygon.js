@@ -27,15 +27,17 @@ class Polygon {
 	}
 
 	perimeter() {
+		if (this.points.length < 2) return 0;
 		let n = this.points.length;
-		let p = euclidianDist(this.points[0], this.points[n - 1]);
+		let p = this.points[0].dist(this.points[n - 1]);
 		for (let i = 0; i < n - 1; i++) {
-			p += euclidianDist(this.points[i], this.points[i + 1]);
+			p += this.points[i].dist(this.points[i + 1]);
 		}
 		return p;
 	}
 
 	area() {
+		if (this.points.length < 3) return 0;
 		let n = this.points.length;
 		let a = 0;
 		for (let i = 0; i < n - 1; i++) {
@@ -51,7 +53,48 @@ class Polygon {
 		return this.points;
 	}
 
+	convexify() {
+		let new_points = [];
+		let convex_hull = computeConvexHull(Array.from(this.points));
+		console.log(convex_hull);
+		for (let p of this.points) {
+			console.log(p);
+			if (convex_hull.includes(p)) {
+				new_points.push(p);
+			} else {
+				let a = this.getPreviousConvexHullPoint(p, convex_hull);
+				let b = this.getNextConvexHullPoint(p, convex_hull);
+				console.log(a, b);
+				new_points.push(p.getSymmetricPoint(new Line(a, b)));
+			}
+		}
+		this.points = new_points;
+	}
 
+	getNeighbourConvexHullPoint(p, left, hull) {
+		let index = this.points.indexOf(p);
+		let n = this.points.length;
+		for (let i = 1; i < n; i++) {
+			let search_index = 0;
+			if (left) {
+				search_index = index - i;
+			} else {
+				search_index = index + i;
+			}
+			search_index = (search_index + n) % n;
+			if (hull.includes(this.points[search_index])) {
+				return this.points[search_index];
+			}
+		}
+	}
+
+	getPreviousConvexHullPoint(p, hull) {
+		return this.getNeighbourConvexHullPoint(p, true, hull);
+	}
+
+	getNextConvexHullPoint(p, hull) {
+		return this.getNeighbourConvexHullPoint(p, false, hull);
+	}
 }
 
 function doIntersect(p1, p2, p3, p4) {
@@ -62,10 +105,3 @@ function doIntersect(p1, p2, p3, p4) {
 	let o4 = crossProduct(p3, p4, p2);
 	return o1 * o2 < 0 && o3 * o4 < 0;
 }
-
-function euclidianDist(p1, p2) {
-	return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-}
-
-
-window.Polygon = Polygon;

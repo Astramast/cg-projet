@@ -9,7 +9,7 @@ function createWindow() {
 		},
 	});
 
-	win.loadFile('../src/pages/index.html'); // Adjust the path if needed
+	win.loadFile('../src/index.html'); // Adjust the path if needed
 }
 
 app.whenReady().then(createWindow);

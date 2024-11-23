@@ -1,4 +1,3 @@
-
 class VoronoiCell {
 	constructor(semiLine1, segments, semiLine2) {
 		this.semiLine1 = semiLine1;
@@ -38,6 +37,3 @@ function computeVoronoiCell(p, points) {
 
 	return cell;
 }
-
-
-window.VoronoiCell = VoronoiCell;
