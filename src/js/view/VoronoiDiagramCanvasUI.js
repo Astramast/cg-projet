@@ -6,7 +6,14 @@ class VoronoiDiagramCanvasUI extends CanvasUI {
 	}
 
 	setup() {
+		// Buttons for user interaction
+		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y - 80, () => this.resetPoints(), this.p);
 
+	}
+
+	resetPoints() {
+		this.points = [];
+		this.voronoiDiagram = null;
 	}
 
 	draw() {
