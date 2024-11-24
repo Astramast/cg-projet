@@ -1,8 +1,8 @@
 class VoronoiCell {
-	constructor(semiLine1, segments, semiLine2) {
+	constructor(semiLine1, semiLine2, segments) {
 		this.semiLine1 = semiLine1;
-		this.segments = segments;
 		this.semiLine2 = semiLine2;
+		this.segments = segments;
 	}
 
 }
@@ -22,18 +22,23 @@ function isInsideHalfPlane(segment, bisector, p) {
 	return orientation > 0;
 }
 
-function computeVoronoiCell3(p, points) {
+function computeVoronoiCell3(p, q, r) {
 
-	let bisectors = [];
-	for (let i = 0; i < points.length; i++) {
-		let q = points[i];
-		if (q === p) continue;
-		let bisector = perpendicularBisector(p, q);
-		bisectors.push(bisector);
-	}
-	cell = new VoronoiCell(null, [], null);
+	console.log(p, q, r);
 
-	// TODO: Implement the rest of the function
+	let bissectorPQ = perpendicularBisector(p, q);
+	let bissectorPR = perpendicularBisector(p, r);
 
-	return cell;
+	let intersection = bissectorPQ.getIntersection(bissectorPR);
+
+	// TODO: Change that
+	let point_infinite_line_pq = new Point(p.x + 1000 * (q.x - p.x), p.y + 1000 * (q.y - p.y));
+	let point_infinite_line_pr = new Point(p.x + 1000 * (r.x - p.x), p.y + 1000 * (r.y - p.y));
+
+
+	let semiLine1 = new SemiLine(intersection, point_infinite_line_pq);
+	let semiLine2 = new SemiLine(intersection, point_infinite_line_pr)
+
+	console.log(semiLine1, semiLine2);
+	return new VoronoiCell(semiLine1, semiLine2, []);
 }

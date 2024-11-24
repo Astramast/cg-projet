@@ -12,12 +12,13 @@ class VoronoiDiagramCanvasUI extends CanvasUI {
 	draw() {
 		this.p.background("#CB9DF0");
 
+		this.p.stroke("#fff8ba");
+		this.p.fill("#fff8ba");
+
 		if (this.voronoiDiagram != null) {
 			this.voronoiDiagram.draw(this.p);
 		}
 
-		this.p.stroke(0);
-		this.p.fill(0);
 		for (let p of this.points) {
 			this.p.ellipse(p.x, p.y, 6, 6);
 		}
@@ -28,8 +29,8 @@ class VoronoiDiagramCanvasUI extends CanvasUI {
 		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 0 || this.p.mouseY > this.p.height) return;
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
 		if (this.points.length >= 2) {
-			let convexPolygon = new ConvexPolygon(this.points);
-			this.voronoiDiagram = convexPolygon.getFPVD();
+			let bounds = [new Point(-this.p.width, -this.p.height), new Point(this.p.width, -this.p.height), new Point(this.p.width, this.p.height), new Point(-this.p.width, this.p.height)];
+			this.voronoiDiagram = VoronoiDiagram.fromPoints(this.points, bounds);
 		}
 	}
 

@@ -25,4 +25,5 @@ class Point {
 		let v_pm = new Point(m.x - this.x, m.y - this.y);
 		return new Point(m.x + v_pm.x, m.y + v_pm.y);
 	}
+
 }

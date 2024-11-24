@@ -11,18 +11,16 @@ class ConvexPolygon {
 
 	getStartingFPVD(p, q, r) {
 		let c1 = computeVoronoiCell3(p, q, r);
+		// return new VoronoiDiagram([p, q, r], [c1.semiLine1, c1.semiLine2]);
 		let c2 = computeVoronoiCell3(q, r, p);
-		let semilines = [c1.semiline1, c1.semiline2];
-		for (let i = 0; i < semilines.length; i++) {
-			if (semilines[i].isEqual(c2.semiline1)) {
-				semilines.push(c2.semiline2);
-				break;
-			} else if (semilines[i].isEqual(c2.semiline2)) {
-				semilines.push(c2.semiline1);
-				break;
+		let c3 = computeVoronoiCell3(r, p, q);
+		let semilines = [c1.semiLine1];
+		for (let s of [c1.semiLine1, c1.semiLine2, c2.semiLine1, c2.semiLine2, c3.semiLine1, c3.semiLine2]) {
+			if (!semilines.includes(s)) {
+				semilines.push(s);
 			}
 		}
-		return new VoronoiDiagram(c1.a, semilines);
+		return new VoronoiDiagram([p, q, r], semilines);
 	}
 
 	//Farthest-Point Voronoi Diagram
@@ -31,7 +29,7 @@ class ConvexPolygon {
 			return new VoronoiDiagram(this.points, []);
 		}
 		if (this.points.length == 2) {
-			return new VoronoiDiagram(this.points, perpendicularBisector(this.points[0], this.points[1]));
+			return new VoronoiDiagram(this.points, [perpendicularBisector(this.points[0], this.points[1])]);
 		}
 		if (this.points.length === 3) {
 			return this.getStartingFPVD(this.points[0], this.points[1], this.points[2]);
@@ -59,5 +57,5 @@ class ConvexPolygon {
 function perpendicularBisector(p, q) {
 	// TODO: Assumed general position, complete code for extreme cases
 	const y = (x) => ((2 * q.x - 2 * p.x) * x + (p.x ** 2 + p.y ** 2 - q.x ** 2 - q.y ** 2)) / (2 * p.y - 2 * q.y);
-	return [new Line(new Point(0, y(0)), new Point(1, y(1)))];
+	return new Line(new Point(0, y(0)), new Point(1000, y(1000)));
 }
