@@ -18,6 +18,23 @@ class Point {
 	getSymmetrical(otherPoint) {
 		return new Point(2*otherPoint.x - this.x, 2*otherPoint.y - this.y);
 	}
+	isEqual(otherPoint) {
+		return (this.x == otherPoint.x && this.y == otherPoint.y);
+	}
+	leftRadialComparator(a, b) {
+		//Answers to : Is a more at left than b ?
+		let od = orientation_determinant(this, a, b);
+		if (od > 0) {
+			return true;
+		}
+		if (od == 0) {
+			return this.manhattanDistance(a) > this.manhattanDistance(b);
+		}
+		return false;
+	}
+	manhattanDistance(otherPoint) {
+		return Math.abs(this.x - otherPoint.x) + Math.abs(this.y - otherPoint.y);
+	}
 }
 
 window.Point = Point;
