@@ -1,11 +1,26 @@
-
 class VoronoiCell {
-	constructor(semiLine1, segments, semiLine2) {
-		this.semiLine1 = semiLine1;
-		this.segments = segments;
-		this.semiLine2 = semiLine2;
+	constructor(semilines, segments) {
+		this.cell = [];
+		if (semilines[0].b.getOrientationDeterminantSign(semilines[1].a, semilines[1].b) > 0) {
+			this.cell.push(semilines[1]);
+			this.cell.push(semilines[0]);
+		} else {
+			this.cell.push(semilines[0]);
+			this.cell.push(semilines[1]);
+		}
+		let chosen = cell[0];
+		while (segments.length > 0) {
+			for (let s of segments) {
+				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
+					this.cell.push(s);
+					segments.splice(segments.indexOf(s), 1);
+					chosen = s;
+					break;
+				}
+			}
+		}
+		this.cell.push(cell.shift());
 	}
-
 }
 
 
