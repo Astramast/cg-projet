@@ -11,8 +11,8 @@ class VoronoiDiagram {
 				symA = bisectors[i].b.getSymmetrical(this.points[0]);
 				flag = true;
 			}
-			let ood_sites = sites[i].getOrientationDeterminantSign(sites[(i + 1) % 3], sites[(i + 2) % 3]);
-			let ood_points = sites[i].getOrientationDeterminantSign(points[0], symA);
+			let ood_sites = this.sites[i].getOrientationDeterminantSign(this.sites[(i + 1) % 3], this.sites[(i + 2) % 3]);
+			let ood_points = this.sites[i].getOrientationDeterminantSign(this.points[0], symA);
 			if (ood_sites == ood_points) {
 				this.lines.push(new SemiLine(this.points[0], symA));
 			} else {
@@ -26,11 +26,14 @@ class VoronoiDiagram {
 		}
 	}
 	draw() {
-		for (p of this.points){
+		for (let p of this.points){
 			p.draw();
 		}
-		for (l of this.lines){
+		for (let l of this.lines){
 			l.draw();
+		}
+		for (let s of this.sites){
+			s.draw();
 		}
 	}
 	addPoint(p, cw, ccw) {

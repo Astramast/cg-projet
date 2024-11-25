@@ -5,6 +5,7 @@ class ConvexPolygon {
 	draw() {
 		for (let i = 0; i < this.points.length; i++) {
 			line(this.points[i].x, this.points[i].y, this.points[(i + 1) % this.points.length].x, this.points[(i + 1) % this.points.length].y);
+			this.points[i].draw();
 		}
 	}
 	getStartingFPVD() {
@@ -16,7 +17,7 @@ class ConvexPolygon {
 			return new VoronoiDiagram(this.points, null);
 		}
 		if (this.points.length == 2) {
-			return new VoronoiDiagram(this.points, perpendicularBisector(this.points[0], this.points[1]));
+			return new VoronoiDiagram(this.points, points[0].getPerpendicularBisector(points[1]));
 		}
 		if (this.points.length == 3) {
 			return this.getStartingFPVD(this.points[0], this.points[1], this.points[2]);
@@ -59,4 +60,3 @@ class ConvexPolygon {
 }
 
 window.ConvexPolygon = ConvexPolygon;
-window.perpendicularBisector = perpendicularBisector;

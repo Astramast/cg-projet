@@ -56,8 +56,8 @@ class Segment {
 }
 
 function intersectLineLine(line1, line2) {
-	let v1 = Point(line1.b.x - line1.a.x, line1.b.y - line1.a.y);
-	let v2 = Point(line2.b.x - line2.a.x, line2.b.y - line2.a.y);
+	let v1 = new Point(line1.b.x - line1.a.x, line1.b.y - line1.a.y);
+	let v2 = new Point(line2.b.x - line2.a.x, line2.b.y - line2.a.y);
 	return v1.x * v2.y - v1.y * v2.x;
 }
 
