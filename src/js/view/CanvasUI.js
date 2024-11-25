@@ -23,7 +23,7 @@ class CanvasUI {
 	}
 
 	getCanvasSize(windowWidth, windowHeight) {
-		return {width: 9 * windowWidth / 10, height: 2 * windowHeight / 3};
+		return {width: Math.min(9 * windowWidth / 10, 800), height: 2 * windowHeight / 3};
 	}
 
 	setCanvasPosition(position) {

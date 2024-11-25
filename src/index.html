@@ -48,26 +48,70 @@
 	<h1> 🌟 Introduction </h1>
 
 	<p>
-		In the field of geometry, one of the fundamental problems is understanding how shapes can maximize certain
-		properties under given constraints.
-		For example, it is well-known that, among all curves with a fixed perimeter, the circle encloses the maximum
-		area.
-		This principle has profound implications in mathematics, physics, and engineering. Below is an image
-		illustrating this concept:
+		In geometry and optimization, one fundamental challenge is to find shapes or curves that maximize or minimize a particular property while adhering to strict constraints. These problems often involve maximizing enclosed area or minimizing perimeter, giving rise to the family of isoperimetric problems.
 	</p>
-	<!-- Add an image or canvas for a circle illustration -->
-	<div id="circle-illustration"></div>
+	<p>
+		A classical example, known since ancient Greece, demonstrates that among all closed curves with a fixed perimeter \( P \), the circle encloses the maximum possible area. This result, rigorously formalized in the 19th century as the *Isoperimetric Theorem*, highlights the exceptional properties of the circle as the optimal solution in this context.
+	</p>
+
+	<div class="theorem">
+		Theorem: For a given perimeter \( P \), the area of a circle is larger than the area of a square.
+	</div>
+
+	<div class="proof">
+		<p>
+			Let the perimeter of a square be \( P \). The side length of the square is
+			\[
+			s = \frac{P}{4}.
+			\]
+			The area of the square is then
+			\[
+			A_\text{square} = s^2 = \left(\frac{P}{4}\right)^2 = \frac{P^2}{16}.
+			\]
+		</p>
+		<p>
+			For a circle with the same perimeter \( P \), the circumference is given by
+			\[
+			2\pi r = P \quad \Rightarrow \quad r = \frac{P}{2\pi}.
+			\]
+			The area of the circle is
+			\[
+			A_\text{circle} = \pi r^2 = \pi \left(\frac{P}{2\pi}\right)^2 = \frac{P^2}{4\pi}.
+			\]
+		</p>
+		<p>
+			To compare, compute the ratio of the circle's area to the square's area:
+			\[
+			\frac{A_\text{circle}}{A_\text{square}} = \frac{\frac{P^2}{4\pi}}{\frac{P^2}{16}} = \frac{16}{4\pi} = \frac{4}{\pi}.
+			\]
+		</p>
+		<p>
+			Since \( \pi > 3 \), we have \( \frac{4}{\pi} > 1 \), implying \( A_\text{circle} > A_\text{square} \).
+			Thus, for the same perimeter, the circle covers a larger area than the square.
+		</p>
+	</div>
+
+	<h3>Why Does This Happen?</h3>
+	<p>
+		A square has four straight edges that meet at right angles, which means some of the space near the corners
+		is not optimally enclosed for maximizing area. In contrast, a circle has no corners or straight edges, allowing it to
+		make the most efficient use of its perimeter to enclose space.
+	</p>
+	<p>
+		This property of the circle minimizes "wasted" space, making it the optimal shape for enclosing the maximum
+		area for a given perimeter. This is why, for the same \( P \), the circle surpasses the square in area coverage.
+	</p>
 
 
-	<h2> Voronoi Diagram </h2>
+	<h2>Voronoi Diagrams</h2>
 	<p>
 		A Voronoi diagram is a partition of the plane into regions based on the distance to a given set of points.
 		Each region corresponds to all locations closer to one particular point than to any other.
-		Voronoi diagrams are widely used in computational geometry for nearest-neighbor queries and shape optimization.
 	</p>
 	<img alt="Voronoi Diagram Growth" src="../assets/images/Voronoi_growth_euclidean.gif">
 	<h3> 🎨 Draw points to generate a Voronoi diagram: </h3>
 	<div id="voronoi-diagram"></div>
+
 	<br>
 
 	<h1> 📖 Explanation of the Problem </h1>
@@ -195,7 +239,9 @@
 	TODO
 
 	<h1> 🌐 Conclusion </h1>
-
+	<p>
+		The interplay between geometry, optimization, and computation reveals deep insights into isoperimetric problems. By combining mathematical rigor with computational tools, this project offers an interactive exploration of one of geometry's most intriguing questions.
+	</p>
 
 	<h1> 📚 References </h1>
 	<div id="references"></div>
