@@ -6,12 +6,22 @@ class VoronoiDiagram {
 		this.lines = [];
 		for (let i = 0; i < 3; i++) {
 			let symA = bisectors[i].a.getSymmetrical(this.points[0]);
+			let flag = false;
+			if (symA.isEqual(bisectors[i].a)) {
+				symA = bisectors[i].b.getSymmetrical(this.points[0]);
+				flag = true;
+			}
 			let ood_sites = sites[i].getOrientationDeterminantSign(sites[(i + 1) % 3], sites[(i + 2) % 3]);
 			let ood_points = sites[i].getOrientationDeterminantSign(points[0], symA);
 			if (ood_sites == ood_points) {
 				this.lines.push(new SemiLine(this.points[0], symA));
 			} else {
-				this.lines.push(new SemiLine(this.points[0], bisectors[i].a));
+				if (flag) {
+					this.lines.push(new SemiLine(this.points[0], bisectors[i].b));
+				} else {
+					
+					this.lines.push(new SemiLine(this.points[0], bisectors[i].a));
+				}
 			}
 		}
 	}
