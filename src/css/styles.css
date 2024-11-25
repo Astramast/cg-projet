@@ -18,6 +18,15 @@ body {
 	font-weight: bold;
 }
 
+.authors {
+	background-color: #CB9DF0;
+	color: #4B0082;
+	padding: 20px;
+	margin-bottom: 0;
+	font-size: 20px;
+	font-weight: bold;
+}
+
 h1 {
 	background-color: #ffd3ab;
 	color: #8E24AA;

@@ -39,7 +39,9 @@
 <body>
 <header class="title">
 	Welcome to the World of Optimal Curves!
+	<h3 class="authors">Authors: Charels Hugo, Installé Arthur, Caeyman Hamza</h3>
 </header>
+
 <main>
 
 	<h1> 🌟 Introduction </h1>
@@ -130,12 +132,68 @@
 	<h1> 🔍 Hardness Results </h1>
 
 	<p>
-		Finally, solving this problem is computationally challenging due to its combinatorial nature.
-		The problem of finding the optimal curve that maximizes the enclosed area while adhering to the given
-		constraints
-		requires sophisticated algorithms and mathematical insights. Below, we explore some theoretical limitations and
-		practical challenges of these computations.
+		In geometric optimization, solving problems often involves balancing between precision and computational feasibility.
+		The isoperimetric problem we explore here is no exception: while some solutions can be derived exactly using
+		closed-form expressions, others challenge the limits of mathematical computation.
 	</p>
+
+	<h2>Why Some Equations Can Be Solved Exactly</h2>
+	<p>
+		Mathematical equations, particularly polynomials, can often be solved exactly using techniques involving
+		basic arithmetic (\(+, -, \cdot, \div \)) and roots (\( \sqrt[k]{}\)). For example, the solution to a quadratic
+		equation \(ax^2 + bx + c = 0 \) is well-defined by the quadratic formula. Similarly, cubic and quartic equations
+		have closed-form solutions. These belong to a class known as "solvable by radicals."
+	</p>
+
+	<h2>When Equations Defy Exact Solutions</h2>
+	<p>
+		Once the degree of a polynomial exceeds four, things get trickier. Not all quintic equations (degree 5) can be
+		solved exactly using traditional techniques. For instance, the equation \(x^5 − x + 1 = 0\) is unsolvable by radicals, as proven
+		through Galois theory. In these cases, we often rely on approximations or numerical methods.
+	</p>
+
+	<h2>Linking This to Isoperimetric Problems</h2>
+	<p>
+		In our problem, we aim to find the curve of fixed perimeter \(P\) that encloses a convex shape \(Q\)
+		while maximizing the enclosed area. This curve, denoted as \((P, Q)-curve\), consists of circular arcs of equal
+		radius \(r\). However, determining the exact value of \(r\) often leads to solving equations like:
+		\[
+			\sum_{i=1}^{k} 2r \cdot \arcsin(d_i/r) = P
+		\]
+		Here, \(d_i\) represents distances between vertices of \(Q\). Unlike polynomials, this equation is
+		transcendental, meaning it involves functions like \(sin\), \(arcsin\), and \(log\). Solving such equations exactly
+		depends on deep mathematical conjectures like Schanuel's Conjecture. As of today, proofs for such conjectures
+		remain out of reach.
+	</p>
+
+	<h2>Implications</h2>
+	<p>
+		Since exact solutions to transcendental equations are not always possible, we rely on approximation algorithms.
+		In our case, we approximate the radius \(r\) to arbitrary precision, ensuring the solution retains
+		its structure while coming as close as possible to the true value.
+	</p>
+	<p>
+		This hardness result highlights the limitations of computation in geometry. It is a reminder of how mathematical
+		theory and computational techniques intersect, leading to new challenges and innovative solutions.
+	</p>
+
+	<h2>Examples</h2>
+	TODO
+
+	<h1> 🌐 Conclusion </h1>
+
+
+	<h1> 📚 References </h1>
+	<div id="references"></div>
+	<script>
+		fetch("references.html")
+			.then(response => response.text())
+			.then(html => {
+				document.getElementById("references").innerHTML = html;
+			});
+	</script>
+
+
 
 </main>
 
