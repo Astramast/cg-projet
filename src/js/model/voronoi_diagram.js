@@ -48,7 +48,7 @@ class VoronoiDiagram {
 			let kCell = getCellFromSite(k);
 			let q = null;
 			let b = null;
-			for (let l of kCell) {
+			for (let l of kCell.cell) {
 				q = l.getLineIntersection(B_kp);
 				if (q != null && !intersection_points.includes(q)) {
 					b = l;
