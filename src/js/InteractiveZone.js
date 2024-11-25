@@ -1,3 +1,25 @@
+const voronoiDiagramSketch = (p) => {
+	let canvasUI;
+	p.setup = () => {
+		canvasUI = new VoronoiDiagramCanvasUI(p);
+		let size = canvasUI.getCanvasSize(p.windowWidth, p.windowHeight);
+		let canvas = p.createCanvas(size.width, size.height);
+		canvas.parent("voronoi-diagram");
+		canvasUI.setCanvasPosition(canvas.position());
+		canvasUI.setup();
+	}
+	p.draw = () => {
+		canvasUI.draw();
+	}
+	p.mousePressed = () => {
+		canvasUI.mousePressed();
+	}
+	p.windowResized = () => {
+		canvasUI.windowResized();
+	}
+	// Add more p5.js functions as needed
+}
+
 
 const cauchyArmLemmaSketch = (p) => {
 	let canvasUI;
@@ -44,14 +66,13 @@ const convexifyPolygonSketch = (p) => {
 	// Add more p5.js functions as needed
 }
 
-
-const voronoiDiagramSketch = (p) => {
+const farthestPointVDSketch = (p) => {
 	let canvasUI;
 	p.setup = () => {
-		canvasUI = new VoronoiDiagramCanvasUI(p);
+		canvasUI = new FarthestPointVDCanvasUI(p);
 		let size = canvasUI.getCanvasSize(p.windowWidth, p.windowHeight);
 		let canvas = p.createCanvas(size.width, size.height);
-		canvas.parent("voronoi-diagram");
+		canvas.parent("fp-voronoi-diagram");
 		canvasUI.setCanvasPosition(canvas.position());
 		canvasUI.setup();
 	}
@@ -91,7 +112,8 @@ const optimalCurveSketch = (p) => {
 }
 
 
+new p5(voronoiDiagramSketch);
 new p5(cauchyArmLemmaSketch);
 new p5(convexifyPolygonSketch);
-new p5(voronoiDiagramSketch);
+new p5(farthestPointVDSketch);
 new p5(optimalCurveSketch);

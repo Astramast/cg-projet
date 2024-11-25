@@ -38,15 +38,15 @@ class Line {
 
 	getDirection() {
 		if (this.slope === Infinity) {
-			return { x: 0, y: 1 }; // Vertical line
+			return {x: 0, y: 1}; // Vertical line
 		} else if (this.slope === 0) {
-			return { x: 1, y: 0 }; // Horizontal line
+			return {x: 1, y: 0}; // Horizontal line
 		} else {
 			// For other lines, normalize the direction vector
 			let dx = 1;
 			let dy = this.slope;
 			let magnitude = Math.sqrt(dx * dx + dy * dy);
-			return { x: dx / magnitude, y: dy / magnitude };
+			return {x: dx / magnitude, y: dy / magnitude};
 		}
 	}
 

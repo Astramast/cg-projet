@@ -27,9 +27,10 @@
 	<script src="js/InteractiveZone.js"></script>
 	<script src="js/view/Button.js"></script>
 	<script src="js/view/CanvasUI.js"></script>
+	<script src="js/view/VoronoiDiagramCanvasUI.js"></script>
 	<script src="js/view/CauchyArmLemmaCanvasUI.js"></script>
 	<script src="js/view/ConvexifyPolygonCanvasUI.js"></script>
-	<script src="js/view/VoronoiDiagramCanvasUI.js"></script>
+	<script src="js/view/FarthestPointVDCanvasUI.js"></script>
 	<script src="js/view/OptimalCurveCanvasUI.js"></script>
 
 	<!-- add other scripts here -->
@@ -56,6 +57,18 @@
 	</p>
 	<!-- Add an image or canvas for a circle illustration -->
 	<div id="circle-illustration"></div>
+
+
+	<h2> Voronoi Diagram </h2>
+	<p>
+		A Voronoi diagram is a partition of the plane into regions based on the distance to a given set of points.
+		Each region corresponds to all locations closer to one particular point than to any other.
+		Voronoi diagrams are widely used in computational geometry for nearest-neighbor queries and shape optimization.
+	</p>
+	<img alt="Voronoi Diagram Growth" src="../assets/images/Voronoi_growth_euclidean.gif">
+	<h3> 🎨 Draw points to generate a Voronoi diagram: </h3>
+	<div id="voronoi-diagram"></div>
+	<br>
 
 	<h1> 📖 Explanation of the Problem </h1>
 
@@ -107,15 +120,13 @@
 
 	<h1> 🔧 The Implementation </h1>
 
-	<h2> Voronoi Diagram </h2>
+	<h2> Farthest Point Voronoi Diagram </h2>
 	<p>
-		A Voronoi diagram is a partition of the plane into regions based on the distance to a given set of points.
-		Each region corresponds to all locations closer to one particular point than to any other.
-		Voronoi diagrams are widely used in computational geometry for nearest-neighbor queries and shape optimization.
+
 	</p>
-	<img src="../assets/images/Voronoi_growth_euclidean.gif" alt="Voronoi Diagram Growth">
-	<h3> 🎨 Draw points to generate a Voronoi diagram: </h3>
-	<div id="voronoi-diagram"></div>
+
+	<h3> 🎨 Draw points to generate the Farthest Point Voronoi diagram: </h3>
+	<div id="fp-voronoi-diagram"></div>
 	<br>
 
 	<h2> Optimal Curve </h2>
@@ -132,7 +143,8 @@
 	<h1> 🔍 Hardness Results </h1>
 
 	<p>
-		In geometric optimization, solving problems often involves balancing between precision and computational feasibility.
+		In geometric optimization, solving problems often involves balancing between precision and computational
+		feasibility.
 		The isoperimetric problem we explore here is no exception: while some solutions can be derived exactly using
 		closed-form expressions, others challenge the limits of mathematical computation.
 	</p>
@@ -148,7 +160,8 @@
 	<h2>When Equations Defy Exact Solutions</h2>
 	<p>
 		Once the degree of a polynomial exceeds four, things get trickier. Not all quintic equations (degree 5) can be
-		solved exactly using traditional techniques. For instance, the equation \(x^5 − x + 1 = 0\) is unsolvable by radicals, as proven
+		solved exactly using traditional techniques. For instance, the equation \(x^5 − x + 1 = 0\) is unsolvable by
+		radicals, as proven
 		through Galois theory. In these cases, we often rely on approximations or numerical methods.
 	</p>
 
@@ -158,10 +171,11 @@
 		while maximizing the enclosed area. This curve, denoted as \((P, Q)-curve\), consists of circular arcs of equal
 		radius \(r\). However, determining the exact value of \(r\) often leads to solving equations like:
 		\[
-			\sum_{i=1}^{k} 2r \cdot \arcsin(d_i/r) = P
+		\sum_{i=1}^{k} 2r \cdot \arcsin(d_i/r) = P
 		\]
 		Here, \(d_i\) represents distances between vertices of \(Q\). Unlike polynomials, this equation is
-		transcendental, meaning it involves functions like \(sin\), \(arcsin\), and \(log\). Solving such equations exactly
+		transcendental, meaning it involves functions like \(sin\), \(arcsin\), and \(log\). Solving such equations
+		exactly
 		depends on deep mathematical conjectures like Schanuel's Conjecture. As of today, proofs for such conjectures
 		remain out of reach.
 	</p>
@@ -192,7 +206,6 @@
 				document.getElementById("references").innerHTML = html;
 			});
 	</script>
-
 
 
 </main>

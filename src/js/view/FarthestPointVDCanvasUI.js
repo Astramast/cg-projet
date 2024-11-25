@@ -1,4 +1,4 @@
-class CauchyArmLemmaCanvasUI extends CanvasUI {
+class FarthestPointVDCanvasUI extends CanvasUI {
 	constructor(p) {
 		super(p);
 		this.points = [];

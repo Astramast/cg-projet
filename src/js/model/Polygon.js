@@ -62,7 +62,6 @@ class Polygon {
 			} else {
 				let a = this.getPreviousConvexHullPoint(p, convex_hull);
 				let b = this.getNextConvexHullPoint(p, convex_hull);
-				console.log(a, b);
 				new_points.push(p.getSymmetricPoint(new Line(a, b)));
 			}
 		}
@@ -93,7 +92,6 @@ class Polygon {
 	getNextConvexHullPoint(p, hull) {
 		return this.getNeighbourConvexHullPoint(p, false, hull);
 	}
-
 
 
 }
