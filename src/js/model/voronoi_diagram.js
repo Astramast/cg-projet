@@ -52,9 +52,13 @@ class VoronoiDiagram {
 				break;
 			}
 		}
+		let j = null;
 		for (let s of this.sites) {
 			if (ccw.isEqual(s)) continue;
-			
+			let bisector = s.getPerpendicularBisector(ccw);
+			if (bisector.isEqual(b)) {
+				j = s;
+				break;
 		}
 	}
 	getCellFromSite(p) {
@@ -90,12 +94,13 @@ class VoronoiDiagram {
 			cell.push(semilines[0]);
 			cell.push(semilines[1]);
 		}
-		chosen
+		let chosen = cell[0];
 		while (segments.length > 0) {
 			for (let s of segments) {
 				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
 					cell.push(s);
 					segments.splice(segments.indexOf(s), 1);
+					chosen = s;
 					break;
 				}
 			}
