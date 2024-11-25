@@ -12,6 +12,7 @@ class ConvexPolygon {
 		return new VoronoiDiagram(this.points[0], this.points[1], this.points[2]);
 	}
 	//Farthest-Point Voronoi Diagram
+	//TODO move to voronoi_diagram.js
 	getFPVD() {
 		if (this.points.length <= 1) {
 			return new VoronoiDiagram(this.points, null);
