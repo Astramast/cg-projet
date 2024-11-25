@@ -43,6 +43,10 @@ class SemiLine {
 		v.mult(Math.max(windowWidth, windowHeight));
 		line(this.a.x, this.a.y, this.a.x + v.x, this.a.y + v.y);
 	}
+	getLineIntersection(otherLine) {
+		if (!intersectLineSemiLine(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
+	}
 }
 
 class Segment {
@@ -52,6 +56,10 @@ class Segment {
 	}
 	draw () {
 		line(this.a.x, this.a.y, this.b.x, this.b.y);
+	}
+	getLineIntersection(otherLine) {
+		if (!intersectLineSegment(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
 

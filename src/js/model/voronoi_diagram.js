@@ -37,36 +37,71 @@ class VoronoiDiagram {
 		}
 	}
 	addPoint(p, cw, ccw) {
-		//TODO
-		return;
+		if (!this.sites.includes(cw) || !this.sites.includes(ccw)) {
+			throw new Error("Neighbours are not sites of the Voronoi Diagram !");
+		}
+		this.sites.push(p);
+		let B_cwccw = cw.getPerpendicularBisector(ccw);
+		let ccwCell = getCellFromSite(ccw);
+		let q = null;
+		let b = null;
+		for (let l of ccwCell) {
+			q = l.getLineIntersection(B_cwccw);
+			if (q != null) {
+				b = l;
+				break;
+			}
+		}
+		for (let s of this.sites) {
+			if (ccw.isEqual(s)) continue;
+			
+		}
 	}
 	getCellFromSite(p) {
 		if (!this.sites.includes(p)) {
 			throw new Error("Point is not a site of the Voronoi Diagram !")
 		}
 		bisectors = [];
-		for (let i = 0; i < this.points.length; i++) {
-			let q = this.points[i];
-			if (q === p) continue;
-			let bisector = perpendicularBisector(p, q);
+		for (let i = 0; i < this.sites.length; i++) {
+			let q = this.sites[i];
+			if (q.isEqual(p)) continue; 
+			let bisector = q.getPerpendicularBisector(p);
 			bisectors.push(bisector);
 		}
+		let cell = [];
 		let semilines = [];
 		let segments = [];
-		for (sl of this.semilines) {
-			if (bisectors.isEqual(sl)) {
-				semilines.push(sl);
+		for (let b of bisectors) {
+			for (let l of this.lines) {
+				if (b.isEqual(l)) {
+					if (l isinstanceof SemiLine) {
+						semilines.push(l);
+					} else {
+						segments.push(l);
+					}
+					break;
+				}
 			}
 		}
-		for (s of this.segments) {
-			if (bisectors.isEqual(s)) {
-				segments.push(s);
+		if (semilines[0].b.getOrientationDeterminantSign(semilines[1].a, semilines[1].b) > 0) {
+			cell.push(semilines[1]);
+			cell.push(semilines[0]);
+		} else {
+			cell.push(semilines[0]);
+			cell.push(semilines[1]);
+		}
+		chosen
+		while (segments.length > 0) {
+			for (let s of segments) {
+				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
+					cell.push(s);
+					segments.splice(segments.indexOf(s), 1);
+					break;
+				}
 			}
 		}
-		if (semilines.length != 2) {
-			throw new Error("Only one semiline found for p !")
-		}
-		return new VoronoiCell(semilines[0], semilines[1], segments);
+		cell.push(cell.shift());
+		return cell;
 	}
 }
 
