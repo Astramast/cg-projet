@@ -60,6 +60,7 @@ class VoronoiDiagram {
 				j = s;
 				break;
 		}
+		//Redo with j instead of ccw until j is equal to cw
 	}
 	getCellFromSite(p) {
 		if (!this.sites.includes(p)) {
