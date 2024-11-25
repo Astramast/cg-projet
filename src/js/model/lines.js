@@ -17,6 +17,16 @@ class Line {
 		let c = this.a.y - m * this.a.x;
 		return m * x + c;
 	}
+	getIntersection(otherLine) {
+		if (!intersectLineLine(this, otherLine)) return null;
+		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
+		let om = (otherLine.b.y - otherLine.a.y) / (otherLine.b.x - otherLine.a.x);
+		let c = this.a.y - m * this.a.x;
+		let oc = otherLine.a.y - om * otherLine.a.x;
+		let x = (oc - c) / (m - om);
+		let y = m * x + c;
+		return new Point(x, y);
+	}
 }
 
 class SemiLine {

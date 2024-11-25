@@ -7,20 +7,8 @@ class ConvexPolygon {
 			line(this.points[i].x, this.points[i].y, this.points[(i + 1) % this.points.length].x, this.points[(i + 1) % this.points.length].y);
 		}
 	}
-	getStartingFPVD(p, q, r) {
-		let c1 = computeVoronoiCell3(p, q, r);
-		let c2 = computeVoronoiCell3(q, r, p);
-		let semilines = [c1.semiline1, c1.semiline2];
-		for (let i = 0; i < semilines.length; i++) {
-			if (semilines[i].isEqual(c2.semiline1)) {
-				semilines.push(c2.semiline2);
-				break;
-			} else if (semilines[i].isEqual(c2.semiline2)) {
-				semilines.push(c2.semiline1);
-				break;
-			}
-		}
-		return new VoronoiDiagram(c1.a, semilines);
+	getStartingFPVD() {
+		return new VoronoiDiagram(this.points[0], this.points[1], this.points[2]);
 	}
 	//Farthest-Point Voronoi Diagram
 	getFPVD() {
@@ -30,9 +18,10 @@ class ConvexPolygon {
 		if (this.points.length == 2) {
 			return new VoronoiDiagram(this.points, perpendicularBisector(this.points[0], this.points[1]));
 		}
-		if (this.points.length === 3) {
+		if (this.points.length == 3) {
 			return this.getStartingFPVD(this.points[0], this.points[1], this.points[2]);
 		}
+		this.sortPoints();
 		let copy = this.points.slice();
 		let vertices = {};
 		for (let i = 0; i < this.points.length - 3; i++) {
@@ -43,20 +32,30 @@ class ConvexPolygon {
 			vertices[randomPoint] = [prevPoint, nextPoint];
 			copy.splice(randomIndex, 1);
 		}
-		let fpvd = this.getStartingFPVD(copy[0], copy[1], copy[2]);
+		let fpvd = new VoronoiDiagram(copy[0], copy[1], copy[2]);
 		for (let i = 3; i < this.points.length; i++) {
 			let p_i = this.points[i];
 			let prevPi = vertices[p_i][0];
 			let nextPi = vertices[p_i][1];
-			let prevVCell = fpvd.getCellFromSite(prevPi);
+			fpvd.add(p_i, prevPi, nextPi);
 		}
+		return fpvd;
 	}
-}
-
-function perpendicularBisector(p, q) {
-	// TODO: Assumed general position, complete code for extreme cases
-	const y = (x) => ((2*q.x - 2*p.x) * x + (p.x**2 + p.y**2 - q.x**2 - q.y**2)) / (2*p.y - 2*q.y);
-	return new Line(new Point(0, y(0)), new Point(1, y(1)));
+	findMinimumX() {
+		let minX = this.points[0];
+		for (let i = 0; i < this.points.length; i++) {
+			if (this.points[i].x < minX.x) {
+				minX = this.points[i];
+			}
+		}
+		return minX;
+	}
+	sortPoints() {
+		let minX = this.findMinimumX();
+		this.points = this.points.filter((x) => x !== minX);
+		this.points.sort(minX.leftRadialComparator.bind(minX));
+		this.points.unshift(minX);
+	}
 }
 
 window.ConvexPolygon = ConvexPolygon;
