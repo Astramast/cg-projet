@@ -54,8 +54,8 @@ function intersectLineLine(line1, line2) {
 function intersectLineSemiline(line, semiline) {
 	if (!intersectLineLine(line, semiline)) return false;
 	let o1 = line.a.orientationDeterminant(line.b, semiline.b);
-	let v = Point(line.b.x - line.a.x, line.b.y - line.a.y);
-	let c = Point(semiline.a.x + v.x, semiline.a.y + v.y);
+	let v = new Point(line.b.x - line.a.x, line.b.y - line.a.y);
+	let c = new Point(semiline.a.x + v.x, semiline.a.y + v.y);
 	let o2 = semiline.a.orientationDeterminant(c, line.b);
 	return o1 * o2 < 0;
 }
