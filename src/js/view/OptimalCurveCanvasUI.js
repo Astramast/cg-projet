@@ -99,6 +99,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
 		if (this.points.length > 2) {
 			this.hull = new Polygon(computeConvexHull(Array.from(this.points)));
+			this.adjustPerimeter();
 		}
 	}
 
