@@ -151,6 +151,10 @@ class VoronoiDiagram {
 		for (let good_point of intersection_points) {
 			this.points.push(good_point);
 		}
+		//Add the lines of the cell
+		for (let l of pCell.cell) {
+			this.lines.push(l);
+		}
 		//Add p to the sites
 		this.sites.push(p);
 	}
