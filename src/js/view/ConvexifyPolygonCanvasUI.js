@@ -30,7 +30,7 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 		// Draw the drawing area
 		this.p.stroke("#CB9DF0");
 		this.p.fill("#CB9DF0");
-		this.p.rect(0, 100, this.p.width, this.p.height);
+		this.p.rect(0, 80, this.p.width, this.p.height);
 
 		// Draw Convex Polygon
 		if (this.convexPolygon != null) {
@@ -69,7 +69,7 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 
 
 	mousePressed() {
-		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 100 || this.p.mouseY > this.p.height) return;
+		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 80 || this.p.mouseY > this.p.height) return;
 		let p = new Point(this.p.mouseX, this.p.mouseY);
 		if (this.polygon.points.length < 3 || this.polygon.doesNotIntersect(p)) {
 			this.polygon.addPoint(p);

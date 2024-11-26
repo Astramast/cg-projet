@@ -5,11 +5,23 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 	}
 
 	setup() {
+		// Buttons for user interaction
+		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y, () => this.resetPoints(), this.p);
+	}
 
+	resetPoints() {
+		this.points = [];
 	}
 
 	draw() {
-		this.p.background("#CB9DF0");
+		// Draw background
+		this.p.background("#FFF9BF");
+
+		// Draw the drawing area
+		this.p.stroke("#CB9DF0");
+		this.p.fill("#CB9DF0");
+		this.p.rect(0, 80, this.p.width, this.p.height);
+
 
 		this.p.stroke("#FFF9BF");
 		this.p.fill("#FFF9BF");
@@ -20,7 +32,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 
 
 	mousePressed() {
-		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 0 || this.p.mouseY > this.p.height) return;
+		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 80 || this.p.mouseY > this.p.height) return;
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
 		console.log(this.points);
 	}
