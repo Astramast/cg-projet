@@ -8,12 +8,22 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 	setup() {
 		// Buttons for user interaction
 		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y, () => this.reset(), this.p);
-		this.convexifyButton = new Button("Convexify", this.canvasPosition.x + 200, this.canvasPosition.y, () => this.convexify(), this.p);
+		this.convexifyButton = new Button("Convexify", this.canvasPosition.x + 110, this.canvasPosition.y, () => this.convexify(), this.p);
+
+		this.perimeterText = this.p.createDiv("Perimeter: " + 0);
+		this.perimeterText.position(this.canvasPosition.x + 280, this.canvasPosition.y + 30);
+		this.perimeterText.addClass('perimeter-text');
+
+		this.areaText = this.p.createDiv("Area: 0");
+		this.areaText.position(this.canvasPosition.x + 480, this.canvasPosition.y + 30);
+		this.areaText.addClass('area-text');
 	}
 
 	reset() {
 		this.polygon = new Polygon();
 		this.convexPolygon = null;
+		this.perimeterText.html("Perimeter: 0");
+		this.areaText.html("Area: 0");
 	}
 
 	convexify() {
@@ -21,6 +31,8 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 			this.polygon = this.convexPolygon;
 		}
 		this.convexPolygon = this.polygon.convexify();
+		this.perimeterText.html("Perimeter: " + this.convexPolygon.perimeter().toFixed(2));
+		this.areaText.html("Area: " + this.convexPolygon.area().toFixed(2));
 	}
 
 	draw() {
@@ -70,9 +82,17 @@ class ConvexifyPolygonCanvasUI extends CanvasUI {
 
 	mousePressed() {
 		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 80 || this.p.mouseY > this.p.height) return;
+		if (this.convexPolygon != null) {
+			this.polygon = new Polygon();
+			this.convexPolygon = null;
+			this.perimeterText.html("Perimeter: 0");
+			this.areaText.html("Area: 0");
+		}
 		let p = new Point(this.p.mouseX, this.p.mouseY);
 		if (this.polygon.points.length < 3 || this.polygon.doesNotIntersect(p)) {
 			this.polygon.addPoint(p);
+			this.perimeterText.html("Perimeter: " + this.polygon.perimeter().toFixed(2));
+			this.areaText.html("Area: " + this.polygon.area().toFixed(2));
 		}
 	}
 
