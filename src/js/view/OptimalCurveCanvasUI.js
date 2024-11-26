@@ -47,14 +47,13 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		}
 
 		let currentPerimeter;
-		if (this.pqcurve != null) {
+		if (this.pqcurve == null) {
 			this.areaText.html("Area: " + this.hull.area().toFixed(2));
-			this.perimeterSlider.value(this.hull.perimeter());
 			this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
 			currentPerimeter = this.hull.perimeter();
 		} else {
 			this.areaText.html("Area: " + this.pqcurve.area().toFixed(2));
-			this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
+			this.perimeterText.html("Perimeter: " + this.pqcurve.perimeter().toFixed(2));
 			currentPerimeter = this.pqcurve.perimeter();
 		}
 		this.perimeterSlider.value(currentPerimeter);
@@ -71,14 +70,19 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		this.p.fill("#CB9DF0");
 		this.p.rect(0, 100, this.p.width, this.p.height);
 
-		// Draw convex hull
-		this.p.stroke("#FFF9BF");
-		this.p.fill("#ba76f1");
-		this.p.beginShape();
-		for (let p of this.hull.points) {
-			this.p.vertex(p.x, p.y);
+		if (this.pqcurve == null) {
+			// Draw convex hull
+			this.p.stroke("#FFF9BF");
+			this.p.fill("#ba76f1");
+			this.p.beginShape();
+			for (let p of this.hull.points) {
+				this.p.vertex(p.x, p.y);
+			}
+			this.p.endShape(this.p.CLOSE);
+		} else {
+			// Draw PQ curve
+			this.pqcurve.draw(this.p);
 		}
-		this.p.endShape(this.p.CLOSE);
 
 		// Draw points
 		this.p.stroke("#FFF9BF");
@@ -87,8 +91,6 @@ class OptimalCurveCanvasUI extends CanvasUI {
 			this.p.ellipse(p.x, p.y, 6, 6);
 		}
 
-		// Draw PQ curve
-		this.pqcurve?.draw(this.p);
 	}
 
 

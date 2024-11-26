@@ -5,8 +5,9 @@ class Circle {
 	}
 
 	draw(canvas) {
-		canvas.noFill();
-		canvas.circle(this.center.x, this.center.y, this.radius);
+		canvas.stroke("#FFF9BF");
+		canvas.fill("#ba76f1");
+		canvas.circle(this.center.x, this.center.y, this.radius*2);
 	}
 
 	perimeter() {
