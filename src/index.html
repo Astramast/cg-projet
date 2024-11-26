@@ -190,11 +190,19 @@
 		These diagrams are particularly useful in problems where the farthest distance is of interest, such as constructing the boundary of shapes or solving optimization problems involving enclosing regions.
 	</p>
 
-
 	<h3> Why Use Farthest Point Voronoi Diagrams? </h3>
 	<p>
 		In the context of the isoperimetric problem, the Farthest Point Voronoi diagram helps identify the critical points and edges necessary for constructing the optimal curve.
 		The diagram allows efficient computation of regions where circular arcs (with the same radius) will form parts of the solution curve.
+	</p>
+
+	<h3> 🚀 How to Implement the Farthest Point Voronoi Diagram </h3>
+
+	<p>
+		First case: there is only one point in the set. In this case, the diagram consists of a single cell covering the entire plane.
+		Second case: there are two points in the set. In this case, the diagram consists of two cells, each covering half of the plane. Separated by their bisector.
+		Third case: there are three point.
+		Last case: there are more than three points.
 	</p>
 
 	<h3> 🎨 Draw points to generate the Farthest Point Voronoi diagram: </h3>
