@@ -6,9 +6,18 @@ class Point {
 	draw() {
 		ellipse(this.x, this.y, 5, 5);
 	}
+	copy() {
+		return new Point(this.x, this.y);
+	}
 	orientationDeterminant(b,c) {
         // > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
-        return (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		// We added 1e-6 to avoid floating point errors, 
+		// this implies that there is an error on close to 0 computations
+        let ood = (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		if (Math.abs(ood) < 1e-6) {
+			return 0;
+		}
+		return ood;
 	}
 	getOrientationDeterminantSign(b,c) {
 		return Math.sign(this.orientationDeterminant(b,c));
@@ -22,7 +31,7 @@ class Point {
 		return new Point(2*otherPoint.x - this.x, 2*otherPoint.y - this.y);
 	}
 	isEqual(otherPoint) {
-		return (this.x == otherPoint.x && this.y == otherPoint.y);
+		return (Math.abs(this.x - otherPoint.x) < 1e-6 && Math.abs(this.y - otherPoint.y) < 1e-6);
 	}
 	leftRadialComparator(a, b) {
 		//Answers to : Is a more at left than b ?

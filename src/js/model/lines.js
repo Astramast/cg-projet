@@ -49,7 +49,7 @@ class SemiLine {
 		line(this.a.x, this.a.y, p.x, p.y);
 	}
 	getLineIntersection(otherLine) {
-		if (!intersectLineSemiLine(otherLine, this)) return null;
+		if (!intersectLineSemiline(otherLine, this)) return null;
 		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }

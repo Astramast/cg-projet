@@ -22,7 +22,7 @@ class VoronoiDiagram {
 			vertices.push([randomPoint, prevPoint, nextPoint]);
 			copy.splice(randomIndex, 1);
 		}
-		this.fvpd3constructor(copy[0], copy[1], copy[2]);
+		this.fpvd3constructor(copy[0], copy[1], copy[2]);
 		for (let i = vertices.length - 1; i >= 0; i--) {
 			let p_i = vertices[i][0];
 			let prev_p_i = vertices[i][1];
@@ -32,15 +32,16 @@ class VoronoiDiagram {
 			this.addPoint(p_i, prev_p_i, next_p_i);
 		}
 	}
-	fvpd3constructor(p1, p2, p3) {
+	fpvd3constructor(p1, p2, p3) {
 		let bisectors = [p1.getPerpendicularBisector(p2), p2.getPerpendicularBisector(p3)];
-		this.points = [bisectors[0].getIntersection(bisectors[1])];
+		let c = bisectors[0].getIntersection(bisectors[1]);
+		this.points = [c];
 		this.sites = [p1, p2, p3];
 		this.lines = [];
 		console.log("p1, p2, p3, c", p1, p2, p3, this.points[0]);
-		this.lines.push(this.getGoodSemiline(p1, p2, p3, this.points[0]));
-		this.lines.push(this.getGoodSemiline(p2, p3, p1, this.points[0]));
-		this.lines.push(this.getGoodSemiline(p3, p1, p2, this.points[0]));
+		this.lines.push(this.getGoodSemiline(p1, p2, p3, c.copy()));
+		this.lines.push(this.getGoodSemiline(p2, p3, p1, c.copy()));
+		this.lines.push(this.getGoodSemiline(p3, p1, p2, c.copy()));
 	}
 	draw() {
 		for (let p of this.points){
@@ -83,30 +84,44 @@ class VoronoiDiagram {
 		let k = ccw;
 		let intersection_points = [];
 		let intersection_lines_indexes = [];
+		let kValues = [ccw];
 		while (!k.isEqual(cw)) {
+			console.log("k, cw", k, cw);
 			let B_kp = p.getPerpendicularBisector(k);
 			let kCell = this.getCellFromSite(k);
 			let q = null;
 			let b = null;
 			for (let l of kCell.cell) {
 				q = l.getLineIntersection(B_kp);
-				if (q != null && !intersection_points.includes(q)) {
-					b = l;
-					intersection_points.push(q);
-					intersection_lines_indexes.push(this.lines.indexOf(l));
-					break;
+				if (q != null) {
+					let isAlreadyKnown = false;
+					for (let int_point of intersection_points) {
+						if (int_point.isEqual(q)) {
+							isAlreadyKnown = true;
+							break;
+						}
+					}
+					if (!isAlreadyKnown) {
+						b = l;
+						intersection_points.push(q);
+						intersection_lines_indexes.push(this.lines.indexOf(l));
+						break;
+					}
 				}
 			}
-			let j = null;
 			for (let s of this.sites) {
 				if (k.isEqual(s)) continue;
 				let bisector = s.getPerpendicularBisector(k);
 				if (bisector.isEqual(b)) {
-					j = s;
+					k = s;
 					break;
 				}
 			}
-			k = j;
+			console.log("q, b, k", q, b, k);
+			console.log("intersection_points", intersection_points);
+			if (kValues.includes(k)) {
+				throw new Error("Loop detected");
+			}
 		}
 		//Construct the cell of p
 		let cell_segments = [];
@@ -116,13 +131,16 @@ class VoronoiDiagram {
 		}
 		cell_semilines.push(this.getGoodSemiline(p, ccw, cw, intersection_points[0]));
 		cell_semilines.push(this.getGoodSemiline(p, cw, ccw, intersection_points[intersection_points.length - 1]));
-		pCell = new VoronoiCell(cell_semilines, cell_segments);
+		console.log("cell_semilines", cell_semilines);
+		let pCell = new VoronoiCell(cell_semilines, cell_segments);
 		//Modify intersected lines
+		console.log("lines before", this.lines);
 		for (let i = 0; i < intersection_lines_indexes.length; i++) {
 			let old_line = this.lines[intersection_lines_indexes[i]];
 			let i_p = intersection_points[i];
 			let new_line = null;
 			if (old_line instanceof SemiLine) {
+				console.log("old_line is semiline", old_line);
 				let v = new Point(old_line.b.x - old_line.a.x, old_line.b.y - old_line.a.y);
 				let i_pv = new Point(i_p.x + v.x, i_p.y + v.y);
 				new_line = new SemiLine(i_p, i_pv);
@@ -135,12 +153,19 @@ class VoronoiDiagram {
 			}
 			this.lines[intersection_lines_indexes[i]] = new_line;
 		}
+		console.log("lines after replacement", this.lines);
 		//Drop the lines inside the cell
 		for (let each_line of this.lines) {
 			if (pCell.isPointStrictlyInside(each_line.a) || pCell.isPointStrictlyInside(each_line.b)) {
 				this.lines.splice(this.lines.indexOf(each_line), 1);
 			}
 		}
+		console.log("lines after drop", this.lines);
+		//Add the lines of the cell
+		for (let l of pCell.cell) {
+			this.lines.push(l);
+		}
+		console.log("lines after addition", this.lines);
 		//Drop the points inside the cell
 		for (let bad_point of this.points) {
 			if (pCell.isPointStrictlyInside(bad_point)) {
@@ -150,10 +175,6 @@ class VoronoiDiagram {
 		//Add the intersection points
 		for (let good_point of intersection_points) {
 			this.points.push(good_point);
-		}
-		//Add the lines of the cell
-		for (let l of pCell.cell) {
-			this.lines.push(l);
 		}
 		//Add p to the sites
 		this.sites.push(p);

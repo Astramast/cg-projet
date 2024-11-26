@@ -20,7 +20,7 @@ class VoronoiCell {
 				}
 			}
 		}
-		this.cell.push(cell.shift());
+		this.cell.push(this.cell.shift());
 	}
 	isPointStrictlyInside(p) {
 		let isInside = true;
