@@ -1,5 +1,6 @@
 class VoronoiCell {
 	constructor(semilines, segments) {
+		console.log("semilines, segments", semilines, segments);
 		this.cell = [];
 		if (semilines[0].b.getOrientationDeterminantSign(semilines[1].a, semilines[1].b) > 0) {
 			this.cell.push(semilines[1]);

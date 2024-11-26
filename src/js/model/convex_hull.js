@@ -5,11 +5,11 @@ class ConvexHull{
 			this.points = points;
 		}
 		let copy = points.slice();
-		let minX = getMinimalX(copy);
+		let minX = this.getMinimalX(copy);
 		copy = copy.filter((x) => x !== minX);
 		copy.sort(minX.leftRadialComparator.bind(minX));
 		copy.unshift(minX);
-		result = [copy[0], copy[1]];
+		let result = [copy[0], copy[1]];
 		for (let i = 2; i < copy.length; i++) {
 			while (result.length >= 2 && result[result.length-2].getOrientationDeterminantSign(result[result.length-1], copy[i]) >= 0) {
 				result.pop();

@@ -4,10 +4,9 @@ class Line {
 		this.b = b;
 	}
 	draw () {
-		let v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
-		v.normalize();
-		v.mult(Math.max(windowWidth, windowHeight));
-		line(this.a.x - v.x, this.a.y - v.y, this.a.x + v.x, this.a.y + v.y);
+		let p = new Point(windowWidth, this.getYFromX(windowWidth));
+		let q = new Point(0, this.getYFromX(0));
+		line(p.x, p.y, q.x, q.y);
 	}
 	isEqual(line){
 		return (this.a.orientationDeterminant(this.b, line.a) == 0 && this.a.orientationDeterminant(this.b, line.b) == 0)
@@ -27,6 +26,9 @@ class Line {
 		let y = m * x + c;
 		return new Point(x, y);
 	}
+	isPointOnLine(p){
+		return this.getYFromX(p.x) == p.y;
+	}
 }
 
 class SemiLine {
@@ -38,10 +40,13 @@ class SemiLine {
 		return (this.a.x == semiline.a.x && this.a.y == semiline.a.y && this.b.orientationDeterminant(this.a, semiline.b) == 0);
 	}
 	draw () {
-		let v = createVector(this.b.x - this.a.x, this.b.y - this.a.y);
-		v.normalize();
-		v.mult(Math.max(windowWidth, windowHeight));
-		line(this.a.x, this.a.y, this.a.x + v.x, this.a.y + v.y);
+		let p = null;
+		if (this.a.x < this.b.x) {
+			p = new Point(windowWidth, new Line(this.a, this.b).getYFromX(windowWidth));
+		} else {
+			p = new Point(0, new Line(this.a, this.b).getYFromX(0));
+		}
+		line(this.a.x, this.a.y, p.x, p.y);
 	}
 	getLineIntersection(otherLine) {
 		if (!intersectLineSemiLine(otherLine, this)) return null;

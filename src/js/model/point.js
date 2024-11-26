@@ -16,7 +16,7 @@ class Point {
 	getPerpendicularBisector(otherPoint) {
 		// TODO: Assumed general position, complete code for extreme cases
 		const y = (x) => ((2*otherPoint.x - 2*this.x) * x + (this.x**2 + this.y**2 - otherPoint.x**2 - otherPoint.y**2)) / (2*this.y - 2*otherPoint.y);
-		return new Line(new Point(0, y(0)), new Point(1, y(1)));
+		return new Line(new Point(this.x, y(this.x)), new Point(otherPoint.x, y(otherPoint.x)));
 	}
 	getSymmetrical(otherPoint) {
 		return new Point(2*otherPoint.x - this.x, 2*otherPoint.y - this.y);
@@ -26,7 +26,7 @@ class Point {
 	}
 	leftRadialComparator(a, b) {
 		//Answers to : Is a more at left than b ?
-		let od = orientation_determinant(this, a, b);
+		let od = this.getOrientationDeterminantSign(a, b);
 		if (od > 0) {
 			return true;
 		}

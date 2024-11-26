@@ -12,34 +12,33 @@ class VoronoiDiagram {
 			return;
 		}
 		sites = new ConvexHull(sites).points;
-		let copy = this.points.slce();
-		let vertices = {};
-		for (let i = 0; i < this.points.length - 3; i++) {
+		let copy = sites.slice();
+		let vertices = [];
+		for (let i = 0; i < sites.length - 3; i++) {
 			const randomIndex = Math.floor(Math.random() * copy.length);
 			const randomPoint = copy[randomIndex];
 			const prevPoint = copy[(randomIndex - 1 + copy.length) % copy.length];
 			const nextPoint = copy[(randomIndex + 1) % copy.length];
-			vertices[randomPoint] = [prevPoint, nextPoint];
+			vertices.push([randomPoint, prevPoint, nextPoint]);
 			copy.splice(randomIndex, 1);
 		}
-		this.fvpd3constructor(sites[0], sites[1], sites[2]);
-		for (let i = 3; i < sites.length; i++) {
-			let p_i = sites[i];
-			let prevPi = vertices[p_i][0];
-			let nextPi = vertices[p_i][1];
-			this.add(p_i, prevPi, nextPi);
+		this.fvpd3constructor(copy[0], copy[1], copy[2]);
+		for (let i = vertices.length - 1; i >= 0; i--) {
+			let p_i = vertices[i][0];
+			let prev_p_i = vertices[i][1];
+			let next_p_i = vertices[i][2];
+			this.addPoint(p_i, prev_p_i, next_p_i);
 		}
 	}
 	fvpd3constructor(p1, p2, p3) {
-		let bisectors = [p1.getPerpendicularBisector(p2), p2.getPerpendicularBisector(p3), p3.getPerpendicularBisector(p1)];
+		let bisectors = [p1.getPerpendicularBisector(p2), p2.getPerpendicularBisector(p3)];
 		this.points = [bisectors[0].getIntersection(bisectors[1])];
 		this.sites = [p1, p2, p3];
 		this.lines = [];
-		for (let i = 0; i < 3; i++) {
-			this.lines.push(this.getGoodSemiline(p1, p2, p3, this.points[0]));
-			this.lines.push(this.getGoodSemiline(p2, p3, p1, this.points[0]));
-			this.lines.push(this.getGoodSemiline(p3, p1, p2, this.points[0]));
-		}
+		console.log("p1, p2, p3, c", p1, p2, p3, this.points[0]);
+		this.lines.push(this.getGoodSemiline(p1, p2, p3, this.points[0]));
+		this.lines.push(this.getGoodSemiline(p2, p3, p1, this.points[0]));
+		this.lines.push(this.getGoodSemiline(p3, p1, p2, this.points[0]));
 	}
 	draw() {
 		for (let p of this.points){
@@ -54,9 +53,6 @@ class VoronoiDiagram {
 	}
 	getGoodSemiline(p, q, r, c) {
 		let B = p.getPerpendicularBisector(q);
-		if (B.a.getOrientationDeterminantSign(B.b, c) != 0) {
-			throw new Error("Point c not on the bisector of pq.");
-		}
 		let sym = null;
 		let flag = false;
 		if (B.a == c) {
@@ -79,6 +75,7 @@ class VoronoiDiagram {
 	}
 	addPoint(p, cw, ccw) {
 		if (!this.sites.includes(cw) || !this.sites.includes(ccw)) {
+			console.log("cw, ccw, sites", cw, ccw, this.sites);
 			throw new Error("Neighbours are not sites of the Voronoi Diagram !");
 		}
 		let k = ccw;
@@ -86,7 +83,7 @@ class VoronoiDiagram {
 		let intersection_lines_indexes = [];
 		while (!k.isEqual(cw)) {
 			let B_kp = p.getPerpendicularBisector(k);
-			let kCell = getCellFromSite(k);
+			let kCell = this.getCellFromSite(k);
 			let q = null;
 			let b = null;
 			for (let l of kCell.cell) {
@@ -160,8 +157,7 @@ class VoronoiDiagram {
 		for (let i = 0; i < this.sites.length; i++) {
 			let q = this.sites[i];
 			if (q.isEqual(p)) continue; 
-			let bisector = q.getPerpendicularBisector(p);
-			bisectors.push(bisector);
+			bisectors.push(p.getPerpendicularBisector(q));
 		}
 		return bisectors;
 	}
@@ -170,13 +166,13 @@ class VoronoiDiagram {
 			throw new Error("Point is not a site of the Voronoi Diagram !")
 		}
 		let bisectors = this.getBisectors(p);
-		let cell = [];
+		console.log("Bisectors", bisectors);
 		let semilines = [];
 		let segments = [];
 		for (let b of bisectors) {
 			for (let l of this.lines) {
 				if (b.isEqual(l)) {
-					if (l isinstanceof SemiLine) {
+					if (l instanceof SemiLine) {
 						semilines.push(l);
 					} else {
 						segments.push(l);
@@ -185,7 +181,10 @@ class VoronoiDiagram {
 				}
 			}
 		}
-		let cell = VoronoiCell(semilines, segments);
+		console.log("Semilines", semilines);
+		console.log("Segments", segments);
+		console.log("Lines", this.lines);
+		let cell = new VoronoiCell(semilines, segments);
 		return cell;
 	}
 }
