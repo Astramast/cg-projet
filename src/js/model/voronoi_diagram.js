@@ -36,6 +36,32 @@ class VoronoiDiagram {
 			s.draw();
 		}
 	}
+	getGoodSemiline(p, q, r, c) {
+		let B = p.getPerpendicularBisector(q);
+		if (B.a.getOrientationDeterminantSign(B.b, c) != 0) {
+			throw new Error("Point c not on the bisector of pq.");
+		}
+		let v = new Point(B.b.x - B.a.x, B.b.y - B.a.y);
+		let sym = null;
+		let flag = false;
+		if (B.a == c) {
+			sym = B.b.getSymmetrical(c);
+			flag = true;
+		} else {
+			sym = B.a.getSymmetrical(c);
+		}
+		let goodSign = p.getOrientationDeterminantSign(q, r);
+		let ood = p.getOrientationDeterminantSign(c, sym);
+		if (goodSign == ood) {
+			return new SemiLine(c, sym);
+		} else {
+			if (flag) {
+				return new SemiLine(c, B.b);
+			} else {
+				return new SemiLine(c, B.a);
+			}
+		}
+	}
 	addPoint(p, cw, ccw) {
 		if (!this.sites.includes(cw) || !this.sites.includes(ccw)) {
 			throw new Error("Neighbours are not sites of the Voronoi Diagram !");
@@ -64,8 +90,19 @@ class VoronoiDiagram {
 				if (bisector.isEqual(b)) {
 					j = s;
 					break;
+				}
 			}
 			k = j;
+		}
+		//Construct the cell of p
+		let cell_segments = [];
+		let cell_semilines = [];
+		for (let i = 1; i < intersection_points.length; i++) { // If length is 1 loop is skipped
+			cell_segments.push(new Segment(intersection_points[i - 1], intersection_points[i]));
+		}
+		cell_semilines.push(this.getGoodSemiline(p, ccw, cw, intersection_points[0]));
+		cell_semilines.push(this.getGoodSemiline(p, cw, ccw, intersection_points[intersection_points.length - 1]));
+		pCell = new VoronoiCell(cell_semilines, cell_segments);
 		this.sites.push(p);
 	}
 	getBisectors(p) {
