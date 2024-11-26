@@ -1,44 +1,44 @@
 class VoronoiCell {
-	constructor(semiLine1, semiLine2, segments) {
-		this.semiLine1 = semiLine1;
-		this.semiLine2 = semiLine2;
-		this.segments = segments;
+	constructor(semilines, segments) {
+		this.cell = [];
+		if (semilines[0].b.getOrientationDeterminantSign(semilines[1].a, semilines[1].b) > 0) {
+			this.cell.push(semilines[1]);
+			this.cell.push(semilines[0]);
+		} else {
+			this.cell.push(semilines[0]);
+			this.cell.push(semilines[1]);
+		}
+		let chosen = this.cell[0];
+		while (segments.length > 0) {
+			for (let s of segments) {
+				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
+					this.cell.push(s);
+					segments.splice(segments.indexOf(s), 1);
+					chosen = s;
+					break;
+				}
+			}
+		}
+		this.cell.push(this.cell.shift());
 	}
 
-}
-
-
-function getIntersectionPoint(line1, line2) {
-	// Assuming intersectLineLine is modified to return intersection point
-	let t = intersectLineLine(line1, line2);
-	if (t) {
-		return new Point(line1.a.x + t * (line1.b.x - line1.a.x), line1.a.y + t * (line1.b.y - line1.a.y));
+	isPointStrictlyInside(p) {
+		let isInside = true;
+		let a = this.cell[0].b;
+		let b = this.cell[0].a;
+		let i = 0;
+		while (isInside && i < this.cell.length) {
+			isInside = a.getOrientationDeterminantSign(b, p) > 0;
+			a = b;
+			if (i + 1 < this.cell.length) {
+				if (this.cell[i + 1].a.isEqual(a)) {
+					b = this.cell[i + 1].b;
+				} else {
+					b = this.cell[i + 1].a;
+				}
+			}
+			i++;
+		}
+		return isInside;
 	}
-	return null;
-}
-
-function isInsideHalfPlane(segment, bisector, p) {
-	let orientation = bisector.a.orientationDeterminant(bisector.b, p);
-	return orientation > 0;
-}
-
-function computeVoronoiCell3(p, q, r) {
-
-	console.log(p, q, r);
-
-	let bissectorPQ = perpendicularBisector(p, q);
-	let bissectorPR = perpendicularBisector(p, r);
-
-	let intersection = bissectorPQ.getIntersection(bissectorPR);
-
-	// TODO: Change that
-	let point_infinite_line_pq = new Point(p.x + 1000 * (q.x - p.x), p.y + 1000 * (q.y - p.y));
-	let point_infinite_line_pr = new Point(p.x + 1000 * (r.x - p.x), p.y + 1000 * (r.y - p.y));
-
-
-	let semiLine1 = new SemiLine(intersection, point_infinite_line_pq);
-	let semiLine2 = new SemiLine(intersection, point_infinite_line_pr)
-
-	console.log(semiLine1, semiLine2);
-	return new VoronoiCell(semiLine1, semiLine2, []);
 }

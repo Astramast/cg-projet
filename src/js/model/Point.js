@@ -4,6 +4,10 @@ class Point {
 		this.y = y;
 	}
 
+	isEqual(p) {
+		return (this.x === p.x && this.y === p.y);
+	}
+
 	draw(canvas) {
 		canvas.ellipse(this.x, this.y, 6, 6);
 	}
@@ -11,6 +15,10 @@ class Point {
 	orientationDeterminant(b, c) {
 		// > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
 		return (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+	}
+
+	getOrientationDeterminantSign(b, c) {
+		return Math.sign(this.orientationDeterminant(b, c));
 	}
 
 	// Returns the distance between two points
@@ -26,4 +34,14 @@ class Point {
 		return new Point(m.x + v_pm.x, m.y + v_pm.y);
 	}
 
+	getSymmetrical(otherPoint) {
+		return new Point(2 * otherPoint.x - this.x, 2 * otherPoint.y - this.y);
+	}
+
+}
+
+function perpendicularBisector(p, q) {
+	// TODO: Assumed general position, complete code for extreme cases
+	const y = (x) => ((2 * q.x - 2 * p.x) * x + (p.x ** 2 + p.y ** 2 - q.x ** 2 - q.y ** 2)) / (2 * p.y - 2 * q.y);
+	return new Line(new Point(0, y(0)), new Point(10000, y(10000)));
 }

@@ -5,6 +5,7 @@ function findPQCurve(polygon, p) {
 	if (p >= enclosingCircle.perimeter()) {
 		return Circle.fromCenterPerimeter(enclosingCircle.center, p);
 	}
+	return null;
 
 	// Definitions:
 	// C: PQ curve with perimeter P

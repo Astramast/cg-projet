@@ -49,8 +49,7 @@ class Polygon {
 
 
 	getFPVD() {
-		// TODO: Implement the farthest-point Voronoi diagram algorithm
-		return this.points;
+		return FarthestPointVoronoiDiagram.fromPoints(this.points);
 	}
 
 	convexify() {
