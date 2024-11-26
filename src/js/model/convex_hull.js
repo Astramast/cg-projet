@@ -1,30 +1,32 @@
-function computeConvexHull(points) {
-	if (points.length < 3) return points; // Convex hull is not defined for fewer than 3 points
-
-	points.sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
-
-	const crossProduct = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
-
-	let lower = [];
-	for (let p of points) {
-		while (lower.length >= 2 && crossProduct(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
-			lower.pop();
+class ConvexHull{
+	constructor(points){ //Graham scan
+		this.points = [];
+		if (points.length <= 2) {
+			this.points = points;
 		}
-		lower.push(p);
-	}
-
-	let upper = [];
-	for (let i = points.length - 1; i >= 0; i--) {
-		const p = points[i];
-		while (upper.length >= 2 && crossProduct(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
-			upper.pop();
+		let copy = points.slice();
+		let minX = getMinimalX(copy);
+		copy = copy.filter((x) => x !== minX);
+		copy.sort(minX.leftRadialComparator.bind(minX));
+		copy.unshift(minX);
+		result = [copy[0], copy[1]];
+		for (let i = 2; i < copy.length; i++) {
+			while (result.length >= 2 && result[result.length-2].getOrientationDeterminantSign(result[result.length-1], copy[i]) >= 0) {
+				result.pop();
+			}
+			result.push(copy[i]);
 		}
-		upper.push(p);
+		this.points = result;
 	}
-
-	upper.pop();
-	lower.pop();
-	return lower.concat(upper);
+	getMinimalX(points){
+		let minX = points[0];
+		for (let i = 1; i < points.length; i++) {
+			if (points[i].x < minX.x) {
+				minX = points[i];
+			}
+		}
+		return minX;
+	}
 }
 
-window.computeConvexHull = computeConvexHull;
+window.ConvexHull = ConvexHull;
