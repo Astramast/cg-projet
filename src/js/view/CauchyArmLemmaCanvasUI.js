@@ -2,10 +2,12 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 	constructor(p) {
 		super(p);
 		this.points = [];
+		this.nbAngleToStretchangle = 1;
 	}
 
 	setup() {
 		// Buttons for user interaction
+		this.clearButton = new Button("Stretch", this.canvasPosition.x + 110, this.canvasPosition.y, () => this.Stretch(), this.p);
 		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y, () => this.resetPoints(), this.p);
 	}
 
@@ -28,13 +30,31 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		for (let p of this.points) {
 			this.p.ellipse(p.x, p.y, 6, 6);
 		}
+
+		// drawing lines
+		this.p.beginShape();
+		this.p.noFill();
+		for (let p of this.points) {
+			this.p.vertex(p.x, p.y);
+		}
+		this.p.endShape(this.p.CLOSE);
 	}
 
 
 	mousePressed() {
 		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 80 || this.p.mouseY > this.p.height) return;
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
-		console.log(this.points);
+		// console.log(this.points);
+	}
+
+	Stretch() {
+		// this.chooseStretch(this.points);
+		this.test();
+	}
+
+	test() {
+		this.testGetAngle();
+		this.testRotate();
 	}
 
 
@@ -68,7 +88,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let radians = angle * Math.PI / 180;
 		let cos = Math.cos(radians);
 		let sin = Math.sin(radians);
-		let x = cos * (p.x - origin.x) - sin * (p.y - origin.y) + origin.x;
+		let x = cos * (p.y - origin.y) + sin * (p.x - origin.x) + origin.x;
 		let y = sin * (p.x - origin.x) + cos * (p.y - origin.y) + origin.y;
 		return new Point(x, y);
 	}
@@ -78,8 +98,8 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let p = new Point(1, 0);
 		let angle = 90;
 		let result = this.rotate(origin, p, angle);
-		if (result.x !== 0 || result.y !== 1) {
-			console.log("ERROR : rotate failed")
+		if (result.x != 0 || (result.y != 1 && result.y != -1) ) {
+			console.log("ERROR : rotate failed, point :", result)
 		} else {
 			console.log("rotate success")
 		}
@@ -116,15 +136,16 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		}
 	}
 
-	chooseStretch(polygon, nbAngleToStretch) {
+	chooseStretch(polygon) {
 		// the user choose a nb x and we choose x angle to stretch
 		let n = polygon.length;
-		let angleToStretch = [];
-		for (let i = 0; i < nbAngleToStretch; i++) {  // we push random values between 0 and n-2, n and n-1 are exluded
-			angleToStretch.push(Math.floor(Math.random() * (n - 1)));  // made by copilot
-		}
+		let angleToStretch = [polygon[1]];
+		// let angleToStretch = [];
+		// for (let i = 0; i < this.nbAngleToStretch; i++) {  // we push random values between 0 and n-2, n and n-1 are exluded
+		// 	angleToStretch.push(Math.floor(Math.random() * (n - 1)));  // made by copilot
+		// }
 
-		for (let a = 0; a < nbAngleToStretch; a++) {
+		for (let a = 0; a < this.nbAngleToStretch; a++) {
 			this.stretchPolygon(polygon, angleToStretch[a]);
 		}
 	}
