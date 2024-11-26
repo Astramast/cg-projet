@@ -4,8 +4,8 @@ class Point {
 		this.y = y;
 	}
 
-	isEqual(p) {
-		return (this.x === p.x && this.y === p.y);
+	isEqual(otherPoint) {
+		return (Math.abs(this.x - otherPoint.x) < 1e-6 && Math.abs(this.y - otherPoint.y) < 1e-6);
 	}
 
 	draw(canvas) {
@@ -38,6 +38,11 @@ class Point {
 		return new Point(2 * otherPoint.x - this.x, 2 * otherPoint.y - this.y);
 	}
 
+	getPerpendicularBisector(otherPoint) {
+		// TODO: Assumed general position, complete code for extreme cases
+		const y = (x) => ((2*otherPoint.x - 2*this.x) * x + (this.x**2 + this.y**2 - otherPoint.x**2 - otherPoint.y**2)) / (2*this.y - 2*otherPoint.y);
+		return new Line(new Point(this.x, y(this.x)), new Point(otherPoint.x, y(otherPoint.x)));
+	}
 }
 
 function perpendicularBisector(p, q) {

@@ -47,9 +47,10 @@ class Line {
 	}
 }
 
-class SemiLine extends Line {
+class SemiLine {
 	constructor(a, b) {
-		super(a, b);
+		this.a = a;
+		this.b = b;
 	}
 
 	isEqual(semiline) {
@@ -60,10 +61,9 @@ class SemiLine extends Line {
 		canvas.line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 
-	getYFromX(x) {
-		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
-		let c = this.a.y - m * this.a.x;
-		return m * x + c;
+	getLineIntersection(otherLine) {
+		if (!intersectLineSemiline(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
 
@@ -75,6 +75,11 @@ class Segment {
 
 	draw() {
 		line(this.a.x, this.a.y, this.b.x, this.b.y);
+	}
+
+	getLineIntersection(otherLine) {
+		if (!intersectLineSegment(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
 

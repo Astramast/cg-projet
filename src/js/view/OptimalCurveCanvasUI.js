@@ -58,7 +58,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		}
 		this.perimeterSlider.value(currentPerimeter);
 		this.perimeterSlider.attribute('min', this.hull.perimeter());
-		this.perimeterSlider.attribute('max', Circle.fromEnclosingPolygon(this.hull).perimeter()*1.5);
+		this.perimeterSlider.attribute('max', Circle.fromEnclosingPolygon(this.hull).perimeter() * 1.5);
 	}
 
 	draw() {

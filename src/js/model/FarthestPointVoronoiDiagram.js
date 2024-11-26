@@ -8,7 +8,7 @@ class FarthestPointVoronoiDiagram {
 
 	static fromPoints(points) {
 		if (points.length === 1) return new FarthestPointVoronoiDiagram([points[0]], [], []);
-		else if (points.length === 2) return new FarthestPointVoronoiDiagram([points[0], points[1]], [], [perpendicularBisector(points[0], points[1])]);
+		else if (points.length === 2) return new FarthestPointVoronoiDiagram([points[0], points[1]], [], [points[0].getPerpendicularBisector(points[1])]);
 		else if (points.length === 3) return FarthestPointVoronoiDiagram.from3Points(points[0], points[1], points[2]);
 
 		// Compute the convex hull of the points
@@ -23,6 +23,7 @@ class FarthestPointVoronoiDiagram {
 			vertices.push([randomPoint, prevPoint, nextPoint]);
 			copy.splice(randomIndex, 1);
 		}
+		console.log("copy in fromPoints: ", copy);
 		let fpvd = FarthestPointVoronoiDiagram.from3Points(copy[0], copy[1], copy[2]);
 		for (let i = vertices.length - 1; i >= 0; i--) {
 			let p_i = vertices[i][0];
@@ -35,7 +36,7 @@ class FarthestPointVoronoiDiagram {
 
 	static from3Points(p1, p2, p3) {
 		let sites = [p1, p2, p3];
-		let points = [perpendicularBisector(p1, p2).getIntersection(perpendicularBisector(p2, p3))];
+		let points = [p1.getPerpendicularBisector(p2).getIntersection(p2.getPerpendicularBisector(p3))];
 		let lines = [
 			getGoodSemiline(p1, p2, p3, points[0]),
 			getGoodSemiline(p2, p3, p1, points[0]),
@@ -62,7 +63,7 @@ class FarthestPointVoronoiDiagram {
 		let intersection_lines_indexes = [];
 		let kValues = [ccw];
 		while (!k.isEqual(cw)) {
-			let B_kp = perpendicularBisector(p, k);
+			let B_kp = p.getPerpendicularBisector(k);
 			let kCell = this.getCellFromSite(k);
 			let q = null;
 			let b = null;
@@ -86,7 +87,7 @@ class FarthestPointVoronoiDiagram {
 			}
 			for (let s of this.sites) {
 				if (k.isEqual(s)) continue;
-				let bisector = perpendicularBisector(s, k);
+				let bisector = s.getPerpendicularBisector(k);
 				if (bisector.isEqual(b)) {
 					k = s;
 					break;
@@ -174,7 +175,7 @@ class FarthestPointVoronoiDiagram {
 		for (let i = 0; i < this.sites.length; i++) {
 			let q = this.sites[i];
 			if (q.isEqual(p)) continue;
-			bisectors.push(perpendicularBisector(p, q));
+			bisectors.push(p.getPerpendicularBisector(q));
 		}
 		return bisectors;
 	}
@@ -182,7 +183,7 @@ class FarthestPointVoronoiDiagram {
 
 
 function getGoodSemiline(p, q, r, c) {
-	let bisector = perpendicularBisector(p, q);
+	let bisector = p.perpendicularBisector(q);
 	let sym = bisector.a === c ? bisector.b.getSymmetrical(c) : bisector.a.getSymmetrical(c);
 	let goodSign = p.getOrientationDeterminantSign(q, r);
 	let ood = p.getOrientationDeterminantSign(c, sym);

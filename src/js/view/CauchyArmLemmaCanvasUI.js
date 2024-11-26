@@ -87,7 +87,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 
 	propagateStretch(c, polygon, angle) {
 		let n = polygon.length;
-		for (let p = c; p !== n-1; p++) {
+		for (let p = c; p !== n - 1; p++) {
 			let p0 = p - 1;
 			polygon[p] = this.rotate(polygon[p0], polygon[p], angle);
 		}
