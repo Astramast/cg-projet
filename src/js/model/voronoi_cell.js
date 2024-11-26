@@ -29,7 +29,12 @@ class VoronoiCell {
 		while (isInside && i < this.cell.length) {
 			isInside = a.getOrientationDeterminantSign(b, p) > 0;
 			a = b;
-			if (i + 1 < this.cell.length && ) {
+			if (i + 1 < this.cell.length) {
+				if (this.cell[i + 1].a.isEqual(a)) {
+					b = this.cell[i + 1].b;
+				} else {
+					b = this.cell[i + 1].a;
+				}
 			}
 			i++;
 		}

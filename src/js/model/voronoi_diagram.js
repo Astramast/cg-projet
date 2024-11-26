@@ -68,7 +68,7 @@ class VoronoiDiagram {
 		}
 		let k = ccw;
 		let intersection_points = [];
-		let intersection_lines = [];
+		let intersection_lines_indexes = [];
 		while (!k.isEqual(cw)) {
 			let B_kp = p.getPerpendicularBisector(k);
 			let kCell = getCellFromSite(k);
@@ -79,7 +79,7 @@ class VoronoiDiagram {
 				if (q != null && !intersection_points.includes(q)) {
 					b = l;
 					intersection_points.push(q);
-					intersection_lines.push(b);
+					intersection_lines_indexes.push(this.lines.indexOf(l));
 					break;
 				}
 			}
@@ -103,6 +103,31 @@ class VoronoiDiagram {
 		cell_semilines.push(this.getGoodSemiline(p, ccw, cw, intersection_points[0]));
 		cell_semilines.push(this.getGoodSemiline(p, cw, ccw, intersection_points[intersection_points.length - 1]));
 		pCell = new VoronoiCell(cell_semilines, cell_segments);
+		//Modify intersected lines
+		for (let i = 0; i < intersection_lines_indexes.length; i++) {
+			let old_line = this.lines[intersection_lines_indexes[i]];
+			let i_p = intersection_points[i];
+			let new_line = null;
+			if (old_line instanceof SemiLine) {
+				let v = new Point(old_line.b.x - old_line.a.x, old_line.b.y - old_line.a.y);
+				let i_pv = new Point(i_p.x + v.x, i_p.y + v.y);
+				new_line = new SemiLine(i_p, i_pv);
+			} else {
+				if (pCell.isPointStrictlyInside(old_line.a)) {
+					new_line = new Segment(ip, old_line.b);
+				} else {
+					new_line = new Segment(old_line.a, ip);
+				}
+			}
+			this.lines[intersection_lines_indexes[i]] = new_line;
+		}
+		//Drop the lines inside the cell
+		for (let l of this.lines) {
+			if (pCell.isPointStrictlyInside(l.a) || pCell.isPointStrictlyInside(l.b)) {
+				this.lines.splice(this.lines.indexOf(l), 1);
+			}
+		}
+		//Add p to the sites
 		this.sites.push(p);
 	}
 	getBisectors(p) {
