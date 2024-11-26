@@ -21,6 +21,20 @@ class VoronoiCell {
 		}
 		this.cell.push(cell.shift());
 	}
+	isPointStrictlyInside(p) {
+		let isInside = true;
+		let a = this.cell[0].b;
+		let b = this.cell[0].a;
+		let i = 0;
+		while (isInside && i < this.cell.length) {
+			isInside = a.getOrientationDeterminantSign(b, p) > 0;
+			a = b;
+			if (i + 1 < this.cell.length && ) {
+			}
+			i++;
+		}
+		return isInside;
+	}
 }
 
 
