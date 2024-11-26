@@ -113,7 +113,7 @@ const optimalCurveSketch = (p) => {
 
 
 new p5(voronoiDiagramSketch);
-new p5(cauchyArmLemmaSketch);
 new p5(convexifyPolygonSketch);
+new p5(cauchyArmLemmaSketch);
 new p5(farthestPointVDSketch);
 new p5(optimalCurveSketch);

@@ -48,10 +48,17 @@
 	<h1> 🌟 Introduction </h1>
 
 	<p>
-		In geometry and optimization, one fundamental challenge is to find shapes or curves that maximize or minimize a particular property while adhering to strict constraints. These problems often involve maximizing enclosed area or minimizing perimeter, giving rise to the family of isoperimetric problems.
+		In geometry and optimization, one fundamental challenge is to find shapes or curves that maximize
+		or minimize a particular property while adhering to strict constraints.
+		These problems often involve maximizing enclosed area or minimizing perimeter,
+		giving rise to the family of isoperimetric problems.
 	</p>
 	<p>
-		A classical example, known since ancient Greece, demonstrates that among all closed curves with a fixed perimeter \( P \), the circle encloses the maximum possible area. This result, rigorously formalized in the 19th century as the *Isoperimetric Theorem*, highlights the exceptional properties of the circle as the optimal solution in this context.
+		A classical example, known since ancient Greece,
+		demonstrates that among all closed curves with a fixed perimeter \( P \),
+		the circle encloses the maximum possible area.
+		This result, rigorously formalized in the 19th century as the *Isoperimetric Theorem*,
+		highlights the exceptional properties of the circle as the optimal solution in this context.
 	</p>
 
 	<div class="theorem">
@@ -123,55 +130,76 @@
 		This question leads to a fascinating interplay between convex geometry and optimization.
 	</p>
 
-	<h2> Key Insight: Cauchy’s Arm Lemma </h2>
-	<p>
-		Cauchy’s Arm Lemma provides an important geometric result that plays a critical role in solving the problem.
-		The lemma states:
-	</p>
-	<blockquote>
-		Let \(Q = (v_0, v_1, \dots, v_k, v_0)\) be a convex polygon where each consecutive pair of vertices is connected
-		by an edge \(e_i = v_{i-1}v_i\),
-		and where the internal angle at vertex \(v_i\) between \(e_i\) and \(e_{i+1}\) (modulo \(k\)) is \(\theta_i\).
-		If we remove the edge \(v_kv_0\) from \(Q\) and increase the value of some nonempty subset of the angles
-		\(\theta_i\)
-		while keeping the length of all remaining edges fixed and every \(\theta_i \leq \pi\),
-		then the distance between the endpoints \(v_0\) and \(v_k\) strictly increases.
-	</blockquote>
-	<p>
-		In simpler terms, modifying the angles of a convex shape while preserving the edge lengths can increase the
-		distance between certain points.
-		This result is crucial in understanding why optimal solutions to our problem are convex.
-	</p>
-
-	<h3> 🎨 Draw a convex polygon and modify the angles to see Cauchy’s Arm Lemma in action: </h3>
-	<div id="cauchy-arm-lemma"></div>
-	<br>
-
-	<h2> Convex vs. Non-Convex Shapes </h2>
+	<h2> Convexity </h2>
 	<p>
 		It is important to note that the shortest enclosing curve for a given set of points is always the convex hull,
 		whereas the largest area is enclosed by a circle. This observation forms the basis for analyzing the optimal
 		shape for a given perimeter \(P\).
 	</p>
-	<h2> Convexity Insight </h2>
+
+	<div class="theorem">
+		Theorem: Given a number \(P > 0\) and a set of points \(S\), any \((P, S)\)-curve of maximum area must be convex.
+	</div>
 	<p>
-		Given a number \(P > 0\) and a set of points \(S\), any \((P, S)\)-curve of maximum area must be convex.
-		To explore this property interactively, consider the following visualization:
+		To explore this property consider the following interactive zone:
 	</p>
+
 	<h3> 🎨 Draw a non-convex polygon and convexify it to see this principle in action: </h3>
 	<div id="convexify-polygon"></div>
 	<br>
+
+	<h2> Cauchy’s Arm Lemma </h2>
+	<p>
+		Cauchy’s Arm Lemma provides an important geometric result that plays a critical role in solving the problem.
+		The lemma states:
+	</p>
+	<div class="theorem">
+		Let \(Q = (v_0, v_1, \dots, v_k, v_0)\) be a convex polygon where each consecutive pair of vertices is connected
+		by an edge \(e_i = v_{i-1}v_i\),
+		and where the internal angle at vertex \(v_i\) between \(e_i\) and \(e_{i+1}\) (modulo \(k\)) is \(\theta_i\).
+		If we remove the edge \(v_kv_0\) from \(Q\) and increase the value of some nonempty subset of the angles
+		\(\theta_i\) while keeping the length of all remaining edges fixed and every \(\theta_i \leq \pi\),
+		then the distance between the endpoints \(v_0\) and \(v_k\) strictly increases.
+	</div>
+	<p>
+		In simpler terms, modifying the angles of a convex shape while preserving the edge lengths can increase the
+		distance between certain points.
+		This result is crucial in understanding why optimal solutions to our problem are convex.
+	</p>
+	<p>
+		To visualize this concept, consider the following example:
+	</p>
+	<img alt="Cauchy's Arm Lemma" src="../assets/images/cauchy_arm_lemma_1.jpg" style="width: 100%; height: auto;">
+
+	<h3> 🎨 Draw a convex polygon and modify the angles to see Cauchy’s Arm Lemma in action: </h3>
+	<div id="cauchy-arm-lemma"></div>
+	<br>
+
 
 	<h1> 🔧 The Implementation </h1>
 
 	<h2> Farthest Point Voronoi Diagram </h2>
 	<p>
+		A <strong>Farthest Point Voronoi Diagram</strong> is a special type of Voronoi diagram where each cell corresponds to the region of the plane farthest from a specific site (point) compared to all other sites.
+		Unlike a standard Voronoi diagram, where regions contain points closest to a given site, the regions in a Farthest Point Voronoi diagram expand outward, capturing areas maximally distant from the sites.
+	</p>
+	<img alt="FPVD" src="../assets/images/fpvd_1.png" style="width: 50%; height: auto;">
 
+	<p>
+		These diagrams are particularly useful in problems where the farthest distance is of interest, such as constructing the boundary of shapes or solving optimization problems involving enclosing regions.
+	</p>
+
+
+	<h3> Why Use Farthest Point Voronoi Diagrams? </h3>
+	<p>
+		In the context of the isoperimetric problem, the Farthest Point Voronoi diagram helps identify the critical points and edges necessary for constructing the optimal curve.
+		The diagram allows efficient computation of regions where circular arcs (with the same radius) will form parts of the solution curve.
 	</p>
 
 	<h3> 🎨 Draw points to generate the Farthest Point Voronoi diagram: </h3>
 	<div id="fp-voronoi-diagram"></div>
 	<br>
+
 
 	<h2> Optimal Curve </h2>
 	<p>
