@@ -9,7 +9,7 @@ class VoronoiCell {
 			this.cell.push(semilines[0]);
 			this.cell.push(semilines[1]);
 		}
-		let chosen = cell[0];
+		let chosen = this.cell[0];
 		while (segments.length > 0) {
 			for (let s of segments) {
 				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {

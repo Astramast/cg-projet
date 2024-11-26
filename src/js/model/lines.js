@@ -8,8 +8,8 @@ class Line {
 		let q = new Point(0, this.getYFromX(0));
 		line(p.x, p.y, q.x, q.y);
 	}
-	isEqual(line){
-		return (this.a.orientationDeterminant(this.b, line.a) == 0 && this.a.orientationDeterminant(this.b, line.b) == 0)
+	isEqual(otherline){
+		return (this.a.orientationDeterminant(this.b, otherline.a) == 0 && this.a.orientationDeterminant(this.b, otherline.b) == 0)
 	}
 	getYFromX(x) {
 		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);

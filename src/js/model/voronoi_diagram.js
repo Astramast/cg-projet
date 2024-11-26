@@ -27,6 +27,8 @@ class VoronoiDiagram {
 			let p_i = vertices[i][0];
 			let prev_p_i = vertices[i][1];
 			let next_p_i = vertices[i][2];
+			console.log("p_i, prev_p_i, next_p_i", p_i, prev_p_i, next_p_i);
+			console.log("sites", this.sites);
 			this.addPoint(p_i, prev_p_i, next_p_i);
 		}
 	}
