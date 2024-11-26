@@ -48,8 +48,8 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 	}
 
 	Stretch() {
-		// this.chooseStretch(this.points);
-		this.test();
+		this.chooseStretch(this.points);
+		// this.test();
 	}
 
 	test() {
@@ -78,9 +78,9 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let c = new Point(1, 1);
 		let result = this.getAngle(a, b, c);
 		if (result !== 90) {
-			console.log("ERROR : getAngle failed")
+			console.log("ERROR : getAngle failed, result", result);
 		} else {
-			console.log("getAngle success")
+			console.log("getAngle success");
 		}
 	}
 
@@ -88,8 +88,9 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let radians = angle * Math.PI / 180;
 		let cos = Math.cos(radians);
 		let sin = Math.sin(radians);
-		let x = cos * (p.y - origin.y) + sin * (p.x - origin.x) + origin.x;
-		let y = sin * (p.x - origin.x) + cos * (p.y - origin.y) + origin.y;
+		// let x = Math.round((cos * (p.x - origin.x) - sin * (p.y - origin.y) + origin.x) * 1e10) / 1e10;
+		let x = (cos * (p.x - origin.x) - sin * (p.y - origin.y) + origin.x).toFixed(10);
+		let y = (sin * (p.x - origin.x) + cos * (p.y - origin.y) + origin.y).toFixed(10);
 		return new Point(x, y);
 	}
 
@@ -99,7 +100,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let angle = 90;
 		let result = this.rotate(origin, p, angle);
 		if (result.x != 0 || (result.y != 1 && result.y != -1) ) {
-			console.log("ERROR : rotate failed, point :", result)
+			console.log("ERROR : rotate failed, result :", result)
 		} else {
 			console.log("rotate success")
 		}
