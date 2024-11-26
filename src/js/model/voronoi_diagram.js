@@ -146,9 +146,9 @@ class VoronoiDiagram {
 				new_line = new SemiLine(i_p, i_pv);
 			} else {
 				if (pCell.isPointStrictlyInside(old_line.a)) {
-					new_line = new Segment(ip, old_line.b);
+					new_line = new Segment(i_p, old_line.b);
 				} else {
-					new_line = new Segment(old_line.a, ip);
+					new_line = new Segment(old_line.a, i_p);
 				}
 			}
 			this.lines[intersection_lines_indexes[i]] = new_line;
