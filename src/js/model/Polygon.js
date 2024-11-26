@@ -93,6 +93,24 @@ class Polygon {
 		return this.getNeighbourConvexHullPoint(p, false, hull);
 	}
 
+	getCentroid() {
+		let n = this.points.length;
+		let x = 0;
+		let y = 0;
+		for (let p of this.points) {
+			x += p.x;
+			y += p.y;
+		}
+		return new Point(x / n, y / n);
+	}
+
+	getFarthestDistance(p) {
+		let maxDist = 0;
+		for (let q of this.points) {
+			maxDist = Math.max(maxDist, p.dist(q));
+		}
+		return maxDist;
+	}
 
 }
 

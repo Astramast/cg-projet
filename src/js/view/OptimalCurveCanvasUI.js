@@ -3,7 +3,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		super(p);
 		this.points = [];
 		this.hull = new Polygon();
-		// this.closedCurve = new ClosedCurve();
+		this.pqcurve = null;
 		this.perimeterSlider = null; // Slider for perimeter adjustment
 	}
 
@@ -30,7 +30,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 	resetPoints() {
 		this.points = [];
 		this.hull = new Polygon();
-		this.closedCurve = new ClosedCurve();
+		this.pqcurve = null;
 		this.perimeterSlider.attribute('min', 0);
 		this.perimeterSlider.attribute('max', 1000);
 		this.perimeterSlider.value(0);
@@ -43,8 +43,22 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		this.perimeterText.html("Perimeter: " + desiredPerimeter.toFixed(2));
 
 		if (this.hull.points.length > 0) {
-			// Find the P-Q Curve with the desired perimeter
+			this.pqcurve = findPQCurve(this.hull, desiredPerimeter);
 		}
+
+		let currentPerimeter;
+		if (this.pqcurve == null) {
+			this.areaText.html("Area: " + this.hull.area().toFixed(2));
+			this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
+			currentPerimeter = this.hull.perimeter();
+		} else {
+			this.areaText.html("Area: " + this.pqcurve.area().toFixed(2));
+			this.perimeterText.html("Perimeter: " + this.pqcurve.perimeter().toFixed(2));
+			currentPerimeter = this.pqcurve.perimeter();
+		}
+		this.perimeterSlider.value(currentPerimeter);
+		this.perimeterSlider.attribute('min', this.hull.perimeter());
+		this.perimeterSlider.attribute('max', Circle.fromEnclosingPolygon(this.hull).perimeter()*1.5);
 	}
 
 	draw() {
@@ -56,14 +70,19 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		this.p.fill("#CB9DF0");
 		this.p.rect(0, 100, this.p.width, this.p.height);
 
-		// Draw convex hull
-		this.p.stroke("#FFF9BF");
-		this.p.fill("#ba76f1");
-		this.p.beginShape();
-		for (let p of this.hull.points) {
-			this.p.vertex(p.x, p.y);
+		if (this.pqcurve == null) {
+			// Draw convex hull
+			this.p.stroke("#FFF9BF");
+			this.p.fill("#ba76f1");
+			this.p.beginShape();
+			for (let p of this.hull.points) {
+				this.p.vertex(p.x, p.y);
+			}
+			this.p.endShape(this.p.CLOSE);
+		} else {
+			// Draw PQ curve
+			this.pqcurve.draw(this.p);
 		}
-		this.p.endShape(this.p.CLOSE);
 
 		// Draw points
 		this.p.stroke("#FFF9BF");
@@ -71,15 +90,6 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		for (let p of this.points) {
 			this.p.ellipse(p.x, p.y, 6, 6);
 		}
-
-		// Draw perimeter and area text
-		this.areaText.html("Area: " + this.hull.area().toFixed(2));
-		this.perimeterSlider.value(this.hull.perimeter());
-		this.perimeterText.html("Perimeter: " + this.hull.perimeter().toFixed(2));
-
-		const currentPerimeter = this.hull.perimeter();
-		this.perimeterSlider.attribute('min', currentPerimeter);
-		this.perimeterSlider.attribute('max', currentPerimeter * 3);
 
 	}
 
@@ -89,6 +99,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
 		if (this.points.length > 2) {
 			this.hull = new Polygon(computeConvexHull(Array.from(this.points)));
+			this.adjustPerimeter();
 		}
 	}
 
