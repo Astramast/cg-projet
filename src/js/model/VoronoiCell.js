@@ -11,8 +11,13 @@ class VoronoiCell {
 		let chosen = this.cell[1];
 		while (segments.length > 0) {
 			for (let s of segments) {
-				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
+				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b)) {
 					this.cell.push(s);
+					segments.splice(segments.indexOf(s), 1);
+					chosen = s;
+					break;
+				} else if (s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
+					this.cell.push(new Segment(s.b, s.a));
 					segments.splice(segments.indexOf(s), 1);
 					chosen = s;
 					break;
@@ -33,10 +38,8 @@ class VoronoiCell {
 			if (i + 1 < this.cell.length) {
 				if (this.cell[i + 1].a.isEqual(a)) {
 					b = this.cell[i + 1].b;
-				} else if (this.cell[i + 1].b.isEqual(a)) {
-					b = this.cell[i + 1].a;
 				} else {
-					throw new Error("Cell is continuous !");
+					throw new Error("Cell is not continuous !");
 				}
 			}
 			i++;

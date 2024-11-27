@@ -85,6 +85,9 @@ class FarthestPointVoronoiDiagram {
 					}
 				}
 			}
+			if (b == null) {
+				break;
+			}
 			for (let s of this.sites) {
 				if (k.isEqual(s)) continue;
 				let bisector = s.getPerpendicularBisector(k);
