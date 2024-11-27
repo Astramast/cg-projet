@@ -1,4 +1,3 @@
-
 function getCenter(points, c) {
 	/*
 	 * Smallest enclosing circle - Library (compiled from TypeScript)
@@ -21,12 +20,14 @@ function getCenter(points, c) {
 	 * If not, see <http://www.gnu.org/licenses/>.
 	 */
 	"use strict";
+
 	class Point {
 		constructor(x, y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
+
 	class Circle {
 		constructor(x, y, r) {
 			this.x = x;
@@ -34,10 +35,12 @@ function getCenter(points, c) {
 			this.r = r;
 		}
 	}
+
 	/*
 	 * Returns the smallest circle that encloses all the given points. Runs in expected O(n) time, randomized.
 	 * Note: If 0 points are given, null is returned. If 1 point is given, a circle of radius 0 is returned.
 	 */
+
 // Initially: No boundary points known
 	function makeCircle(points) {
 		// Clone list to preserve the caller's data, do Durstenfeld shuffle
@@ -57,6 +60,7 @@ function getCenter(points, c) {
 		});
 		return c;
 	}
+
 // One boundary point known
 	function makeCircleOnePoint(points, p) {
 		let c = new Circle(p.x, p.y, 0);
@@ -70,6 +74,7 @@ function getCenter(points, c) {
 		});
 		return c;
 	}
+
 // Two boundary points known
 	function makeCircleTwoPoints(points, p, q) {
 		const circ = makeDiameter(p, q);
@@ -101,6 +106,7 @@ function getCenter(points, c) {
 		else
 			throw new Error("Assertion error");
 	}
+
 	function makeDiameter(a, b) {
 		const cx = (a.x + b.x) / 2;
 		const cy = (a.y + b.y) / 2;
@@ -108,6 +114,7 @@ function getCenter(points, c) {
 		const r1 = distance(cx, cy, b.x, b.y);
 		return new Circle(cx, cy, Math.max(r0, r1));
 	}
+
 	function makeCircumcircle(a, b, c) {
 		// Mathematical algorithm from Wikipedia: Circumscribed circle
 		const ox = (Math.min(a.x, b.x, c.x) + Math.max(a.x, b.x, c.x)) / 2;
@@ -128,15 +135,19 @@ function getCenter(points, c) {
 		const rc = distance(x, y, c.x, c.y);
 		return new Circle(x, y, Math.max(ra, rb, rc));
 	}
+
 	/* Simple mathematical functions */
 	const MULTIPLICATIVE_EPSILON = 1 + 1e-14;
+
 	function isInCircle(c, p) {
 		return c !== null && distance(p.x, p.y, c.x, c.y) <= c.r * MULTIPLICATIVE_EPSILON;
 	}
+
 // Returns twice the signed area of the triangle defined by (x0, y0), (x1, y1), (x2, y2).
 	function crossProduct(x0, y0, x1, y1, x2, y2) {
 		return (x1 - x0) * (y2 - y0) - (y1 - y0) * (x2 - x0);
 	}
+
 	function distance(x0, y0, x1, y1) {
 		return Math.hypot(x0 - x1, y0 - y1);
 	}

@@ -75,7 +75,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 
 	stretchTriangle(triangle, vertex_to_increase_angle) {
 		let n = triangle.length;
-		let start_vertex = (vertex_to_increase_angle -1 + n) % n;
+		let start_vertex = (vertex_to_increase_angle - 1 + n) % n;
 		this.stretchPolygon(triangle, start_vertex);
 	}
 
@@ -90,10 +90,10 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let n = polygon.length;
 		let b = (a + 1) % n;
 		let c = (b + 1) % n;
-			
+
 		let theta = this.getAngle(polygon[a], polygon[b], polygon[c]);
 		let diff = 180 - theta;
-		
+
 		if (diff > 0) {
 			this.printDistance(polygon, a, "distance before stretch :");
 			polygon[c] = this.rotate(polygon[a], polygon[b], polygon[c]);
@@ -123,31 +123,31 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 
 	getAngle(a, b, c) {
 
-    // Vectors AB and BC
-    const u = [b.x - a.x, b.y - a.y]; // Vector AB
-    const v = [c.x - b.x, c.y - b.y]; // Vector BC
+		// Vectors AB and BC
+		const u = [b.x - a.x, b.y - a.y]; // Vector AB
+		const v = [c.x - b.x, c.y - b.y]; // Vector BC
 
-    // Dot product of u and v
-    const dotProduct = u[0] * v[0] + u[1] * v[1];
+		// Dot product of u and v
+		const dotProduct = u[0] * v[0] + u[1] * v[1];
 
-    // Magnitudes of u and v
-    const magnitudeU = Math.sqrt(u[0] ** 2 + u[1] ** 2);
-    const magnitudeV = Math.sqrt(v[0] ** 2 + v[1] ** 2);
+		// Magnitudes of u and v
+		const magnitudeU = Math.sqrt(u[0] ** 2 + u[1] ** 2);
+		const magnitudeV = Math.sqrt(v[0] ** 2 + v[1] ** 2);
 
-    // Cosine of the angle
-    let cosTheta = dotProduct / (magnitudeU * magnitudeV);
+		// Cosine of the angle
+		let cosTheta = dotProduct / (magnitudeU * magnitudeV);
 
-    // Handle potential floating-point inaccuracies
-    cosTheta = Math.max(-1, Math.min(1, cosTheta));
+		// Handle potential floating-point inaccuracies
+		cosTheta = Math.max(-1, Math.min(1, cosTheta));
 
-    // Angle in radians
-    const angleRadians = Math.acos(cosTheta);
+		// Angle in radians
+		const angleRadians = Math.acos(cosTheta);
 
-    // Convert to degrees
-    const angleDegrees = (angleRadians * 180) / Math.PI;
+		// Convert to degrees
+		const angleDegrees = (angleRadians * 180) / Math.PI;
 
-    return angleDegrees;
-}
+		return angleDegrees;
+	}
 
 	rotate(a, b, c, factor = 1.1) {
 		const [x1, y1] = [a.x, a.y];
@@ -198,7 +198,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let c = (b + 1) % 3;
 		console.log(str, (this.getDistance(triangle[a], triangle[b])).toFixed(0));
 		console.log(str, (this.getDistance(triangle[b], triangle[c])).toFixed(0));
-		
+
 	}
 
 
@@ -236,7 +236,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let p = new Point(1, 0);
 		let angle = 90;
 		let result = this.rotate(origin, p, angle);
-		if (result.x != 0 || (result.y != 1 && result.y != -1) ) {
+		if (result.x != 0 || (result.y != 1 && result.y != -1)) {
 			console.log("ERROR : rotate failed, result :", result)
 		} else {
 			console.log("rotate success")
@@ -244,7 +244,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 	}
 
 	maxStretch(polygon) {  // for test only
-		for (let a = 0;	a <= n-3; a++) {  // we do the maximum stretching of the edge [n-1, 0]
+		for (let a = 0; a <= n - 3; a++) {  // we do the maximum stretching of the edge [n-1, 0]
 			try {
 				this.stretchPolygon(polygon, a);
 			} catch (e) {
@@ -256,24 +256,24 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 
 	testStretch(polygon) {  // not finished
 		let n = polygon.length;
-		let old_dist_to_stretch = this.getDistance(polygon[n-1], polygon[0]);
+		let old_dist_to_stretch = this.getDistance(polygon[n - 1], polygon[0]);
 		let fixed_distances = [];
-		for (let p = 0; p <= n-2; p++) {
-			fixed_distances.push((this.getDistance(polygon[p], polygon[p+1])).toFixed(0));
+		for (let p = 0; p <= n - 2; p++) {
+			fixed_distances.push((this.getDistance(polygon[p], polygon[p + 1])).toFixed(0));
 		}
 
 		// this.maxStretch(polygon);
 		this.stretchTriangle(polygon, 2);
 
-		let new_stretched_dist = this.getDistance(polygon[n-1], polygon[0]);
+		let new_stretched_dist = this.getDistance(polygon[n - 1], polygon[0]);
 
 		if (new_stretched_dist != old_dist_to_stretch) {
 			console.log("GOOD : the targeted edge has been stretched");
 		}
 
-		for (let p = 0; p <= n-2; p++) {  // we iterate over the points to be moved
+		for (let p = 0; p <= n - 2; p++) {  // we iterate over the points to be moved
 			let old_dist = fixed_distances[p];
-			let new_dist = (this.getDistance(polygon[p], polygon[p+1])).toFixed(0);
+			let new_dist = (this.getDistance(polygon[p], polygon[p + 1])).toFixed(0);
 			if (old_dist != new_dist) {
 				console.log("ERROR : some fixed edges has changed :", old_dist, new_dist);
 				return;

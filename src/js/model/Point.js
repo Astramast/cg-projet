@@ -48,6 +48,10 @@ class Point {
 		// TODO: Assumed general position, complete code for extreme cases
 		return perpendicularBisector(this, otherPoint);
 	}
+
+	copy() {
+		return new Point(this.x, this.y);
+	}
 }
 
 function perpendicularBisector(p, q) {

@@ -33,8 +33,10 @@ class VoronoiCell {
 			if (i + 1 < this.cell.length) {
 				if (this.cell[i + 1].a.isEqual(a)) {
 					b = this.cell[i + 1].b;
-				} else {
+				} else if (this.cell[i + 1].b.isEqual(a)) {
 					b = this.cell[i + 1].a;
+				} else {
+					throw new Error("Cell is continuous !");
 				}
 			}
 			i++;
