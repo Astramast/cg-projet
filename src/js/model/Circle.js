@@ -5,7 +5,8 @@ class Circle {
 	}
 
 	static fromEnclosingPolygon(polygon) {
-		let center = polygon.getCentroid();
+		// let center = polygon.getCentroid();
+		let center = getCenter(polygon.points, new Point(0, 0));
 		let radius = polygon.getFarthestDistance(center);
 		return new Circle(center, radius);
 	}
