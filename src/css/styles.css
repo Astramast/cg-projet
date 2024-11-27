@@ -47,6 +47,10 @@ h1 {
 	border-left: 4px solid #8E24AA;
 }
 
+.left {
+	text-align: left;
+}
+
 .styled-button {
 	font-family: 'Fredoka', sans-serif;
 	background-color: #ffd6b0;

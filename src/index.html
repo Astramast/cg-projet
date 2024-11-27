@@ -122,6 +122,13 @@
 		Each region corresponds to all locations closer to one particular point than to any other.
 	</p>
 	<img alt="Voronoi Diagram Growth" src="../assets/images/Voronoi_growth_euclidean.gif">
+	<p>
+		While Fortune's algorithm allows constructing a Voronoi diagram in \(O(n \log n)\) time for \(n\) points,
+		we use an alternative approach here for simplicity. This method involves intersecting half-planes
+		defined by bisectors of point pairs, computing the dual of the points, and applying a convex hull
+		algorithm. The resulting complexity is \(O(n^2 \log n)\).
+	</p>
+	<img alt="Fortune's Algorithm" src="../assets/images/Fortunes-algorithm.gif">
 	<h3> 🎨 Draw points to generate a Voronoi diagram: </h3>
 	<div id="voronoi-diagram"></div>
 
@@ -171,7 +178,6 @@
 	<p>
 		In simpler terms, modifying the angles of a convex shape while preserving the edge lengths can increase the
 		distance between certain points.
-		This result is crucial in understanding why optimal solutions to our problem are convex.
 	</p>
 	<p>
 		To visualize this concept, consider the following example:
@@ -209,11 +215,26 @@
 
 	<h3> 🚀 How to Implement the Farthest Point Voronoi Diagram </h3>
 
+	<h4>Steps to Implement the Algorithm</h4>
+	<ol class="left">
+		<li><strong>Compute the convex hull:</strong> Start by finding the convex hull of the set of points. Only the points on the convex hull can have cells in the farthest-point Voronoi diagram.</li>
+		<li><strong>Sort the vertices:</strong> Arrange the vertices of the convex hull in a counterclockwise order.</li>
+		<li><strong>Incremental construction:</strong>
+			<ul class="left">
+				<li>Begin with the farthest-point Voronoi diagram for the first three points.</li>
+				<li>For each subsequent point:
+					<ul>
+						<li>Identify its neighbors on the convex hull.</li>
+						<li>Compute the bisectors and determine new edges for the diagram.</li>
+						<li>Update the doubly-connected edge list by removing obsolete edges.</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ol>
+
 	<p>
-		First case: there is only one point in the set. In this case, the diagram consists of a single cell covering the entire plane.
-		Second case: there are two points in the set. In this case, the diagram consists of two cells, each covering half of the plane. Separated by their bisector.
-		Third case: there are three point.
-		Last case: there are more than three points.
+		This algorithm can be executed in \(O(n \log n)\) time, and \(O(n)\) storage.
 	</p>
 
 	<h3> 🎨 Draw points to generate the Farthest Point Voronoi diagram: </h3>
@@ -283,14 +304,11 @@
 		theory and computational techniques intersect, leading to new challenges and innovative solutions.
 	</p>
 
-	<h2>Examples</h2>
-	TODO
-
-	<h1> 🌐 Conclusion </h1>
+	<h1> 👷‍♂️ Team Responsibilities </h1>
 	<p>
-		The interplay between geometry, optimization, and computation reveals deep insights into isoperimetric problems.
-		By combining mathematical rigor with computational tools, this project offers an interactive exploration of one
-		of geometry's most intriguing questions.
+		<strong>Charels Hugo:</strong> Built the overall structure of the project and is responsible for the report. Implemented the Voronoi Diagram, the Optimal Curve, and the Hardness Results analysis.<br>
+		<strong>Installé Arthur:</strong> Focused on implementing the Convexify Polygon algorithm and the Farthest-Point Voronoi Diagram.<br>
+		<strong>Caeyman Hamza:</strong> Specialized in implementing Cauchy's Arm Lemma and contributed to the Convexify Polygon algorithm.
 	</p>
 
 	<h1> 📚 References </h1>
