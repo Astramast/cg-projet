@@ -50,7 +50,9 @@ class SemiLine {
 		line(this.a.x, this.a.y, p.x, p.y);
 	}
 	getLineIntersection(otherLine) {
-		if (!intersectLineSemiline(otherLine, this)) return null;
+		if (!intersectLineSemiline(otherLine, this)) {
+			return null;
+		}
 		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
@@ -72,16 +74,17 @@ class Segment {
 function intersectLineLine(line1, line2) {
 	let v1 = new Point(line1.b.x - line1.a.x, line1.b.y - line1.a.y);
 	let v2 = new Point(line2.b.x - line2.a.x, line2.b.y - line2.a.y);
-	return v1.x * v2.y - v1.y * v2.x;
+	return Math.abs(v1.x * v2.y - v1.y * v2.x) > 1e-6;
 }
 
 function intersectLineSemiline(line, semiline) {
 	if (!intersectLineLine(line, semiline)) return false;
-	let o1 = line.a.orientationDeterminant(line.b, semiline.b);
+	let o1 = line.a.getOrientationDeterminantSign(line.b, semiline.b);
+	if (o1 == 0) return true;
 	let v = new Point(line.b.x - line.a.x, line.b.y - line.a.y);
 	let c = new Point(semiline.a.x + v.x, semiline.a.y + v.y);
-	let o2 = semiline.a.orientationDeterminant(c, line.b);
-	return o1 * o2 < 0;
+	let o2 = semiline.a.getOrientationDeterminantSign(c, line.b);
+	return o1 * o2 >= 0;
 }
 
 function intersectLineSegment(line, segment) {

@@ -11,10 +11,10 @@ class VoronoiDiagram {
 			this.lines.push(sites[0].getPerpendicularBisector(sites[1]));
 			return;
 		}
-		sites = new ConvexHull(sites).points;
-		let copy = sites.slice();
+		let ch = new ConvexHull(sites).points;
+		let copy = ch.slice();
 		let vertices = [];
-		for (let i = 0; i < sites.length - 3; i++) {
+		for (let i = 0; i < ch.length - 3; i++) {
 			const randomIndex = Math.floor(Math.random() * copy.length);
 			const randomPoint = copy[randomIndex];
 			const prevPoint = copy[(randomIndex - 1 + copy.length) % copy.length];
@@ -108,6 +108,9 @@ class VoronoiDiagram {
 						break;
 					}
 				}
+			}
+			if (b == null) {
+				break;
 			}
 			for (let s of this.sites) {
 				if (k.isEqual(s)) continue;
