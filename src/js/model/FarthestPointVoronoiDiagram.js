@@ -136,15 +136,17 @@ class FarthestPointVoronoiDiagram {
 		for (let l of pCell.cell) {
 			this.lines.push(l);
 		}
-		//Drop the points inside the cell
-		for (let bad_point of this.points) {
-			if (pCell.isPointStrictlyInside(bad_point)) {
-				this.points.splice(this.points.indexOf(bad_point), 1);
+		//Recompute the vertices
+		this.points = [];
+		for (let l of this.lines) {
+			if (!this.points.includes(l.a)){
+				this.points.push(l.a);
 			}
-		}
-		//Add the intersection points
-		for (let good_point of intersection_points) {
-			this.points.push(good_point);
+			if (l instanceof Segment) {
+				if (!this.points.includes(l.b)){
+					this.points.push(l.b);
+				}
+			}
 		}
 		//Add p to the sites
 		this.sites.push(p);
