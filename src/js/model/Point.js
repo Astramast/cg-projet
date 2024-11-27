@@ -12,7 +12,10 @@ class Point {
 		canvas.ellipse(this.x, this.y, 6, 6);
 	}
 
-	orientationDeterminant(b, c) {
+	copy() {
+		return new Point(this.x, this.y);
+	}
+	orientationDeterminant(b,c) {
 		// > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
 		// We added 1e-6 to avoid floating point errors,
 		// this implies that there is an error on close to 0 computations
@@ -23,11 +26,15 @@ class Point {
 		return ood;
 	}
 
-	getOrientationDeterminantSign(b, c) {
-		return Math.sign(this.orientationDeterminant(b, c));
+	getOrientationDeterminantSign(b,c) {
+		return Math.sign(this.orientationDeterminant(b,c));
 	}
 
-	// Returns the distance between two points
+	getPerpendicularBisector(otherPoint) {
+		// TODO: Assumed general position, complete code for extreme cases
+		return perpendicularBisector(this, otherPoint);
+	}
+
 	dist(p) {
 		return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
 	}
@@ -41,17 +48,24 @@ class Point {
 	}
 
 	getSymmetrical(otherPoint) {
-		return new Point(2 * otherPoint.x - this.x, 2 * otherPoint.y - this.y);
+		return new Point(2*otherPoint.x - this.x, 2*otherPoint.y - this.y);
 	}
 
-	getPerpendicularBisector(otherPoint) {
-		// TODO: Assumed general position, complete code for extreme cases
-		return perpendicularBisector(this, otherPoint);
+	leftRadialComparator(a, b) {
+		//Answers to : Is a more at left than b ?
+		let od = this.getOrientationDeterminantSign(a, b);
+		if (od > 0) {
+			return true;
+		}
+		if (od == 0) {
+			return this.manhattanDistance(a) > this.manhattanDistance(b);
+		}
+		return false;
+	}
+	manhattanDistance(otherPoint) {
+		return Math.abs(this.x - otherPoint.x) + Math.abs(this.y - otherPoint.y);
 	}
 
-	copy() {
-		return new Point(this.x, this.y);
-	}
 }
 
 function perpendicularBisector(p, q) {
