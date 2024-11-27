@@ -32,24 +32,6 @@ class Line {
 		return new Point(x, y);
 	}
 
-	isAbove(point) {
-		return point.y > this.getYFromX(point.x);
-	}
-
-	getDirection() {
-		if (this.slope === Infinity) {
-			return {x: 0, y: 1}; // Vertical line
-		} else if (this.slope === 0) {
-			return {x: 1, y: 0}; // Horizontal line
-		} else {
-			// For other lines, normalize the direction vector
-			let dx = 1;
-			let dy = this.slope;
-			let magnitude = Math.sqrt(dx * dx + dy * dy);
-			return {x: dx / magnitude, y: dy / magnitude};
-		}
-	}
-
 	computeDualPoint() {
 		if (this.a.x === this.b.x) {
 			return new Point(1 / this.a.x, 0);
@@ -65,9 +47,10 @@ class Line {
 	}
 }
 
-class SemiLine extends Line {
+class SemiLine {
 	constructor(a, b) {
-		super(a, b);
+		this.a = a;
+		this.b = b;
 	}
 
 	isEqual(semiline) {
@@ -78,10 +61,9 @@ class SemiLine extends Line {
 		canvas.line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 
-	getYFromX(x) {
-		let m = (this.b.y - this.a.y) / (this.b.x - this.a.x);
-		let c = this.a.y - m * this.a.x;
-		return m * x + c;
+	getIntersection(otherLine) {
+		if (!intersectLineSemiline(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
 
@@ -91,8 +73,13 @@ class Segment {
 		this.b = b;
 	}
 
-	draw() {
-		line(this.a.x, this.a.y, this.b.x, this.b.y);
+	draw(canvas) {
+		canvas.line(this.a.x, this.a.y, this.b.x, this.b.y);
+	}
+
+	getIntersection(otherLine) {
+		if (!intersectLineSegment(otherLine, this)) return null;
+		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
 }
 

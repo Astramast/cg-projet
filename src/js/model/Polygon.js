@@ -49,8 +49,7 @@ class Polygon {
 
 
 	getFPVD() {
-		// TODO: Implement the farthest-point Voronoi diagram algorithm
-		return this.points;
+		return FarthestPointVoronoiDiagram.fromPoints(this.points);
 	}
 
 	convexify() {
@@ -91,17 +90,6 @@ class Polygon {
 
 	getNextConvexHullPoint(p, hull) {
 		return this.getNeighbourConvexHullPoint(p, false, hull);
-	}
-
-	getCentroid() {
-		let n = this.points.length;
-		let x = 0;
-		let y = 0;
-		for (let p of this.points) {
-			x += p.x;
-			y += p.y;
-		}
-		return new Point(x / n, y / n);
 	}
 
 	getFarthestDistance(p) {

@@ -4,13 +4,27 @@ class Point {
 		this.y = y;
 	}
 
+	isEqual(otherPoint) {
+		return (Math.abs(this.x - otherPoint.x) < 1e-6 && Math.abs(this.y - otherPoint.y) < 1e-6);
+	}
+
 	draw(canvas) {
 		canvas.ellipse(this.x, this.y, 6, 6);
 	}
 
 	orientationDeterminant(b, c) {
 		// > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
-		return (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		// We added 1e-6 to avoid floating point errors,
+		// this implies that there is an error on close to 0 computations
+		let ood = (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		if (Math.abs(ood) < 1e-6) {
+			return 0;
+		}
+		return ood;
+	}
+
+	getOrientationDeterminantSign(b, c) {
+		return Math.sign(this.orientationDeterminant(b, c));
 	}
 
 	// Returns the distance between two points
@@ -26,4 +40,18 @@ class Point {
 		return new Point(m.x + v_pm.x, m.y + v_pm.y);
 	}
 
+	getSymmetrical(otherPoint) {
+		return new Point(2 * otherPoint.x - this.x, 2 * otherPoint.y - this.y);
+	}
+
+	getPerpendicularBisector(otherPoint) {
+		// TODO: Assumed general position, complete code for extreme cases
+		return perpendicularBisector(this, otherPoint);
+	}
+}
+
+function perpendicularBisector(p, q) {
+	// TODO: Assumed general position, complete code for extreme cases
+	const y = (x) => ((2 * q.x - 2 * p.x) * x + (p.x ** 2 + p.y ** 2 - q.x ** 2 - q.y ** 2)) / (2 * p.y - 2 * q.y);
+	return new Line(new Point(0, y(0)), new Point(10000, y(10000)));
 }

@@ -10,11 +10,13 @@
 	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
 
+	<!-- --- Code Imported --- -->
+	<script src="js/model/smallest-enclosing-circle.js"></script>
+
 	<!-- --- Models--- -->
 	<script src="js/model/Curve.js"></script>
 	<script src="js/model/ClosedCurve.js"></script>
 	<script src="js/model/ConvexHull.js"></script>
-	<script src="js/model/ConvexPolygon.js"></script>
 	<script src="js/model/Lines.js"></script>
 	<script src="js/model/Point.js"></script>
 	<script src="js/model/Polygon.js"></script>
@@ -22,6 +24,7 @@
 	<script src="js/model/Tree.js"></script>
 	<script src="js/model/VoronoiCell.js"></script>
 	<script src="js/model/VoronoiDiagram.js"></script>
+	<script src="js/model/FarthestPointVoronoiDiagram.js"></script>
 	<script src="js/model/Circle.js"></script>
 
 	<!-- --- Views --- -->
@@ -90,7 +93,8 @@
 		<p>
 			To compare, compute the ratio of the circle's area to the square's area:
 			\[
-			\frac{A_\text{circle}}{A_\text{square}} = \frac{\frac{P^2}{4\pi}}{\frac{P^2}{16}} = \frac{16}{4\pi} = \frac{4}{\pi}.
+			\frac{A_\text{circle}}{A_\text{square}} = \frac{\frac{P^2}{4\pi}}{\frac{P^2}{16}} = \frac{16}{4\pi} =
+			\frac{4}{\pi}.
 			\]
 		</p>
 		<p>
@@ -102,7 +106,8 @@
 	<h3>Why Does This Happen?</h3>
 	<p>
 		A square has four straight edges that meet at right angles, which means some of the space near the corners
-		is not optimally enclosed for maximizing area. In contrast, a circle has no corners or straight edges, allowing it to
+		is not optimally enclosed for maximizing area. In contrast, a circle has no corners or straight edges, allowing
+		it to
 		make the most efficient use of its perimeter to enclose space.
 	</p>
 	<p>
@@ -139,7 +144,8 @@
 	</p>
 
 	<div class="theorem">
-		Theorem: Given a number \(P > 0\) and a set of points \(S\), any \((P, S)\)-curve of maximum area must be convex.
+		Theorem: Given a number \(P > 0\) and a set of points \(S\), any \((P, S)\)-curve of maximum area must be
+		convex.
 	</div>
 	<p>
 		To explore this property consider the following interactive zone:
@@ -181,19 +187,24 @@
 
 	<h2> Farthest Point Voronoi Diagram </h2>
 	<p>
-		A <strong>Farthest Point Voronoi Diagram</strong> is a special type of Voronoi diagram where each cell corresponds to the region of the plane farthest from a specific site (point) compared to all other sites.
-		Unlike a standard Voronoi diagram, where regions contain points closest to a given site, the regions in a Farthest Point Voronoi diagram expand outward, capturing areas maximally distant from the sites.
+		A <strong>Farthest Point Voronoi Diagram</strong> is a special type of Voronoi diagram where each cell
+		corresponds to the region of the plane farthest from a specific site (point) compared to all other sites.
+		Unlike a standard Voronoi diagram, where regions contain points closest to a given site, the regions in a
+		Farthest Point Voronoi diagram expand outward, capturing areas maximally distant from the sites.
 	</p>
 	<img alt="FPVD" src="../assets/images/fpvd_1.png" style="width: 50%; height: auto;">
 
 	<p>
-		These diagrams are particularly useful in problems where the farthest distance is of interest, such as constructing the boundary of shapes or solving optimization problems involving enclosing regions.
+		These diagrams are particularly useful in problems where the farthest distance is of interest, such as
+		constructing the boundary of shapes or solving optimization problems involving enclosing regions.
 	</p>
 
 	<h3> Why Use Farthest Point Voronoi Diagrams? </h3>
 	<p>
-		In the context of the isoperimetric problem, the Farthest Point Voronoi diagram helps identify the critical points and edges necessary for constructing the optimal curve.
-		The diagram allows efficient computation of regions where circular arcs (with the same radius) will form parts of the solution curve.
+		In the context of the isoperimetric problem, the Farthest Point Voronoi diagram helps identify the critical
+		points and edges necessary for constructing the optimal curve.
+		The diagram allows efficient computation of regions where circular arcs (with the same radius) will form parts
+		of the solution curve.
 	</p>
 
 	<h3> 🚀 How to Implement the Farthest Point Voronoi Diagram </h3>
@@ -277,7 +288,9 @@
 
 	<h1> 🌐 Conclusion </h1>
 	<p>
-		The interplay between geometry, optimization, and computation reveals deep insights into isoperimetric problems. By combining mathematical rigor with computational tools, this project offers an interactive exploration of one of geometry's most intriguing questions.
+		The interplay between geometry, optimization, and computation reveals deep insights into isoperimetric problems.
+		By combining mathematical rigor with computational tools, this project offers an interactive exploration of one
+		of geometry's most intriguing questions.
 	</p>
 
 	<h1> 📚 References </h1>

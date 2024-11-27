@@ -13,17 +13,17 @@ class OptimalCurveCanvasUI extends CanvasUI {
 
 		// Slider for adjusting perimeter
 		this.perimeterSlider = this.p.createSlider(0, 1000, 0);
-		this.perimeterSlider.position(320, this.canvasPosition.y + 60);
+		this.perimeterSlider.position(this.canvasPosition.x + 120, this.canvasPosition.y + 40);
 		this.perimeterSlider.addClass('slider');
 		this.perimeterSlider.input(() => this.adjustPerimeter());
 
 		// Perimeter and area text
 		this.perimeterText = this.p.createDiv("Perimeter: " + this.perimeterSlider.value());
-		this.perimeterText.position(330, this.canvasPosition.y + 30);
+		this.perimeterText.position(this.canvasPosition.x + 350, this.canvasPosition.y + 30);
 		this.perimeterText.addClass('perimeter-text');
 
 		this.areaText = this.p.createDiv("Area: 0");
-		this.areaText.position(550, this.canvasPosition.y + 30);
+		this.areaText.position(this.canvasPosition.x + 550, this.canvasPosition.y + 30);
 		this.areaText.addClass('area-text');
 	}
 
@@ -58,7 +58,7 @@ class OptimalCurveCanvasUI extends CanvasUI {
 		}
 		this.perimeterSlider.value(currentPerimeter);
 		this.perimeterSlider.attribute('min', this.hull.perimeter());
-		this.perimeterSlider.attribute('max', Circle.fromEnclosingPolygon(this.hull).perimeter()*1.5);
+		this.perimeterSlider.attribute('max', Circle.fromEnclosingPolygon(this.hull).perimeter() * 1.5);
 	}
 
 	draw() {
