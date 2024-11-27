@@ -45,12 +45,12 @@ class FarthestPointVoronoiDiagram {
 		return new FarthestPointVoronoiDiagram(sites, [], lines);
 	}
 
-	draw(p) {
+	draw(canvas) {
 		for (let p of this.points) {
-			p.draw(p);
+			p.draw(canvas);
 		}
 		for (let l of this.lines) {
-			l.draw(p);
+			l.draw(canvas);
 		}
 	}
 
@@ -183,7 +183,7 @@ class FarthestPointVoronoiDiagram {
 
 
 function getGoodSemiline(p, q, r, c) {
-	let bisector = p.perpendicularBisector(q);
+	let bisector = p.getPerpendicularBisector(q);
 	let sym = bisector.a === c ? bisector.b.getSymmetrical(c) : bisector.a.getSymmetrical(c);
 	let goodSign = p.getOrientationDeterminantSign(q, r);
 	let ood = p.getOrientationDeterminantSign(c, sym);

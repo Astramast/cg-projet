@@ -61,7 +61,7 @@ class SemiLine {
 		canvas.line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 
-	getLineIntersection(otherLine) {
+	getIntersection(otherLine) {
 		if (!intersectLineSemiline(otherLine, this)) return null;
 		return new Line(this.a, this.b).getIntersection(otherLine);
 	}
@@ -73,11 +73,11 @@ class Segment {
 		this.b = b;
 	}
 
-	draw() {
-		line(this.a.x, this.a.y, this.b.x, this.b.y);
+	draw(canvas) {
+		canvas.line(this.a.x, this.a.y, this.b.x, this.b.y);
 	}
 
-	getLineIntersection(otherLine) {
+	getIntersection(otherLine) {
 		if (!intersectLineSegment(otherLine, this)) return null;
 		return new Line(this.a, this.b).getIntersection(otherLine);
 	}

@@ -14,7 +14,13 @@ class Point {
 
 	orientationDeterminant(b, c) {
 		// > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
-		return (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		// We added 1e-6 to avoid floating point errors,
+		// this implies that there is an error on close to 0 computations
+		let ood = (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		if (Math.abs(ood) < 1e-6) {
+			return 0;
+		}
+		return ood;
 	}
 
 	getOrientationDeterminantSign(b, c) {
@@ -40,8 +46,7 @@ class Point {
 
 	getPerpendicularBisector(otherPoint) {
 		// TODO: Assumed general position, complete code for extreme cases
-		const y = (x) => ((2*otherPoint.x - 2*this.x) * x + (this.x**2 + this.y**2 - otherPoint.x**2 - otherPoint.y**2)) / (2*this.y - 2*otherPoint.y);
-		return new Line(new Point(this.x, y(this.x)), new Point(otherPoint.x, y(otherPoint.x)));
+		return perpendicularBisector(this, otherPoint);
 	}
 }
 
