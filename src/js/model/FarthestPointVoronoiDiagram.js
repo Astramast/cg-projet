@@ -42,7 +42,7 @@ class FarthestPointVoronoiDiagram {
 			getGoodSemiline(p2, p3, p1, points[0]),
 			getGoodSemiline(p3, p1, p2, points[0])
 		];
-		return new FarthestPointVoronoiDiagram(sites, [], lines);
+		return new FarthestPointVoronoiDiagram(sites, points, lines);
 	}
 
 	draw(canvas) {
