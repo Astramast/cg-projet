@@ -4,16 +4,22 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		this.points = [];
 		this.nbAngleToStretchangle = 1;
 		this.polygonStretched = null;
+		this.acceptInput = true;
+	}
+
+	refuseInput() {
+		this.acceptInput = false;
 	}
 
 	setup() {
 		// Buttons for user interaction
-		this.clearButton = new Button("Stretch", this.canvasPosition.x + 110, this.canvasPosition.y, () => this.Stretch(), this.p);
+		this.stretchButton = new Button("Stretch", this.canvasPosition.x + 110, this.canvasPosition.y, () => {this.Stretch(); this.refuseInput();}, this.p);
 		this.clearButton = new Button("Clear", this.canvasPosition.x + 10, this.canvasPosition.y, () => this.resetPoints(), this.p);
 	}
 
 	resetPoints() {
 		this.points = [];
+		this.acceptInput = true;
 		this.polygonStretched = null;
 	}
 
@@ -26,14 +32,33 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		this.p.fill("#CB9DF0");
 		this.p.rect(0, 80, this.p.width, this.p.height);
 
+		// drawing lines
+		this.p.stroke("#8E24AA");
+		// this.p.fill("#ba76f1");
+		this.p.noFill();
+		this.p.beginShape();
+		for (let p of this.points) {
+			this.p.vertex(p.x, p.y);
+		}
+		this.p.endShape(this.p.CLOSE);
+
 		// Draw points
 		this.p.stroke("#FFF9BF");
 		this.p.fill("#FFF9BF");
 		for (let p of this.points) {
 			this.p.ellipse(p.x, p.y, 6, 6);
 		}
+	
 
 		if (this.polygonStretched != null) {
+
+			// Draw points
+			this.p.stroke("#FFF9BF");
+			this.p.fill("#FFF9BF");
+			for (let p of this.polygonStretched) {
+				this.p.ellipse(p.x, p.y, 6, 6);
+			}
+
 			this.p.stroke("#FFF9BF");
 			this.p.noFill();
 			// this.p.fill("#ba76f1");
@@ -44,19 +69,11 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 			this.p.endShape(this.p.CLOSE);
 		}
 
-		// drawing lines
-		this.p.stroke("#8E24AA");
-		// this.p.fill("#ba76f1");
-		this.p.noFill();
-		this.p.beginShape();
-		for (let p of this.points) {
-			this.p.vertex(p.x, p.y);
-		}
-		this.p.endShape(this.p.CLOSE);
 	}
 
 
 	mousePressed() {
+		if (!this.acceptInput || this.points.length >= 3) {return;}
 		if (this.p.mouseX < 0 || this.p.mouseX > this.p.width || this.p.mouseY < 80 || this.p.mouseY > this.p.height) return;
 		this.points.push(new Point(this.p.mouseX, this.p.mouseY));
 		// console.log(this.points);
@@ -73,7 +90,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		// this.testStretch(this.polygonStretched);
 	}
 
-	stretchTriangle(triangle, vertex_to_increase_angle) {
+	stretchTriangle(triangle, vertex_to_increase_angle) {  // can stretch or contract
 		let n = triangle.length;
 		let start_vertex = (vertex_to_increase_angle - 1 + n) % n;
 		this.stretchPolygon(triangle, start_vertex);
@@ -91,11 +108,11 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let b = (a + 1) % n;
 		let c = (b + 1) % n;
 
-		let theta = this.getAngle(polygon[a], polygon[b], polygon[c]);
+		let theta = this.convertInDegree(this.getAngle(polygon[a], polygon[b], polygon[c]));
 		let diff = 180 - theta;
 
 		if (diff > 0) {
-			this.printDistance(polygon, a, "distance before stretch :");
+			this.printDistance(this.points, a, "distance before stretch :");
 			polygon[c] = this.rotate(polygon[a], polygon[b], polygon[c]);
 			this.printDistance(polygon, a, "distance after stretch (should stay unchanged) :");
 
@@ -121,71 +138,68 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		return is_convex;
 	}
 
-	getAngle(a, b, c) {
+	convertInDegree(angleRadiant) {
+		return (angleRadiant * 180) / Math.PI;
+	}
 
-		// Vectors AB and BC
+	getAngle(a, b, c) {
+		// Calculate the angle formed by AB and BC
+
 		const u = [b.x - a.x, b.y - a.y]; // Vector AB
 		const v = [c.x - b.x, c.y - b.y]; // Vector BC
 
-		// Dot product of u and v
 		const dotProduct = u[0] * v[0] + u[1] * v[1];
 
-		// Magnitudes of u and v
 		const magnitudeU = Math.sqrt(u[0] ** 2 + u[1] ** 2);
 		const magnitudeV = Math.sqrt(v[0] ** 2 + v[1] ** 2);
 
-		// Cosine of the angle
 		let cosTheta = dotProduct / (magnitudeU * magnitudeV);
 
 		// Handle potential floating-point inaccuracies
 		cosTheta = Math.max(-1, Math.min(1, cosTheta));
 
-		// Angle in radians
 		const angleRadians = Math.acos(cosTheta);
 
-		// Convert to degrees
-		const angleDegrees = (angleRadians * 180) / Math.PI;
-
-		return angleDegrees;
+		return angleRadians;
 	}
 
 	rotate(a, b, c, factor = 1.1) {
-		const [x1, y1] = [a.x, a.y];
-		const [x2, y2] = [b.x, b.y];
-		const [x3, y3] = [c.x, c.y];
+    // Vector BC
+    const vX = c.x - b.x;
+    const vY = c.y - b.y;
 
-		// Vector BC
-		const vX = x3 - x2;
-		const vY = y3 - y2;
+    // Current vector length
+    const originalLength = this.getDistance(b, c);
 
-		// Calculate the current angle
-		const dotProduct = (x2 - x1) * vX + (y2 - y1) * vY;
-		const magnitudeAB = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-		const magnitudeBC = Math.sqrt(vX ** 2 + vY ** 2);
-		const currentCosTheta = dotProduct / (magnitudeAB * magnitudeBC);
-		const currentAngle = Math.acos(currentCosTheta);
+    // Determine the rotation angle (radians)
+    const delta = Math.acos(1 / factor); // Small rotation increment
 
-		// Determine the rotation angle
-		const delta = Math.acos(1 / factor); // Rotation in radians
+    // Ensure the new angle stays below 180° (angle between a, b, c)
+    const currentAngle = this.getAngle(a, b, c);
+    const newAngle = currentAngle + delta;
+    if (newAngle >= Math.PI) {
+        throw new Error("Angle enlargement exceeds 180°");
+    }
 
-		// Ensure the new angle stays below 180°
-		const newAngle = currentAngle + delta;
-		if (newAngle >= Math.PI) {
-			throw new Error("Angle enlargement exceeds 180°");
-		}
+    // Rotate vector BC counterclockwise
+    const cosDelta = Math.cos(delta);
+    const sinDelta = Math.sin(delta);
+    const rotatedVX = cosDelta * vX - sinDelta * vY;
+    const rotatedVY = sinDelta * vX + cosDelta * vY;
 
-		// Rotate vector BC slightly counterclockwise
-		const cosDelta = Math.cos(delta);
-		const sinDelta = Math.sin(delta);
-		const newVX = cosDelta * vX - sinDelta * vY;
-		const newVY = sinDelta * vX + cosDelta * vY;
+    // Normalize the rotated vector to maintain the original length
+    const magnitude = Math.sqrt(rotatedVX * rotatedVX + rotatedVY * rotatedVY);
+    const normalizedVX = (rotatedVX / magnitude) * originalLength;
+    const normalizedVY = (rotatedVY / magnitude) * originalLength;
 
-		// Compute new position of C
-		const newX3 = x2 + newVX;
-		const newY3 = y2 + newVY;
+    // Compute new position of C
+    const newX3 = b.x + normalizedVX;
+    const newY3 = b.y + normalizedVY;
 
-		return new Point(newX3, newY3);
-	}
+    return new Point(newX3, newY3);
+}
+
+
 
 	getDistance(b, c) {
 		const dx = b.x - c.x;
@@ -198,6 +212,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let c = (b + 1) % 3;
 		console.log(str, (this.getDistance(triangle[a], triangle[b])).toFixed(0));
 		console.log(str, (this.getDistance(triangle[b], triangle[c])).toFixed(0));
+		console.log(str, (this.getDistance(triangle[c], triangle[a])).toFixed(0));
 
 	}
 
@@ -223,7 +238,7 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		let a = new Point(0, 0);
 		let b = new Point(1, 0);
 		let c = new Point(1, 1);
-		let result = this.getAngle(a, b, c);
+		let result = this.convertInDegree(this.getAngle(a, b, c));
 		if (result !== 90) {
 			console.log("ERROR : getAngle failed, result", result);
 		} else {
@@ -231,11 +246,11 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		}
 	}
 
-	testRotate() {
+	testRotate() {  // deprecated
 		let origin = new Point(0, 0);
 		let p = new Point(1, 0);
 		let angle = 90;
-		let result = this.rotate(origin, p, angle);
+		let result = this.convertInDegree(this.rotate(origin, p, angle));
 		if (result.x != 0 || (result.y != 1 && result.y != -1)) {
 			console.log("ERROR : rotate failed, result :", result)
 		} else {
@@ -243,50 +258,9 @@ class CauchyArmLemmaCanvasUI extends CanvasUI {
 		}
 	}
 
-	maxStretch(polygon) {  // for test only
-		for (let a = 0; a <= n - 3; a++) {  // we do the maximum stretching of the edge [n-1, 0]
-			try {
-				this.stretchPolygon(polygon, a);
-			} catch (e) {
-				console.log("ERROR : stretchPolygon failed")
-				// return;
-			}
-		}
-	}
-
-	testStretch(polygon) {  // not finished
-		let n = polygon.length;
-		let old_dist_to_stretch = this.getDistance(polygon[n - 1], polygon[0]);
-		let fixed_distances = [];
-		for (let p = 0; p <= n - 2; p++) {
-			fixed_distances.push((this.getDistance(polygon[p], polygon[p + 1])).toFixed(0));
-		}
-
-		// this.maxStretch(polygon);
-		this.stretchTriangle(polygon, 2);
-
-		let new_stretched_dist = this.getDistance(polygon[n - 1], polygon[0]);
-
-		if (new_stretched_dist != old_dist_to_stretch) {
-			console.log("GOOD : the targeted edge has been stretched");
-		}
-
-		for (let p = 0; p <= n - 2; p++) {  // we iterate over the points to be moved
-			let old_dist = fixed_distances[p];
-			let new_dist = (this.getDistance(polygon[p], polygon[p + 1])).toFixed(0);
-			if (old_dist != new_dist) {
-				console.log("ERROR : some fixed edges has changed :", old_dist, new_dist);
-				return;
-			}
-		}
-		console.log("GOOD : every fixed edges remained unchanged")
-
-
-	}
-
 	testALL() {
 		this.testGetAngle();
-		this.testRotate();
+		// this.testRotate();
 		this.testIsConvex();
 	}
 
