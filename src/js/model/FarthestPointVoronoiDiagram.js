@@ -110,26 +110,28 @@ class FarthestPointVoronoiDiagram {
 		for (let i = 0; i < intersection_lines_indexes.length; i++) {
 			let old_line = this.lines[intersection_lines_indexes[i]];
 			let i_p = intersection_points[i];
-			let new_line = null;
+			let new_line1 = null;
+			let new_line2 = null;
 			if (old_line instanceof SemiLine) {
 				let v = new Point(old_line.b.x - old_line.a.x, old_line.b.y - old_line.a.y);
 				let i_pv = new Point(i_p.x + v.x, i_p.y + v.y);
-				new_line = new SemiLine(i_p, i_pv);
+				new_line1 = new Segment(old_line.a.copy(), i_p.copy());
+				new_line2 = new SemiLine(i_p.copy(), i_pv.copy());
 			} else {
-				if (pCell.isPointStrictlyInside(old_line.a)) {
-					new_line = new Segment(i_p, old_line.b);
-				} else {
-					new_line = new Segment(old_line.a, i_p);
-				}
+				new_line1 = new Segment(old_line.a.copy(), i_p.copy());
+				new_line2 = new Segment(i_p.copy(), old_line.b.copy());
 			}
-			this.lines[intersection_lines_indexes[i]] = new_line;
+			this.lines[intersection_lines_indexes[i]] = new_line1;
+			this.lines.push(new_line2);
 		}
 		//Drop the lines inside the cell
+		let new_lines = [];
 		for (let each_line of this.lines) {
-			if (pCell.isPointStrictlyInside(each_line.a) || pCell.isPointStrictlyInside(each_line.b)) {
-				this.lines.splice(this.lines.indexOf(each_line), 1);
+			if (!pCell.isPointStrictlyInside(each_line.a) && !pCell.isPointStrictlyInside(each_line.b)) {
+				new_lines.push(each_line);
 			}
 		}
+		this.lines = new_lines;
 		//Add the lines of the cell
 		for (let l of pCell.cell) {
 			this.lines.push(l);
