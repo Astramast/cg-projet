@@ -35,6 +35,7 @@ class SemiLine {
 	constructor(a,b){
 		this.a = a;
 		this.b = b;
+		this.c = "semiline";
 	}
 	isEqual(semiline){
 		return (this.a.x == semiline.a.x && this.a.y == semiline.a.y && this.b.orientationDeterminant(this.a, semiline.b) == 0);

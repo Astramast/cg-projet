@@ -13,7 +13,7 @@ class Point {
         // > 0 is RIGHT, < 0 is LEFT, = 0 is colinear
 		// We added 1e-6 to avoid floating point errors, 
 		// this implies that there is an error on close to 0 computations
-        let ood = (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
+		let ood = (b.x * c.y) - (this.x * c.y) + (this.x * b.y) - (b.y * c.x) + (this.y * c.x) - (this.y * b.x);
 		if (Math.abs(ood) < 1e-6) {
 			return 0;
 		}

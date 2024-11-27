@@ -1,6 +1,5 @@
 class VoronoiCell {
 	constructor(semilines, segments) {
-		console.log("semilines, segments", semilines, segments);
 		this.cell = [];
 		if (semilines[0].b.getOrientationDeterminantSign(semilines[1].a, semilines[1].b) > 0) {
 			this.cell.push(semilines[1]);
@@ -9,7 +8,7 @@ class VoronoiCell {
 			this.cell.push(semilines[0]);
 			this.cell.push(semilines[1]);
 		}
-		let chosen = this.cell[0];
+		let chosen = this.cell[1];
 		while (segments.length > 0) {
 			for (let s of segments) {
 				if (s.a.isEqual(chosen.a) || s.a.isEqual(chosen.b) || s.b.isEqual(chosen.a) || s.b.isEqual(chosen.b)) {
@@ -33,8 +32,10 @@ class VoronoiCell {
 			if (i + 1 < this.cell.length) {
 				if (this.cell[i + 1].a.isEqual(a)) {
 					b = this.cell[i + 1].b;
-				} else {
+				} else if (this.cell[i + 1].b.isEqual(a)) {
 					b = this.cell[i + 1].a;
+				} else {
+					throw new Error("Cell is continuous !");
 				}
 			}
 			i++;
