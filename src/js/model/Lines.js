@@ -95,7 +95,7 @@ function intersectLineSemiline(line, semiline) {
 	let v = new Point(line.b.x - line.a.x, line.b.y - line.a.y);
 	let c = new Point(semiline.a.x + v.x, semiline.a.y + v.y);
 	let o2 = semiline.a.orientationDeterminant(c, line.b);
-	return o1 * o2 < 0;
+	return o1 * o2 >= 0;
 }
 
 function intersectLineSegment(line, segment) {
