@@ -215,7 +215,7 @@
 
 	<h3> 🚀 How to Implement the Farthest Point Voronoi Diagram </h3>
 
-	<h4>Steps to Implement the Algorithm</h4>
+	<h4>🧮 Steps to Implement the Algorithm</h4>
 	<ol class="left">
 		<li><strong>Compute the convex hull:</strong> Start by finding the convex hull of the set of points. Only the points on the convex hull can have cells in the farthest-point Voronoi diagram.</li>
 		<li><strong>Sort the vertices:</strong> Arrange the vertices of the convex hull in a counterclockwise order.</li>
@@ -249,6 +249,28 @@
 		This involves iterative adjustments to ensure convexity and area maximization, which can be visualized
 		interactively:
 	</p>
+	<h3>📐 How to Implement the Optimal Curve (\((P,Q)\)-Curve)</h3>
+
+	<p>The \((P,Q)\)-curve of maximum area is a convex curve of fixed perimeter \(P\) that encloses a convex polygon \(Q\). This guide describes the steps to compute the curve using theoretical principles and algorithms from the paper.</p>
+	<ul class="left">
+		<li>The curve consists of one or more circular arcs of equal radius, and its endpoints are vertices of \(Q\).</li>
+		<li>For \(P \geq \text{perimeter}(\mathcal{B}_Q)\), the solution is a circle with perimeter \(P\) enclosing \(Q\).</li>
+		<li>For \(P < \text{perimeter}(\mathcal{B}_Q)\), the curve is the boundary of the intersection of disks with radius \(r\) that contain \(Q\).</li>
+	</ul>
+
+	<h4>🧮 Steps to Compute the \((P, Q)\)-curve</h4>
+	<ol class="left">
+		<li><strong>Compute the Convex Hull:</strong> If given a set of points, determine the convex hull \(Q\) in \(O(n \log n)\) time.</li>
+		<li><strong>Construct the Farthest-Point Voronoi Diagram:</strong> Compute the farthest-point Voronoi diagram of the vertices of \(Q\) in \(O(n)\) time.</li>
+		<li><strong>Find the Radius \(r\):</strong>
+			<ul class="left">
+				<li>Use a binary search to find \(r\) such that the curve’s perimeter is close to \(P\).</li>
+				<li>The radius is approximated using the farthest-point Voronoi diagram.</li>
+			</ul>
+		</li>
+		<li><strong>Construct the Curve:</strong> Use \(r\) to define circular arcs and segments along the boundary of \(Q\). Ensure arcs have the same radius and endpoints lie on \(Q\).</li>
+	</ol>
+
 	<h3> 🎨 Draw points, set the perimeter, and visualize the optimal curve: </h3>
 	<div id="optimal-curve"></div>
 	<br>
