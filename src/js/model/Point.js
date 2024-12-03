@@ -65,7 +65,12 @@ class Point {
 	manhattanDistance(otherPoint) {
 		return Math.abs(this.x - otherPoint.x) + Math.abs(this.y - otherPoint.y);
 	}
-
+	euclidianDistance(otherPoint) {
+		return Math.sqrt(Math.pow(this.x - otherPoint.x, 2) + Math.pow(this.y - otherPoint.y, 2));
+	}
+	inCircle(circle){
+		return this.euclidianDistance(circle.center) - circle.radius < 1e-6;
+	}
 }
 
 function perpendicularBisector(p, q) {

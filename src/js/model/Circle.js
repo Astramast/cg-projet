@@ -3,29 +3,25 @@ class Circle {
 		this.center = center;
 		this.radius = radius;
 	}
-
-	static fromEnclosingPolygon(polygon) {
-		// let center = polygon.getCentroid();
-		let center = getCenter(polygon.points, new Point(0, 0));
-		let radius = polygon.getFarthestDistance(center);
-		return new Circle(center, radius);
-	}
-
-	static fromCenterPerimeter(center, p) {
-		return new Circle(center, p / (2 * Math.PI));
-	}
-
 	draw(canvas) {
 		canvas.stroke("#FFF9BF");
 		canvas.fill("#ba76f1");
 		canvas.circle(this.center.x, this.center.y, this.radius * 2);
 	}
-
-	perimeter() {
+	static fromTwoPoints(p, q){
+		const center = new Point((p.x + q.x) / 2, (p.y + q.y) / 2);
+		const radius = center.euclidianDistance(p);
+		return new Circle(center, radius);
+	}
+	static fromThreePoints(p, q, r){
+		const pqBissector = p.getPerpendicularBisector(q);
+		const prBissector = p.getPerpendicularBisector(r);
+		const center = prBissector.getIntersection(pqBissector);
+		const radius = center.euclidianDistance(p);
+		return new Circle(center, radius);
+	}
+	getPerimeter() {
 		return 2 * Math.PI * this.radius;
 	}
 
-	area() {
-		return Math.PI * this.radius * this.radius;
-	}
 }
