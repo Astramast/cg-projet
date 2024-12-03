@@ -73,3 +73,33 @@ function findPQCurve(polygon, p) {
 
 	return polygon.computeIntersectionOfCircles(r);
 }
+
+
+function findPQCurve2(polygon, p) {
+	let enclosingCircle = Circle.fromEnclosingPolygon(polygon);
+
+	if (p >= enclosingCircle.perimeter()) {
+		return Circle.fromCenterPerimeter(enclosingCircle.center, p);
+	}
+
+	// Compute the farthest-point Voronoi diagram
+	let fpvd = polygon.getFPVD();
+
+	// For each pair of vertices u, v of V(Q), find the two points x, y with a distance r from u and v.
+	// Find wich of x, y is at the left og the line uv
+	// If the point is a line of the fpvd we can add it to the list of points
+	let points = [];
+	for (let i = 0; i < polygon.points.length; i++) {
+		for (let j=i+1; j < polygon.points.length; j++) {
+			let u = polygon.points[i];
+			let v = polygon.points[j];
+
+		}
+	}
+
+	// Find the intersection of the circles with radius r
+	for (let i = 0; i < points.length; i++) {
+		// TODO
+	}
+
+}
