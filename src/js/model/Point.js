@@ -71,6 +71,16 @@ class Point {
 	inCircle(circle){
 		return this.euclidianDistance(circle.center) - circle.radius < 1e-6;
 	}
+	getEquidistantPoints(otherPoint, r){
+		let d = this.euclidianDistance(otherPoint);
+		let h = Math.sqrt(r*r - d*d/4);
+		let v = new Point(otherPoint.x - this.x, otherPoint.y - this.y);
+		let v_90 = new Point(-v.y, v.x);
+		let m = new Point((this.x + otherPoint.x)/2, (this.y + otherPoint.y)/2);
+		let x1 = new Point(m.x + h*v_90.x, m.y + h*v_90.y);
+		let x2 = new Point(m.x - h*v_90.x, m.y - h*v_90.y);
+		return [x1, x2];
+	}
 }
 
 function perpendicularBisector(p, q) {

@@ -4,15 +4,15 @@ class PQCurve{
 		this.smallestEnclosingCircle = this.convexHull.getSmallestEnclosingCircle();
 	}
 	getCurve(perimeter){
-		let convexHullPerimeter = this.convexHull.getPerimeter();
+		let convexHullPerimeter = this.convexHull.toPolygon().perimeter();
 		if (convexHullPerimeter < perimeter){
 			return null;
 		}
-		if (convexHullPerimeter == perimeter){
+		if (convexHullPerimeter === perimeter){
 			return this.convexHull;
 		}
 		if (perimeter >= this.smallestEnclosingCircle.getPerimeter()){
-			return Circle(this.smallestEnclosingCircle.center, perimeter/(2*Math.PI));
+			return new Circle(this.smallestEnclosingCircle.center, perimeter/(2*Math.PI));
 		}
 		return this.computeCurve(perimeter);
 	}
@@ -22,7 +22,7 @@ class PQCurve{
 		let i = (maximum + minimum)/2;
 		while (Math.abs(maximum - minimum) > 1e-6){
 			let phiR = this.computePhiR(i);
-			let phiRPerimeter = phiR.getPerimeter();
+			let phiRPerimeter = phiR.perimeter();
 			if (Math.abs(phiRPerimeter - perimeter) < 1e-6){
 				return phiR;
 			}
@@ -37,7 +37,7 @@ class PQCurve{
 	}
 	findMaximum(perimeter){
 		let maximum = this.smallestEnclosingCircle.radius;
-		while (this.computePhiR(maximum).getPerimeter() < perimeter){
+		while (this.computePhiR(maximum).perimeter() < perimeter){
 			maximum *= 2;
 		}
 		return maximum;
@@ -49,7 +49,7 @@ class PQCurve{
 			let b = this.convexHull.points[(i+1)%this.convexHull.points.length];
 			let candidates = a.getEquidistantPoints(b, r);
 			let x = null;
-			if a.getOrientationDeterminantSign(b, candidates[0]) > 0{
+			if (a.getOrientationDeterminantSign(b, candidates[0]) > 0) {
 				x = candidates[1];
 			} else {
 				x = candidates[0];
@@ -70,6 +70,10 @@ class PQCurve{
 			}
 			X_r.push(x);
 		}
-		return new CircleUnion(X_r, r);
+		let circles = [];
+		for (let center of X_r){
+			circles.push(new Circle(center, r));
+		}
+		return new CircleIntersection(circles);
 	}
 }

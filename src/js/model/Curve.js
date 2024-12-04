@@ -1,39 +1,62 @@
 class Curve {
-	constructor(points = [], segments = 100) {
-		this.points = points; // Array of p5.Vector points
-		this.segments = segments; // Number of segments to sample the curve
+	constructor(point1, point2, radius) {
+		this.point1 = point1;
+		this.point2 = point2;
+		this.radius = radius; // Radius of the arc
+		this._computeArcProperties(); // Precompute arc properties
 	}
 
-	addPoint(x, y) {
-		this.points.push(createVector(x, y));
+	_computeArcProperties() {
+		// Compute distance between the two points
+		const dx = this.point2.x - this.point1.x;
+		const dy = this.point2.y - this.point1.y;
+		this.chordLength = Math.sqrt(dx * dx + dy * dy);
+
+		// Compute the angle subtended by the arc (in radians)
+		this.angle = 2 * Math.asin(this.chordLength / (2 * this.radius));
 	}
 
-	// Calculate the perimeter by approximating the curve using sampled points
 	perimeter() {
-		let totalPerimeter = 0;
-		let prevPoint = this.points[0];
-		for (let i = 1; i <= this.segments; i++) {
-			let t = i / this.segments;
-			let sampledPoint = this.samplePoint(t);
-			totalPerimeter += prevPoint.dist(sampledPoint);
-			prevPoint = sampledPoint;
-		}
-		return totalPerimeter;
+		// Perimeter is the arc length: r * θ
+		return this.radius * this.angle;
 	}
 
-	// Sample a point on the curve using a parameter t (from 0 to 1)
-	samplePoint(t) {
-		let n = this.points.length;
-		let i = Math.floor(t * n);
-		let p0 = this.points[i % n];
-		let p1 = this.points[(i + 1) % n];
-		let p2 = this.points[(i + 2) % n];
-		let p3 = this.points[(i + 3) % n];
+	area() {
+		// Area of the circular segment: A = 0.5 * r^2 * (θ - sin(θ))
+		return 0.5 * this.radius * this.radius * (this.angle - Math.sin(this.angle));
+	}
 
-		// Using Catmull-Rom spline for smooth interpolation between points
-		let x = 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t * t + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t * t * t);
-		let y = 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t * t + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t * t * t);
+	draw(p) {
+		// Compute the center of the arc
+		const midX = (this.point1.x + this.point2.x) / 2;
+		const midY = (this.point1.y + this.point2.y) / 2;
 
-		return createVector(x, y);
+		// Vector from point1 to point2
+		const dx = this.point2.x - this.point1.x;
+		const dy = this.point2.y - this.point1.y;
+		const dist = Math.sqrt(dx * dx + dy * dy);
+
+		// Compute the height of the arc from the line connecting point1 and point2
+		const h = Math.sqrt(this.radius * this.radius - (dist / 2) * (dist / 2));
+
+		// Direction vector perpendicular to the line connecting point1 and point2
+		const perpX = -dy / dist;
+		const perpY = dx / dist;
+
+		// Compute the center of the arc
+		const cx = midX + h * perpX;
+		const cy = midY + h * perpY;
+
+		// Compute angles for the arc
+		const angle1 = Math.atan2(this.point1.y - cy, this.point1.x - cx);
+		const angle2 = Math.atan2(this.point2.y - cy, this.point2.x - cx);
+
+		// Normalize the angles to ensure the arc is drawn correctly
+		const startAngle = Math.min(angle1, angle2);
+		const endAngle = Math.max(angle1, angle2);
+
+		// Draw the arc
+		p.noFill();
+		p.arc(cx, cy, 2 * this.radius, 2 * this.radius, startAngle, endAngle);
 	}
 }

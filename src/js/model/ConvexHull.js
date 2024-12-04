@@ -2,12 +2,12 @@ class ConvexHull {
 	constructor(points) {
 		this.points = this.grahamScan(points);
 	}
-	draw(){
+	draw(p){
 		for (let i = 0; i < this.points.length; i++) {
 			this.points[i].draw();
 			let a = this.points[i];
 			let b = this.points[(i + 1) % this.points.length];
-			line(a.x, a.y, b.x, b.y);
+			p.line(a.x, a.y, b.x, b.y);
 		}
 	}
 	getSmallestEnclosingCircle() {
@@ -56,18 +56,18 @@ class ConvexHull {
 		}
 		return convexHull;
 	}
-	grahamStep(points, newPoint){;
+	grahamStep(points, newPoint){
 		let a = points[points.length - 2];
 		let b = points[points.length - 1];
-		while (points.length >= 2 && a.getOrientationDeterminantSign(b, c) >= 0) {
-			convexHull.pop();
+		while (points.length >= 2 && a.getOrientationDeterminantSign(b, newPoint) >= 0) {
+			points.pop();
 			a = points[points.length - 2];
 			b = points[points.length - 1];
 		}
-		convexHull.push(newPoint);
+		points.push(newPoint);
 	}
 	getSortedPoints(points) {
-		let copy = points.slice();
+		let copy = Array.from(points);
 		let leftmostPoint = this.findLeftmostPoint(copy);
 		copy.filter((p) => p.isEqual(leftmostPoint));
 		copy.sort(leftmostPoint.leftRadialComparator.bind(leftmostPoint));
@@ -83,3 +83,7 @@ class ConvexHull {
 		}
 		return leftmostPoint;
 	}
+	toPolygon(){
+		return new Polygon(this.points);
+	}
+}

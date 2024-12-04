@@ -24,4 +24,8 @@ class Circle {
 		return 2 * Math.PI * this.radius;
 	}
 
+	containsPoint(point) {
+		return this.center.euclidianDistance(point) <= this.radius;
+	}
+
 }
