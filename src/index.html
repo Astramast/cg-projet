@@ -218,15 +218,15 @@
 	<h4>🧮 Steps to Implement the Algorithm</h4>
 	<ol class="left">
 		<li><strong>Compute the convex hull:</strong> Start by finding the convex hull of the set of points. Only the points on the convex hull can have cells in the farthest-point Voronoi diagram, so there are our new sites now.</li>
-		<li><strong>Remove almost all sites:</strong> Remove n-3 sites randomly from the diagram. For each site, keep note of the clockwise(cw) and counterclockwise(ccw) sites neighbours <strong>at time of removal</strong>.</li>
+		<li><strong>Remove almost all sites:</strong> Remove \(n-3\) sites randomly from the diagram. For each site, keep note of the clockwise(cw) and counterclockwise(ccw) sites neighbours <strong>at time of removal</strong>.</li>
 		<li><strong>Initialise the FPVD with the three last points:</strong> It is easy to construct the FPVD of three points because it is just the three bisectors of the three points cut at the intersection.
 		<li><strong>Insert back the removed vertices:</strong> This must be done in the reverse order of removal.
 			<ul>
-				<li>Move clockwisely in the cell of ccw and find the intersection q with the perpendicular bisector of ccw and the point you are adding.</li>
-				<li>Find the other cell V(j) containing q.</li>
-				<li>Find the second intersection point q2 with the perpendicular bisector of j and p in V(j).</li>
-				<li>Do those steps again until j is cw.</li>
-				<li>Construct the cell V(p) with all the intersection points and the perpendicular bisectors of p-cw and p-ccw.</li>
+				<li>Move clockwisely in the cell of \(ccw\) and find the intersection \(q\) with the perpendicular bisector of \(ccw\) and the point you are adding.</li>
+				<li>Find the other cell \(V(j)\) containing \(q\).</li>
+				<li>Find the second intersection point \(q_2\) with the perpendicular bisector of \(j\) and \(p\) in \(V(j)\).</li>
+				<li>Do those steps again until \(j\) is \(cw\).</li>
+				<li>Construct the cell \(V(p)\) with all the intersection points and the perpendicular bisectors of \(p-cw\) and \(p-ccw\).</li>
 				<li>Merge the cell with the FPVD and drop any element strictly inside the cell.</li>
 			</ul>
 		</li>
@@ -250,6 +250,11 @@
 	</p>
 	<h3>📐 How to Implement the Optimal Curve (\((P,Q)\)-Curve)</h3>
 
+	<p>
+		Frist let's define \(\mathcal{B}_Q\) the smallest circle that enclose all points of \(Q\).
+		Let's denote \(\mathcal{V}(Q)\) the farthest-point Voronoi diagram of the vertices of \(Q\) and \(\rho\) the function that maps a vertex to the radius of the smallest enclosing circle of \(Q\) with that vertex as center.
+	</p>
+
 	<p>The \((P,Q)\)-curve of maximum area is a convex curve of fixed perimeter \(P\) that encloses a convex polygon \(Q\). This guide describes the steps to compute the curve using theoretical principles and algorithms from the paper.</p>
 	<ul class="left">
 		<li>The curve consists of one or more circular arcs of equal radius, and its endpoints are vertices of \(Q\).</li>
@@ -261,6 +266,7 @@
 	<ol class="left">
 		<li><strong>Compute the Convex Hull:</strong> If given a set of points, determine the convex hull \(Q\) in \(O(n \log n)\) time.</li>
 		<li><strong>Construct the Farthest-Point Voronoi Diagram:</strong> Compute the farthest-point Voronoi diagram of the vertices of \(Q\) in \(O(n)\) time.</li>
+		<li><strong>Sort the vertices of \(\mathcal{V}(Q)\) by their value under \(\rho\)</strong></li>
 		<li><strong>Find the Radius \(r\):</strong>
 			<ul class="left">
 				<li>Use a binary search to find \(r\) such that the curve’s perimeter is close to \(P\).</li>
